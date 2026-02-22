@@ -374,10 +374,6 @@ textarea.editable:focus {
 
 /* --- CONTRAT ADOPTION --- */
 
-.header-adoption > div {
-    display: block;
-}
-
 .header-adoption {
    display: flex;
    justify-content: space-between; /* gauche / droite */
