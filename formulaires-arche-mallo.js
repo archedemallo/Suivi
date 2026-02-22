@@ -254,7 +254,7 @@ function getTodayISO() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     var today      = getTodayISO();
-    var excludeIds = ['dateNaissance', 'dateNaissancePersonne'];
+    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntiPuces', 'prochainAntiPuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto'];
 
     document.querySelectorAll('input[type="date"].editable').forEach(function(el) {
         if (!excludeIds.includes(el.id) && !el.value) {
