@@ -378,7 +378,6 @@ textarea.editable:focus {
    display: flex;
    justify-content: space-between; /* gauche / droite */
    align-items: center;            /* alignement vertical centré */
-   margin-bottom: 15px;
 }
 
 .header-adoption > div:first-child {
