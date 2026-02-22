@@ -3,14 +3,14 @@
 // ============================================================================
 
 // ============================================================
-// CONFIGURATION — À REMPLIR
+// CONFIGURATION
 // ============================================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynHEzGWpFqS_ZLmTtZMgabnypJcLj8CKBKzkLI8I_67lP2qbRnEG0Kk2-RaqAtpuel1w/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4vzrO0fmQngUPK7_3NUPxlyba8LKwzhYBLSh-NdN6nbhW5W2TVuUqp1l9uYy35uTz/exec';
 
 // ============================================================
 // ÉTAT DE SAUVEGARDE
 // ============================================================
-let formSaved = false;
+let formSaved     = false;
 let savedFilename = '';
 
 // ============================================================
@@ -20,7 +20,7 @@ function toggleCheck(element, groupName) {
     let box;
 
     if (element.classList.contains('checkbox')) {
-        box = element;
+        box       = element;
         groupName = element.getAttribute('data-group');
     } else if (element.classList.contains('clickable-row')) {
         box = element.querySelector('.checkbox');
@@ -73,7 +73,7 @@ function collectFormData() {
 }
 
 // ============================================================
-// NOM DU FICHIER PDF
+// NOM DU FICHIER
 // ============================================================
 function buildFilename(data) {
     const date    = new Date();
@@ -93,6 +93,47 @@ function buildFilename(data) {
     parts.push(dateStr);
 
     return parts.join('_');
+}
+
+// ============================================================
+// CONSTRUIRE LE HTML AVEC DONNÉES INJECTÉES
+// ============================================================
+function buildHtmlWithData() {
+    let htmlStr = document.documentElement.outerHTML;
+
+    // Injecter les valeurs des inputs
+    document.querySelectorAll('input').forEach(input => {
+        if (!input.id) return;
+        const val = input.value.replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
+
+        if (input.type === 'date' || input.type === 'text' || input.type === 'tel' ||
+            input.type === 'email' || input.type === 'number') {
+            // Chercher la balise avec cet id et remplacer/ajouter value
+            const regex = new RegExp(`(<input[^>]*?id="${input.id}"[^>]*?)(?:\\s+value="[^"]*")?([^>]*?>)`, 'g');
+            htmlStr = htmlStr.replace(regex, `$1 value="${val}"$2`);
+        }
+    });
+
+    // Injecter les valeurs des textareas
+    document.querySelectorAll('textarea').forEach(textarea => {
+        if (!textarea.id) return;
+        const val = textarea.value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        const regex = new RegExp(
+            `(<textarea[^>]*?id="${textarea.id}"[^>]*?>)[\\s\\S]*?(<\\/textarea>)`, 'g'
+        );
+        htmlStr = htmlStr.replace(regex, `$1${val}$2`);
+    });
+
+    // Masquer les boutons dans le fichier sauvegardé
+    htmlStr = htmlStr.replace(
+        '<head>',
+        '<head><style>.buttons{display:none!important}</style>'
+    );
+
+    return htmlStr;
 }
 
 // ============================================================
@@ -119,7 +160,7 @@ async function sendToGoogle(data) {
 }
 
 // ============================================================
-// BOUTON SAUVEGARDER — Sheet + PDF Drive
+// BOUTON SAUVEGARDER — Sheet + HTML Drive
 // ============================================================
 async function saveForm() {
     const data     = collectFormData();
@@ -127,39 +168,12 @@ async function saveForm() {
 
     data.onglet      = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename    = filename;
-    
-// Cloner le HTML et injecter les valeurs des champs
-const clone = document.documentElement.cloneNode(true);
 
-// Injecter les valeurs des inputs
-document.querySelectorAll('input').forEach(input => {
-    const cloneInput = clone.querySelector(`#${input.id}`);
-    if (cloneInput) {
-        cloneInput.setAttribute('value', input.value);
-    }
-});
+    // HTML avec données injectées
+    const htmlWithData   = buildHtmlWithData();
+    data.htmlContent     = btoa(unescape(encodeURIComponent(htmlWithData)));
 
-// Injecter les valeurs des textareas
-document.querySelectorAll('textarea').forEach(textarea => {
-    const cloneTextarea = clone.querySelector(`#${textarea.id}`);
-    if (cloneTextarea) {
-        cloneTextarea.textContent = textarea.value;
-    }
-});
-
-// Injecter l'état des checkboxes personnalisées
-document.querySelectorAll('.checkbox.checked').forEach(cb => {
-    if (cb.id) {
-        const cloneCb = clone.querySelector(`#${cb.id}`);
-        if (cloneCb) cloneCb.classList.add('checked');
-    }
-});
-
-data.htmlContent = btoa(unescape(encodeURIComponent(clone.outerHTML)));
-
-    
-    )));
-
+    // Overlay chargement
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:bold;font-family:Arial;';
     overlay.innerHTML = '<div style="text-align:center">⏳<br><br>Sauvegarde en cours...<br><small>Veuillez patienter</small></div>';
@@ -181,7 +195,6 @@ data.htmlContent = btoa(unescape(encodeURIComponent(clone.outerHTML)));
             btnSave.className   = 'btn btn-saved';
             btnSave.disabled    = true;
         }
-
         if (btnPrint) {
             btnPrint.textContent = '🖨️ Imprimer';
             btnPrint.className   = 'btn btn-print';
@@ -205,7 +218,7 @@ function printForm() {
     }
 
     const originalTitle = document.title;
-    document.title = savedFilename || document.title;
+    document.title      = savedFilename || document.title;
     window.print();
     setTimeout(() => document.title = originalTitle, 2000);
 }
@@ -242,7 +255,6 @@ function resetForm() {
         btnSave.className   = 'btn btn-save';
         btnSave.disabled    = false;
     }
-
     if (btnPrint) {
         btnPrint.textContent = '🖨️ Imprimer';
         btnPrint.className   = 'btn btn-print btn-print-disabled';
