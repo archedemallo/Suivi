@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrat d'adoption responsable - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Contrat_Adoption">
+<body>
+
+<div class="buttons">
+    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
+</div>
+
+<div class="page-container">
+<div class="content">
+
+<!-- En-tête -->
+<div class="header-adoption">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+            </p>
+        </div>
+    </div>
+    <div class="header-adoption-right">
+        Date adoption : <input type="date" class="editable editable-date" id="dateAdoption">
+    </div>
+</div>
+
+<div class="title">Contrat d'adoption responsable</div>
+
+<p>
+L'association <em>L'ARCHE DE MALLO</em>, déclarée en préfecture de Belfort le 25 novembre 2021
+sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confier l'animal suivant :
+</p>
+
+<!-- Informations animal -->
+<div class="form-group">
+        Nom usuel : <input type="text" class="editable editable-medium" id="nomUsuel">
+<div class="form-group">
+        Nom d'adoption : <input type="text" class="editable editable-medium" id="nomAdoption">
+</div>
+<div class="form-group">
+        Sexe :
+        <span class="clickable-row" onclick="toggleCheck(this, 'sexe')"><span class="checkbox" data-group="sexe"></span> Mâle</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'sexe')"><span class="checkbox" data-group="sexe"></span> Femelle</span>
+</div>
+
+<div class="form-group">
+        Né(e) le : <input type="date" class="editable editable-date" id="dateNaissance">
+</div>
+    <p>N° de puce ou tatouage : <input type="text" class="editable editable-long" id="puce"></p>
+    <p>Couleur : <input type="text" class="editable editable-long" id="couleur"></p>
+    <p>
+        <span class="blue">Stérilisé :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')"><span class="checkbox" data-group="sterilise"></span> OUI</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')"><span class="checkbox" data-group="sterilise"></span> NON</span>
+    </p>
+    <p>
+       <span class="blue"> Vermifugé :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vermifuge')"><span class="checkbox" data-group="vermifuge"></span> OUI</span>
+        le <input type="date" class="editable editable-date" id="dateVermifuge">
+        AVEC <input type="text" class="editable editable-medium" id="produitVermifuge">
+        <span class="clickable-row" onclick="toggleCheck(this, 'vermifuge')"><span class="checkbox" data-group="vermifuge"></span> NON</span>
+    </p>
+    <p><span class="blue">Prochain vermifuge : </span>le <input type="date" class="editable editable-date" id="prochainVermifuge"></p>
+    <p>
+       <span class="blue"> ANTI-PUCES :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'antipuces')"><span class="checkbox" data-group="antipuces"></span> OUI</span>
+        le <input type="date" class="editable editable-date" id="dateAntiPuces">
+        AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
+        <span class="clickable-row" onclick="toggleCheck(this, 'antipuces')"><span class="checkbox" data-group="antipuces"></span> NON</span>
+    </p>
+    <p><span class="blue">Prochain Anti-puces et tiques :</span> le <input type="date" class="editable editable-date" id="prochainAntiPuces"></p>
+    <p>
+        <span class="blue">Testé(e) FIV/FEL :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'testFIV')"><span class="checkbox" data-group="testFIV"></span> OUI</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'testFIV')"><span class="checkbox" data-group="testFIV"></span> NON</span>
+        Si oui :
+        <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> NÉGATIF</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> POSITIF</span>
+    </p>
+    <p><span class="blue">
+        Test diarrhée :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee')"><span class="checkbox" data-group="testDiarrhee"></span> OUI</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee')"><span class="checkbox" data-group="testDiarrhee"></span> NON</span>
+         Si oui :
+        <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> NÉGATIF</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> POSITIF</span>
+    </p>
+    <p><span class="blue">
+        Vaccin Coryza-Typhus :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> NON</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> Primo</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> Secundo</span>
+    </p>
+    <p>
+        Date de vaccin : <input type="date" class="editable editable-date" id="dateVaccin">
+        
+        Date de rappel : <input type="date" class="editable editable-date" id="dateRappel">
+    </p>
+</div>
+
+<!-- Adoptant -->
+<div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
+<div class="section">
+    <p>Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant"></p>
+    <p>Adresse : <input type="text" class="editable editable-long" id="adresse"></p>
+    <p>
+        Code postal : <input type="text" class="editable editable-short" id="codePostal">
+        &nbsp;&nbsp;
+        Ville : <input type="text" class="editable editable-medium" id="ville">
+    </p>
+    <p>
+        Téléphone fixe : <input type="tel" class="editable editable-tel" id="telFixe">
+        &nbsp;&nbsp;
+        Portable : <input type="tel" class="editable editable-tel" id="portable">
+    </p>
+    <p>Email : <input type="email" class="editable editable-email" id="email"></p>
+
+ <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
+<div>
+    <span class="clickable-row" onclick="toggleCheck(this)">
+        <span class="checkbox"></span> Photocopie pièce d'identité
+    </span>
+</div>
+<div>
+    <span class="clickable-row" onclick="toggleCheck(this)">
+        <span class="checkbox"></span> Photocopie justificatif de domicile
+    </span>
+</div>
+<br>
+
+
+<!-- Engagement stérilisation -->
+<div><strong><span class="highlight-red">ENGAGEMENT À LA STÉRILISATION</strong></span></div>
+
+<div class="cas-box">
+    <p><span class="red">CAS 1 :</span></p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this, 'cas')"><span class="checkbox" data-group="cas"></span></span>
+        Vous adoptez un chat de + de 7 mois à l'Arche de Mallo avec la stérilisation déjà effectuée
+        en date du <input type="date" class="editable editable-date" id="dateSterilisationCas1">
+    </p>
+    <p>
+        Vous n'avez rien à fournir, l'ICAD de l'animal restera au nom de l'association pendant 1 mois
+        après la date d'adoption afin de valider son adoption définitive.
+    </p>
+</div>
+
+<div class="cas-box">
+    <p><span class="red">CAS 2 :</span></p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this, 'cas')"><span class="checkbox" data-group="cas"></span></span>
+        Vous adoptez aujourd'hui un chaton de - de 6 mois à L'Arche de Mallo,
+        la stérilisation est à effectuer avant le <input type="date" class="editable editable-date" id="dateLimiteSterilisation">
+    </p>
+    <p>Du fait de son jeune âge, il ne peut donc pas être stérilisé actuellement. Cependant,
+    le but de l'Arche de Mallo étant de stopper la prolifération de chats, et de placer ses animaux
+    en tant qu'animaux de compagnie et non d'animaux de reproduction.</p>
+    <p>Vous devez vous engager à stériliser votre chat entre 6 et 7 mois d'âge à vos frais,
+    dans la clinique vétérinaire de votre choix.</p>
+    <p>Dans le cas d'une pathologie empêchant la stérilisation, un certificat de votre vétérinaire
+    devra nous être délivré.</p>
+    <p><strong><span class="underline red">IMPORTANT</span></strong> :
+    <span class="red">L'ICAD de l'animal restera au nom de l'association jusqu'à réception du certificat de stérilisation
+    fourni par votre vétérinaire.</span></p>
+    <p><span class="red">Vous devez envoyer le certificat de stérilisation par e-mail à :</span>
+    <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a></p>
+    <p><span class="red">Le changement de propriétaire sera effectué à votre nom dès réception du certificat.</span></p>
+    <p><span class="red">Si toutefois vous ne respectez pas ce contrat, L'Arche de Mallo se donne le droit de récupérer
+    l'animal sans conditions. Un suivi de cet engagement sera tenu par l'association.</span></p>
+</div>
+
+<p>
+    Date : <input type="date" class="editable editable-date" id="dateEngagement">
+    &nbsp;&nbsp;
+    Signature, précédée de la mention « lu et approuvé » :
+</p>
+<br>
+<br>
+<br>
+
+<!-- Frais d'adoption -->
+<div><strong><span class="highlight-red">Frais d'adoption :</strong></span></div>
+<div class="section">
+    <!-- Cases multiples : chaque option est indépendante -->
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        participation de <span class="red">90 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        la 1ère vaccination TC + tests). <span class="blue">Les frais de stérilisation restent à la charge de l'adoptant.</span>
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        participation de <span class="red">120 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        la 1ère et 2ème vaccination TC + tests). <span class="blue">Les frais de stérilisation restent à la charge de l'adoptant.</span>
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        participation de <span class="red">150 € </span>pour l'adoption (Comprenant l'identification par puce électronique
+        et la stérilisation + tests)
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        participation de <span class="red">180 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        la stérilisation + la vaccination TC + tests).
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        participation de <span class="red">220 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        la stérilisation + la 1ère et 2ème vaccination TC + tests).
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        tarif particulier de <input type="number" class="editable editable-num" id="tarifParticulier"><span class="red"> €</span>
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Passeport <span class="red">20 €</span>
+        
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Vaccin de la rage <span class="red">40 €</span>
+        
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Test divers maladies <span class="red">40 €</span>
+        
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Radio <span class="red">65 €</span>
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Caisse de transport <span class="red">10 €</span>
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        Autres : (préciser) <input type="text" class="editable editable-long" id="autres">
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        Je souhaite adhérer à l'association L'ARCHE DE MALLO <span class="red">(20 € par an).</span> En adhérant, vous soutenez
+        notre démarche de protection et vous nous aidez à sauver toujours plus de chats dans le besoin.
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        Reprise d'acompte de <span class="red">50 €</span> pour la réservation
+    </p>
+    <p>Reste à payer <input type="number" class="editable editable-num" id="resteAPayer"><span class="red"> €</span></p>
+    <p class="total-line">Total de la participation : </span><input type="number" class="editable editable-num" id="totalParticipation"> <span class="red"> €</span></p>
+
+    <!-- Paiement : multi-sélection -->
+    <p><strong><span class="blue">Paiement effectué par :</span></strong></p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Virement
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> CB
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Espèce
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Chèque
+        <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement"></span>
+    </p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        Paiement en plusieurs fois : <span class="blue">2 chèques
+        N° <input type="text" class="editable editable-medium" id="cheque1">
+        ET <input type="text" class="editable editable-medium" id="cheque2">
+    </span></p>
+    <p class="cheques-indent">
+       <span class="blue"> 4 chèques
+        N° <input type="text" class="editable editable-medium" id="cheque3">
+        ET <input type="text" class="editable editable-medium" id="cheque4">
+    </span></p>
+    <p class="cheques-indent"><span class="blue">
+        N° <input type="text" class="editable editable-medium" id="cheque5">
+        ET <input type="text" class="editable editable-medium" id="cheque6">
+    </span></p>
+</div>
+<br>
+
+<!-- Obligations -->
+<div><strong><span class="highlight-red">LES OBLIGATIONS DE L'ADOPTANT</span></strong></div><br>
+<p><strong><span class="underline">En signant le présent contrat, l'adoptant s'engage :</span></strong></p>
+
+<div class="article"><p><strong><span class="underline">Article 1</span></strong> : A apporter à l'animal tous les soins qu'il nécessite,
+le nourrir correctement, le soigner, à le protéger avec tous les moyens en ma possession,
+à le rendre heureux et ne pas permettre qu'il soit maltraité. Le préserver contre la chaleur et le froid.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 2</span></strong> : A ne pas céder l'animal sans en avoir au préalable
+averti l'association et à faire part à l'association de tout changement d'adresse, téléphone ou mail.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 3</span></strong> : En accueillant l'animal, les adoptants s'engagent
+à faire en sorte de lui offrir les meilleures conditions d'accueil et d'adaptation. Si toutefois,
+l'animal n'arrivait pas à s'habituer dans un délai de 30 jours maximum, l'association s'engage à le récupérer
+(il faudra restituer le carnet de santé),<span class="blue"> mais les frais d'adoption et de réservation resteront acquis
+par l'association.</span></p></div>
+
+<div class="article"><p><strong><span class="underline">Article 4</span></strong> : A donner des nouvelles régulières de l'animal adopté
+ainsi que des photos. L'association se réserve le droit de mandater une personne au domicile des adoptants
+afin de vérifier les conditions de vie de l'animal. L'adoptant s'engage à laisser entrer cette personne
+sous réserve qu'elle lui présente sa carte de membre ou une pièce d'identité.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 5</span></strong> : A ne pas procéder à une quelconque euthanasie de convenance.
+En cas de décès accidentel, de fugue ou de perte, l'adoptant s'engage à prévenir l'association dans les meilleurs
+délais, à fournir un justificatif ou à tout mettre en œuvre afin de retrouver son animal.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 6</span></strong> : <span class="blue">A faire stériliser l'animal à ses frais, à ses 7 mois
+maximum et à fournir un certificat de stérilisation établie par le vétérinaire.</span></p></div>
+
+<div class="article"><p><strong><span class="underline">Article 7</span></strong> : A garantir un bon état sanitaire de l'animal,
+par les vaccins et autres soins préventifs. Nous vous rappelons que l'association n'effectue que des sauvetages
+de chats errants et ne peut donc fournir de garantie vétérinaire pour les maladies cachées dont pourrait souffrir
+l'animal. L'adoptant s'engage donc à ne pas rendre responsable l'association.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 8</span></strong> : L'adoptant reconnait qu'il adopte l'animal « en l'état »
+et qu'il ne pourra jamais réclamer à l'association aucun remboursement ni dédommagement en cas de dégâts, morsures,
+maladies ou décès de l'animal qui pourrait survenir postérieurement à l'adoption.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 9</span></strong> : A respecter les consignes données par l'association
+concernant les vermifuges, soins, vaccinations, stérilisation ou mesure de sécurité à suivre.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 10</span></strong> : L'adoptant donne son accord sur tout ce qui précède
+et autorise l'association à reprendre l'animal confié sans paiement d'aucune indemnité dans le cas où elle
+constaterait un manquement quelconque au susdit engagement.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 11</span></strong> : En cas de décès de l'adoptant, les héritiers devront
+contacter l'association au plus vite. En accord avec eux, il sera trouvé la meilleure solution pour l'animal.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 12</span></strong> : L'adoptant reconnait que la somme versée à l'association
+pour l'adoption est inhérente aux frais de sauvetage et de mise en conformité de l'animal. Ce montant peut donc varier
+selon les actes vétérinaires effectués.</p></div>
+
+<div class="article"><p><strong><span class="underline">Article 13</span></strong> : Reconnais que l'association a fourni les documents
+suivants ce jour :</p>
+<ul>
+    <li>Carnet de santé et/ou passeport n° <input type="text" class="editable editable-medium" id="numeroPasseport"></li>
+    <li>Certificat vétérinaire avant cession daté du <input type="date" class="editable editable-date" id="dateCertificatVeto"></li>
+    <li>Copie du certificat ICAD</li>
+    <li>Copie du contrat d'adoption</li>
+    <li>Copie du certificat d'engagement</li>
+</ul>
+</div>
+
+<p>Le présent contrat est conclu pour une durée indéterminée et prend fin par le décès de l'animal,
+celui de son adoptant ou la renonciation de celui-ci.</p>
+
+<!-- Attestation -->
+<div><strong><span class="highlight-red">ATTESTATION</span></strong></div>
+<div class="section">
+    <p>Je soussigné(e) : <input type="text" class="editable editable-long" id="nomAttestation"></p>
+    <p>Déclare vouloir adopter l'animal désigné dans ce contrat.</p>
+    <ul>
+        <li>Je m'engage, si celle-ci n'a pas encore été effectuée, à procéder à la stérilisation de l'animal
+        avant ses 7 mois (date indiquée dans le contrat) par un vétérinaire de mon choix et nous fournir le
+        justificatif de stérilisation.</li>
+        <li>Il est également convenu qu'à partir de la date où je signe le contrat,<span class="red"> tous les frais vétérinaires
+        seront à ma charge malgré le fait que le chat soit identifié à l'Arche de Mallo. L'ICAD ne sera modifié
+        qu'après réception du certificat de stérilisation établi par le vétérinaire, ou après validation de
+        l'adoption soit un mois après signature si l'animal est déjà stérilisé.</span></li>
+        <li>Je m'engage à donner des nouvelles, des photos et vidéos régulièrement de l'animal à l'association
+        afin de valider l'adoption. Et j'accepte que l'association procède à un entretien téléphonique ou une
+        visite post-adoption dans les 6 mois après l'adoption.</li>
+        <li>Je reconnais avoir été averti(e) du caractère, de la santé de l'animal et avoir été conseillé(e)
+        pour son éducation, son alimentation et son adaptation.</li>
+        <li>Je reconnais avoir été averti(e) qu'en cas de non-respect d'une des clauses du contrat d'adoption,
+        l'association sera en droit de résilier le contrat et de récupérer l'animal dans les plus brefs délais.</li>
+        <li>Les frais d'adoption versés à l'association couvrent une petite partie des frais vétérinaires et de
+        soins dont l'animal a fait l'objet et permettent à l'association de continuer à sauver et à nourrir le
+        maximum d'animaux. En cas de retour de l'animal (pour des raisons exceptionnelles et contrôlées), les
+        frais d'adoption ne seront pas remboursés.</li>
+    </ul>
+    <p>L'adoptant prend note que le changement de propriétaire sera effectué par l'association au moment de la
+    preuve de stérilisation et dans un délai de 1 mois, une fois que toutes les clauses sont réunies.</p>
+</div>
+
+<!-- Rappel important -->
+<div><strong><span class="highlight-red">RAPPEL IMPORTANT :</strong></span></div>
+<ul>
+    <li><strong><span class="blue">Responsabilité liée à la garde de l'animal</span></strong>
+    <p>La responsabilité d'une association de protection animale dépend avant tout de la notion de « garde »
+    de l'animal. Tant que l'animal est sous la garde effective de l'association (entretien, soins quotidiens,
+    surveillance), elle peut être tenue responsable des dommages causés par cet animal ou des conséquences
+    liées à son état de santé. Une fois que l'animal est remis à l'adoptant, la garde est transférée à ce dernier,
+    et c'est donc lui qui assume la responsabilité et le soin de l'animal (article 1243 du Code civil).</p>
+    </li>
+</ul>
+
+<ul>
+    <li><strong><span class="blue">Exonération de responsabilité après adoption</span></strong>
+    <p>Après adoption, sauf clause contractuelle claire et acceptée, l’association n’est pas légalement responsable des 
+	Après adoption, sauf clause contractuelle claire et acceptée, l’association n’est pas légalement responsable des maladies 
+	survenues ultérieurement. En effet, la responsabilité du fait des animaux s’applique au gardien de l’animal, et l’adoptant 
+	devient gardien au moment de la remise. L’association doit toutefois informer l’adoptant de l’état de santé connu de 
+	l’animal au moment de l’adoption. La jurisprudence précise que pour se dégager de responsabilité, l'association doit
+	prouver qu'elle n’avait plus la garde ni le contrôle de l'animal au moment où le dommage est survenu.</p>
+    </li>
+</ul>
+<br>
+<div>
+
+<p class="bold">Fait en deux exemplaires (dont un remis à l’adoptant)</p>
+<p class="bold">Chaque feuillets doit être paraphés, le dernier feuillet également daté et signé.</p>
+</div>
+
+
+<!-- Signatures -->
+<div class="section mt-30">
+    <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
+                <div class="signature-line"></div>
+            </td>
+            <td>
+                <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
+                <div class="signature-line"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+<script src="formulaires-arche-mallo.js"></script>
+</body>
+</html>
