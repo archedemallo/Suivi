@@ -97,43 +97,48 @@ function buildFilename(data) {
 
 // ============================================================
 // CONSTRUIRE LE HTML AVEC DONNÉES INJECTÉES
+// — Travaille sur une copie string, ne touche pas au DOM
 // ============================================================
 function buildHtmlWithData() {
-    let htmlStr = document.documentElement.outerHTML;
+    // Snapshot du HTML courant
+    let html = document.documentElement.outerHTML;
 
-    // Injecter les valeurs des inputs
-    document.querySelectorAll('input').forEach(input => {
-        if (!input.id) return;
-        const val = input.value.replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
-
-        if (input.type === 'date' || input.type === 'text' || input.type === 'tel' ||
-            input.type === 'email' || input.type === 'number') {
-            // Chercher la balise avec cet id et remplacer/ajouter value
-            const regex = new RegExp(`(<input[^>]*?id="${input.id}"[^>]*?)(?:\\s+value="[^"]*")?([^>]*?>)`, 'g');
-            htmlStr = htmlStr.replace(regex, `$1 value="${val}"$2`);
-        }
+    // Injecter les valeurs des inputs via manipulation de string
+    document.querySelectorAll('input.editable').forEach(input => {
+        if (!input.id || !input.value) return;
+        const val = input.value
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;');
+        // Cherche id="xxx" dans la balise et ajoute/remplace value
+        const regex = new RegExp(
+            `(id="${input.id}")((?:[^>]*?))(>)`,
+            'g'
+        );
+        html = html.replace(regex, (match, id, rest, end) => {
+            // Supprimer value existant si présent
+            const cleanRest = rest.replace(/\s+value="[^"]*"/, '');
+            return `${id}${cleanRest} value="${val}"${end}`;
+        });
     });
 
     // Injecter les valeurs des textareas
-    document.querySelectorAll('textarea').forEach(textarea => {
+    document.querySelectorAll('textarea.editable').forEach(textarea => {
         if (!textarea.id) return;
         const val = textarea.value
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
         const regex = new RegExp(
-            `(<textarea[^>]*?id="${textarea.id}"[^>]*?>)[\\s\\S]*?(<\\/textarea>)`, 'g'
+            `(<textarea[^>]*?id="${textarea.id}"[^>]*?>)[\\s\\S]*?(<\\/textarea>)`,
+            'g'
         );
-        htmlStr = htmlStr.replace(regex, `$1${val}$2`);
+        html = html.replace(regex, `$1${val}$2`);
     });
 
     // Masquer les boutons dans le fichier sauvegardé
-    htmlStr = htmlStr.replace(
-        '<head>',
-        '<head><style>.buttons{display:none!important}</style>'
-    );
+    html = html.replace('<head>', '<head><style>.buttons{display:none!important}</style>');
 
-    return htmlStr;
+    return html;
 }
 
 // ============================================================
@@ -168,10 +173,7 @@ async function saveForm() {
 
     data.onglet      = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename    = filename;
-
-    // HTML avec données injectées
-    const htmlWithData   = buildHtmlWithData();
-    data.htmlContent     = btoa(unescape(encodeURIComponent(htmlWithData)));
+    data.htmlContent = btoa(unescape(encodeURIComponent(buildHtmlWithData())));
 
     // Overlay chargement
     const overlay = document.createElement('div');
@@ -276,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const today      = getTodayISO();
     const excludeIds = ['dateNaissance', 'dateNaissancePersonne'];
 
-    document.querySelectorAll('input[type="date"]').forEach(el => {
+    document.querySelectorAll('input[type="date"].editable').forEach(el => {
         if (!excludeIds.includes(el.id) && !el.value) {
             el.value = today;
         }
