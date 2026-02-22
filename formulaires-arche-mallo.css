@@ -373,6 +373,11 @@ textarea.editable:focus {
 }
 
 /* --- CONTRAT ADOPTION --- */
+
+.header-adoption > div {
+    display: block;
+}
+
 .header-adoption {
     display: flex;
     justify-content: space-between;
@@ -627,7 +632,3 @@ input[type="date"] {
 }
 
 
-
-.header-adoption > div {
-    display: block;
-}
