@@ -5,7 +5,7 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydedBMjH4TteG1e97NUQ7yGfMflZVyx0m3ZXAYP1d_cZv9H8_L4F05Zp5tQZTaTUXWtQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDSwyHucQtCXgX0WWCJ5FBh8pZw4oHAwHnNyM5t3KGmWDhdY5CS-VR1-Uh7jI_UmfTmQ/exec';
 
 // ============================================================
 // ÉTAT DE SAUVEGARDE
