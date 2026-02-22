@@ -2,15 +2,20 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-
 // ============================================================
 // CONFIGURATION — À REMPLIR
 // ============================================================
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4vzrO0fmQngUPK7_3NUPxlyba8LKwzhYBLSh-NdN6nbhW5W2TVuUqp1l9uYy35uTz/exec';
 
+// ============================================================
+// ÉTAT DE SAUVEGARDE
+// ============================================================
+let formSaved = false;
+let savedFilename = '';
 
-// --- CASES À COCHER ---
-// Gère deux syntaxes : onclick sur .clickable-row ou directement sur .checkbox
+// ============================================================
+// CASES À COCHER
+// ============================================================
 function toggleCheck(element, groupName) {
     let box;
 
@@ -28,7 +33,6 @@ function toggleCheck(element, groupName) {
     if (!box) return;
 
     if (groupName) {
-        // Comportement radio : décocher les autres du même groupe
         document.querySelectorAll(`.checkbox[data-group="${groupName}"]`).forEach(cb => {
             if (cb !== box) cb.classList.remove('checked');
         });
@@ -37,20 +41,16 @@ function toggleCheck(element, groupName) {
     box.classList.toggle('checked');
 }
 
-
-
 // ============================================================
 // COLLECTE DES DONNÉES DU FORMULAIRE
 // ============================================================
 function collectFormData() {
     const data = {};
 
-    // Champs texte / date / number / email / tel
     document.querySelectorAll('input.editable, textarea.editable').forEach(el => {
         if (el.id) data[el.id] = el.value;
     });
 
-    // Checkboxes personnalisées cochées
     document.querySelectorAll('.checkbox.checked').forEach(cb => {
         const group = cb.getAttribute('data-group');
         const label = cb.parentElement.textContent.trim();
@@ -61,11 +61,10 @@ function collectFormData() {
         }
     });
 
-    // Checkboxes HTML natives
     document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
         const label = document.querySelector(`label[for="${cb.id}"]`);
-        const key = 'check_' + (cb.name || cb.id);
-        data[key] = data[key]
+        const key   = 'check_' + (cb.name || cb.id);
+        data[key]   = data[key]
             ? data[key] + ', ' + (label ? label.textContent.trim() : cb.id)
             : (label ? label.textContent.trim() : cb.id);
     });
@@ -77,17 +76,16 @@ function collectFormData() {
 // NOM DU FICHIER PDF
 // ============================================================
 function buildFilename(data) {
-    const date = new Date();
+    const date    = new Date();
     const dateStr = [
         String(date.getDate()).padStart(2, '0'),
         String(date.getMonth() + 1).padStart(2, '0'),
         date.getFullYear()
     ].join('-');
 
-    // Infos importantes selon le formulaire
-    const nom    = (data.nomAdoptant || data.nomComplet || data.nomProprietaire || data.nom || '').replace(/[^a-zA-Z0-9]/g, '_');
-    const chat   = (data.nomChat || data.nomAnimal || data.chat || data.nom_animal || '').replace(/[^a-zA-Z0-9]/g, '_');
-    const titre  = document.title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
+    const nom   = (data.nomAdoptant || data.nomComplet || data.nomProprietaire || data.nom || '').replace(/[^a-zA-Z0-9]/g, '_');
+    const chat  = (data.nomChat || data.nomAnimal || data.chat || data.nom_animal || '').replace(/[^a-zA-Z0-9]/g, '_');
+    const titre = document.title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
 
     const parts = [titre];
     if (nom)  parts.push(nom);
@@ -107,10 +105,10 @@ async function sendToGoogle(data) {
     try {
         console.log('Envoi en cours...');
         await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
+            method:  'POST',
+            mode:    'no-cors',
             headers: { 'Content-Type': 'text/plain' },
-            body: json
+            body:    json
         });
         console.log('Envoi terminé');
         return true;
@@ -121,49 +119,75 @@ async function sendToGoogle(data) {
 }
 
 // ============================================================
-// BOUTON IMPRIMER — FONCTION PRINCIPALE
+// BOUTON SAUVEGARDER — Sheet + PDF Drive
 // ============================================================
-async function printForm() {
+async function saveForm() {
     const data     = collectFormData();
     const filename = buildFilename(data);
 
-    // Métadonnées
-    data.onglet    = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
-    data.filename  = filename;
-
-    // Encoder le HTML en base64 pour Drive
+    data.onglet      = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
+    data.filename    = filename;
     data.htmlContent = btoa(unescape(encodeURIComponent(
         document.documentElement.outerHTML
     )));
 
-    // Afficher indicateur
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:bold;font-family:Arial;';
-    overlay.innerHTML = '<div style="text-align:center">⏳<br><br>Sauvegarde en cours...<br><small>L\'impression s\'ouvrira ensuite</small></div>';
+    overlay.innerHTML = '<div style="text-align:center">⏳<br><br>Sauvegarde en cours...<br><small>Veuillez patienter</small></div>';
     document.body.appendChild(overlay);
 
-    // Envoyer vers Google
-    await sendToGoogle(data);
+    const ok = await sendToGoogle(data);
 
-    // Retirer l'overlay et imprimer
     document.body.removeChild(overlay);
 
-    // Nom du fichier pour l'impression
+    if (ok !== false) {
+        formSaved     = true;
+        savedFilename = filename;
+
+        const btnSave  = document.querySelector('.btn-save');
+        const btnPrint = document.querySelector('.btn-print');
+
+        if (btnSave) {
+            btnSave.textContent = '✅ Sauvegardé';
+            btnSave.className   = 'btn btn-saved';
+            btnSave.disabled    = true;
+        }
+
+        if (btnPrint) {
+            btnPrint.textContent = '🖨️ Imprimer';
+            btnPrint.className   = 'btn btn-print';
+            btnPrint.disabled    = false;
+        }
+
+        alert('✅ Sauvegarde réussie !\nVous pouvez maintenant imprimer le document.');
+
+    } else {
+        alert('❌ Erreur lors de la sauvegarde.\nVérifiez votre connexion et réessayez.');
+    }
+}
+
+// ============================================================
+// BOUTON IMPRIMER — uniquement accessible après sauvegarde
+// ============================================================
+function printForm() {
+    if (!formSaved) {
+        alert('⚠️ Veuillez d\'abord sauvegarder le formulaire.');
+        return;
+    }
+
     const originalTitle = document.title;
-    document.title = filename;
+    document.title = savedFilename || document.title;
     window.print();
     setTimeout(() => document.title = originalTitle, 2000);
 }
 
-
-
-
-
-// --- RÉINITIALISATION ---
+// ============================================================
+// BOUTON NOUVEAU — Remet tout à zéro
+// ============================================================
 function resetForm() {
     if (!confirm('⚠️ Voulez-vous vraiment réinitialiser le formulaire ?\nToutes les données saisies seront perdues.')) return;
 
-    const today = getTodayISO();
+    const today      = getTodayISO();
     const excludeIds = ['dateNaissance', 'dateNaissancePersonne'];
 
     document.querySelectorAll('input.editable').forEach(input => {
@@ -174,33 +198,55 @@ function resetForm() {
         }
     });
 
-    // Décocher toutes les cases
+    document.querySelectorAll('textarea.editable').forEach(t => t.value = '');
     document.querySelectorAll('.checkbox').forEach(cb => cb.classList.remove('checked'));
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+    formSaved     = false;
+    savedFilename = '';
+
+    const btnSave  = document.querySelector('.btn-save');
+    const btnPrint = document.querySelector('.btn-print');
+
+    if (btnSave) {
+        btnSave.textContent = '💾 Sauvegarder';
+        btnSave.className   = 'btn btn-save';
+        btnSave.disabled    = false;
+    }
+
+    if (btnPrint) {
+        btnPrint.textContent = '🖨️ Imprimer';
+        btnPrint.className   = 'btn btn-print btn-print-disabled';
+        btnPrint.disabled    = true;
+    }
 }
 
-// --- UTILITAIRES ---
+// ============================================================
+// UTILITAIRES
+// ============================================================
 function getTodayISO() {
     return new Date().toISOString().split('T')[0];
 }
 
-// --- INIT AU CHARGEMENT ---
+// ============================================================
+// INIT AU CHARGEMENT
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-    const today = getTodayISO();
-
-    // Initialiser TOUTES les dates à aujourd'hui, sauf les dates de naissance
+    const today      = getTodayISO();
     const excludeIds = ['dateNaissance', 'dateNaissancePersonne'];
 
     document.querySelectorAll('input[type="date"]').forEach(el => {
-        if (!excludeIds.includes(el.id)) {
+        if (!excludeIds.includes(el.id) && !el.value) {
             el.value = today;
         }
     });
 
-    // Rendre le panneau de boutons déplaçable
     makeDraggable();
 });
 
-// --- DRAG & DROP DU PANNEAU BOUTONS ---
+// ============================================================
+// DRAG & DROP DU PANNEAU BOUTONS
+// ============================================================
 function makeDraggable() {
     const panel = document.querySelector('.buttons');
     if (!panel) return;
@@ -209,7 +255,7 @@ function makeDraggable() {
     let startX, startY, offsetX = 0, offsetY = 0;
 
     function onStart(e) {
-        if (e.target.classList.contains('btn')) return; // ne pas déclencher sur clic bouton
+        if (e.target.classList.contains('btn')) return;
         isDragging = true;
         const point = e.touches ? e.touches[0] : e;
         startX = point.clientX - offsetX;
