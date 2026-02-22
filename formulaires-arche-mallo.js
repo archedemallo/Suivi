@@ -127,8 +127,37 @@ async function saveForm() {
 
     data.onglet      = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename    = filename;
-    data.htmlContent = btoa(unescape(encodeURIComponent(
-        document.documentElement.outerHTML
+    
+// Cloner le HTML et injecter les valeurs des champs
+const clone = document.documentElement.cloneNode(true);
+
+// Injecter les valeurs des inputs
+document.querySelectorAll('input').forEach(input => {
+    const cloneInput = clone.querySelector(`#${input.id}`);
+    if (cloneInput) {
+        cloneInput.setAttribute('value', input.value);
+    }
+});
+
+// Injecter les valeurs des textareas
+document.querySelectorAll('textarea').forEach(textarea => {
+    const cloneTextarea = clone.querySelector(`#${textarea.id}`);
+    if (cloneTextarea) {
+        cloneTextarea.textContent = textarea.value;
+    }
+});
+
+// Injecter l'état des checkboxes personnalisées
+document.querySelectorAll('.checkbox.checked').forEach(cb => {
+    if (cb.id) {
+        const cloneCb = clone.querySelector(`#${cb.id}`);
+        if (cloneCb) cloneCb.classList.add('checked');
+    }
+});
+
+data.htmlContent = btoa(unescape(encodeURIComponent(clone.outerHTML)));
+
+    
     )));
 
     const overlay = document.createElement('div');
