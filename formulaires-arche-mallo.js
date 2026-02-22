@@ -101,24 +101,18 @@ function buildFilename(data) {
 // ENVOI VERS GOOGLE APPS SCRIPT
 // ============================================================
 async function sendToGoogle(data) {
-    // Vérifier la taille (limite ~50Mo mais Apps Script limite à ~50Ko pour postData)
     const json = JSON.stringify(data);
     console.log('Taille des données envoyées :', Math.round(json.length / 1024) + ' Ko');
 
-    if (json.length > 40 * 1024 * 1024) {
-        console.error('Données trop volumineuses');
-        alert('⚠️ Le fichier est trop volumineux pour être sauvegardé automatiquement.');
-        return false;
-    }
-
     try {
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method:  'POST',
-            mode:    'cors',
+        console.log('Envoi en cours...');
+        await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain' },
-            body:    json
+            body: json
         });
-        console.log('Réponse Google :', response.status);
+        console.log('Envoi terminé');
         return true;
     } catch(e) {
         console.error('Erreur envoi Google :', e);
