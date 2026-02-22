@@ -190,7 +190,7 @@ p {
 .editable-short  { width: 80px; }
 .editable-medium { width: 200px; }
 .editable-long   { width: 400px; }
-.editable-date   { width: 130px; }
+.editable-date   { width: 100px; }
 .editable-tel    { width: 150px; }
 .editable-email  { width: 300px; }
 .editable-num    { width: 80px; text-align: center; }
@@ -480,7 +480,9 @@ table.suivi input:focus { background: #ffffcc; }
 input[type="date"] {
     -webkit-appearance: none;
 }
-
+.form-group input.editable-date {
+    width: 130px;
+}
 .form-group input[type="number"] {
     width: 50%;
     padding: 8px 10px;
