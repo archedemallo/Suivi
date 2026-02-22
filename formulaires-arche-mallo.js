@@ -6,7 +6,7 @@
 // ============================================================
 // CONFIGURATION — À REMPLIR
 // ============================================================
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxYATMgrSPfzPrLQtwpp5dsZI3Rsp6ZTaPL8c9tOE3r31YgTrb6W6ZzzCwDOsfITvzKrA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4vzrO0fmQngUPK7_3NUPxlyba8LKwzhYBLSh-NdN6nbhW5W2TVuUqp1l9uYy35uTz/exec';
 
 
 // --- CASES À COCHER ---
