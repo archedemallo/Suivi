@@ -68,6 +68,13 @@ body {
     margin-bottom: 8px;
 }
 
+.header-table .logo-box {
+    width: 120px;
+    height: 80px;
+    display: block;
+}
+
+
 .logo-cat {
     width: 120px;
     height: 80px;
