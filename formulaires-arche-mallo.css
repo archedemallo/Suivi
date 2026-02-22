@@ -603,6 +603,11 @@ table.suivi input:focus { background: #ffffcc; }
     opacity: 0.6;
 }
 
+.btn-save {
+    background: #c96b2a;
+    color: white;
+}
+
 .btn-saved {
     background: #28a745;
     color: white;
