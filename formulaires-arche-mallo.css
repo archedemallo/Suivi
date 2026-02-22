@@ -379,11 +379,22 @@ textarea.editable:focus {
 }
 
 .header-adoption {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
+   display: flex;
+   justify-content: space-between; /* gauche / droite */
+   align-items: center;            /* alignement vertical centré */
+   margin-bottom: 15px;
 }
+
+.header-adoption > div:first-child {
+    display: flex;
+    align-items: center; /* aligne logo + texte */
+    gap: 20px;           /* espace entre logo et texte */
+}
+
+.header-info {
+    margin-top: 0; /* supprime le décalage vertical */
+}
+
 .header-adoption-right {
     text-align: right;
     font-size: 11pt;
