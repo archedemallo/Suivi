@@ -173,7 +173,14 @@ async function saveForm() {
 
     data.onglet      = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename    = filename;
-    data.htmlContent = btoa(unescape(encodeURIComponent(buildHtmlWithData())));
+    // Encodage base64 compatible unicode
+const htmlStr = buildHtmlWithData();
+const uint8 = new TextEncoder().encode(htmlStr);
+let binary = '';
+uint8.forEach(b => binary += String.fromCharCode(b));
+data.htmlContent = btoa(binary);
+    
+    )));
 
     // Overlay chargement
     const overlay = document.createElement('div');
