@@ -120,33 +120,96 @@
         </p>
     </div>
 
+	<!-- Engagement -->
 <div class="section">
 <p class="bold underline">Je m’engage par la présente adhésion à respecté les statuts et le règlement intérieur de l’association l’Arche de Mallo</p>
-		
 </div>		
 
-    <!-- Signature -->
-    <div class="signature-section">
-        <table class="signature-table">
-            <tr>
-                <td>
-                    <p><span class="bold">Fait à :</span> <input type="text" class="editable editable-medium" id="lieu"></p>
-                </td>
-                <td>
-                    <p><span class="bold">Le :</span> <input type="date" class="editable editable-date" id="date"></p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <p class="signature-label">Signature :</p>
-                    </td>
-            </tr>
-        </table>
-    </div>
+<!-- Lieu et date -->
+<div class="signature-section mt-30">
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p><span class="bold">Fait a :</span> <input type="text" class="editable editable-medium" id="lieu"></p>
+            </td>
+            <td>
+                <p><span class="bold">Le :</span> <input type="date" class="editable editable-date" id="date"></p>
+            </td>
+        </tr>
+    </table>
+</div>
 
+<!-- Zone de signature tactile -->
+<div class="section mt-20">
+    <p class="bold underline">Signature :</p>
+    <div class="signature-pad-container">
+        <canvas id="signaturePad" class="signature-pad" width="500" height="150"
+                style="background:#fff;"></canvas>
+    </div>
+    <div class="signature-controls">
+        <button class="btn-signature" onclick="effacerSignature()">Effacer la signature</button>
+    </div>
+</div>
+
+
+
+
+	
 </div><!-- /content -->
 </div><!-- /page-container -->
 
+<script>
+(function() {
+    var canvas  = document.getElementById('signaturePad');
+    var ctx     = canvas.getContext('2d');
+    var drawing = false;
+
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+
+    function getPos(e) {
+        var rect  = canvas.getBoundingClientRect();
+        var point = e.touches ? e.touches[0] : e;
+        return {
+            x: point.clientX - rect.left,
+            y: point.clientY - rect.top
+        };
+    }
+
+    function start(e) {
+        e.preventDefault();
+        drawing = true;
+        var pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
+
+    function stop() { drawing = false; }
+
+    canvas.addEventListener('mousedown',  start);
+    canvas.addEventListener('mousemove',  draw);
+    canvas.addEventListener('mouseup',    stop);
+    canvas.addEventListener('mouseleave', stop);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove',  draw,  { passive: false });
+    canvas.addEventListener('touchend',   stop);
+})();
+
+function effacerSignature() {
+    var canvas = document.getElementById('signaturePad');
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+</script>
+	
 <script src="formulaires-arche-mallo.js"></script>
 </body>
 </html>
