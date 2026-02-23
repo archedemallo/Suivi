@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrat de réservation - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body>
+
+<!-- Boutons flottants -->
+<div class="buttons">
+    <button class="btn btn-print" onclick="printForm()">🖨️ Imprimer</button>
+    <button class="btn btn-reset" onclick="resetForm()">🔄 Nouveau</button>
+</div>
+
+<div class="page-container">
+<div class="content">
+
+    <!-- En-tête 3 colonnes -->
+    <table class="header-table">
+        <tr>
+            <td class="col-left">
+                <div class="logo-box"></div>
+                <p class="bold">Association L'ARCHE DE MALLO</p>
+                <p>
+                    8 ter rue d'Eschène<br>
+                    90140 AUTRECHÊNE<br>
+                    07.71.64.69.89<br>
+                    <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+                </p>
+            </td>
+            <td class="col-center">
+                <h2>Contrat de réservation</h2>
+                <p class="small">Date de réservation :
+                    <input type="date" class="editable editable-date" id="dateReservation">
+                </p>
+            </td>
+            <td class="col-right">
+                <div class="logo-cat">🐱</div>
+                <p class="bold">CHAT</p>
+                <p>N° du BOX : <input type="text" class="editable editable-box" id="numeroBox"></p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Informations du chat -->
+    <div class="section">
+        <p>
+            <span class="bold">Nom provisoire du chat :</span>
+            <input type="text" class="editable editable-long" id="nomChat">
+        </p>
+        <p>
+<p>
+    <span class="bold">Né(e) le :</span>
+    <input type="date" class="editable editable-date" id="dateNaissance">
+    
+    <span class="bold">Sexe :</span>
+    <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
+        <span class="checkbox" data-group="exterieur"></span> Mâle
+    </span>
+    <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
+        <span class="checkbox" data-group="exterieur"></span> Femelle
+    </span>
+</p>
+
+     
+        <p>
+            <span class="bold">N° d'identification (puce électronique) :</span>
+            <input type="text" class="editable editable-medium" id="identification">
+            
+            <br><span class="bold">Robe, couleur :</span>
+            <input type="text" class="editable editable-medium" id="couleur">
+        </p>
+        <p>
+            <span class="bold">Signes particuliers :</span>
+            <input type="text" class="editable editable-long" id="signesParticuliers">
+        </p>
+    </div>
+
+    <!-- Identité de l'adoptant -->
+    <div class="section">
+        <p>
+            <span class="bold">Je soussigné(e) M/Mme</span>
+            <input type="text" class="editable editable-long" id="nomComplet">,
+            <br>né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne">
+            et résidant <input type="text" class="editable editable-long" id="adresse">
+        </p>
+        <p>
+            <span class="bold">Téléphone :</span>
+            <input type="tel" class="editable editable-tel" id="telephone">
+            
+            <span class="bold">E-mail :</span>
+            <input type="email" class="editable editable-email" id="email">
+        </p>
+        <p>
+            m'engage à adopter à l'association « l'Arche de Mallo » le chat décrit ci-dessus
+            à compter du <input type="date" class="editable editable-date" id="dateAdoption">
+        </p>
+    </div>
+
+    <!-- Logement -->
+    <div class="section">
+        <p>
+            <span class="bold">Type d'habitation :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
+                <span class="checkbox" data-group="habitation"></span> Maison
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
+                <span class="checkbox" data-group="habitation"></span> Appartement
+            </span>
+        </p>
+        <p>
+            <span class="bold">Nombre de m² :</span>
+            <input type="number" class="editable editable-num" id="superficie"> m²
+        </p>
+        <p>
+            <span class="bold">Espace extérieur :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
+                <span class="checkbox" data-group="exterieur"></span> OUI
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
+                <span class="checkbox" data-group="exterieur"></span> NON
+            </span>
+        </p>
+        <p>
+            <span class="bold">Autres animaux :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
+                <span class="checkbox" data-group="animaux"></span> Chat
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
+                <span class="checkbox" data-group="animaux"></span> Chien
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
+                <span class="checkbox" data-group="animaux"></span> Lapin
+            </span>
+        </p>
+        <p>
+            <span class="bold">Enfants :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
+                <span class="checkbox" data-group="enfants"></span> OUI
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
+                <span class="checkbox" data-group="enfants"></span> NON
+            </span>
+        </p>
+    </div>
+
+    <!-- Engagement & Acompte -->
+    <div class="section">
+        <p>
+            Cette transaction fera l'objet d'un contrat d'engagement signé le jour de la réservation,
+            au sein des locaux de l'Arche de Mallo.
+        </p>
+
+        <!-- Paiement acompte : MULTI-SÉLECTION (pas de data-group → plusieurs cases cochables) -->
+        <p class="bold underline">Afin de garantir ma réservation, je verse ce jour un acompte de 50€ par :</p>
+        <p>
+            <span class="clickable-row" onclick="toggleCheck(this)">
+                <span class="checkbox"></span> CB
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this)">
+                <span class="checkbox"></span> Espèce
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this)">
+                <span class="checkbox"></span> Virement
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this)">
+                <span class="checkbox"></span> Chèque.  
+          <span class="blue">  N° <input type="text" class="editable editable-medium" id="numeroPaiement"></span>          
+			</span>
+        </p>
+
+        <p class="red">
+            Si le chat choisi décède avant l'adoption finale, la somme versée à titre d'acompte me sera
+            restituée ou sera reportée sur un autre chat, au choix.
+        </p>
+        <p class="red">
+            En revanche, si je me désiste pour quelque motif que ce soit, ladite somme restera acquise
+            pour l'association L'Arche de Mallo.
+        </p>
+    </div>
+
+    <!-- Certifications -->
+    <div class="section">
+        <p class="bold underline">Je certifie :</p>
+        <ul>
+            <li>Avoir les moyens financiers nécessaires pour subvenir à l'intégralité des frais généraux
+                (vétérinaire, alimentaire, litière…) pour le besoin de mon animal</li>
+            <li>Avoir l'espace et la superficie d'accueil nécessaire pour le bien-être de mon animal.</li>
+        </ul>
+    </div>
+
+    <!-- Signatures -->
+    <div class="section">
+        <p class="bold">Fait en double exemplaire à Autrechêne, le
+            <input type="date" class="editable editable-date" id="dateFait">
+        </p>
+
+        <table class="signature-table">
+            <tr>
+                <td>
+                    <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
+                    <div class="signature-line"></div>
+                </td>
+                <td>
+                    <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
+                    <div class="signature-line"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+<script src="formulaires-arche-mallo.js"></script>
+</body>
+</html>
