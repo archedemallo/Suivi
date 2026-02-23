@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulletin d'adhésion 2025 - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Bulletin_adhesion">
+
+<body>
+
+<!-- Boutons flottants -->
+<div class="buttons">
+    <button class="btn btn-print" onclick="printForm()">🖨️ Imprimer</button>
+    <button class="btn btn-reset" onclick="resetForm()">🔄 Nouveau</button>
+</div>
+
+<div class="page-container">
+<div class="content">
+
+    <!-- En-tête -->
+ <!-- En-tête -->
+<div class="header-info">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+            </p>
+        </div>
+    </div>
+
+
+
+
+    <div class="title">📋 Bulletin d'adhésion</div>
+
+    <div class="intro-text">
+        <p>
+            <span class="bold">L'ARCHE DE MALLO</span> est une Association de Loi 1901, déclarée en préfecture de Belfort
+            le 25 novembre 2021 sous le n°W901006456 et représentée par Mallory ORTEGA.
+        </p>
+        <p>
+            En adhérant, vous soutenez notre démarche de protection et vous nous aidez à sauver toujours plus de chats
+            dans le besoin.
+        </p>
+    </div>
+
+    <!-- Civilité -->
+    <div class="section">
+        <p>
+            <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+                <span class="checkbox" data-group="civilite"></span>
+                <span class="bold">Monsieur</span>
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+                <span class="checkbox" data-group="civilite"></span>
+                <span class="bold">Madame</span>
+            </span>
+        </p>
+
+        <p><span class="bold">Nom :</span> <input type="text" class="editable editable-long" id="nom"></p>
+        <p><span class="bold">Prénom :</span> <input type="text" class="editable editable-long" id="prenom"></p>
+        <p><span class="bold">Adresse :</span> <input type="text" class="editable editable-long" id="adresse"></p>
+        <p>
+            <span class="bold">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal">
+            &nbsp;&nbsp;
+            <span class="bold">Ville :</span> <input type="text" class="editable editable-medium" id="ville">
+        </p>
+        <p><span class="bold">Portable :</span> <input type="tel" class="editable editable-tel" id="portable"></p>
+        <p><span class="bold">Email :</span> <input type="email" class="editable editable-email" id="email"></p>
+    </div>
+
+    <!-- Type d'adhésion -->
+    <div class="section">
+        <p class="bold underline">Je souhaite adhérer à l'association en tant que :</p>
+        <p class="ml-30">
+            <span class="clickable-row" onclick="toggleCheck(this, 'type')">
+                <span class="checkbox" data-group="type"></span>
+                <span class="bold">Membre adhérent</span> : Cotisation annuelle de 20€
+            </span>
+        </p>
+        <p class="ml-30">
+            <span class="clickable-row" onclick="toggleCheck(this, 'type')">
+                <span class="checkbox" data-group="type"></span>
+                <span class="bold">Membre bienfaiteur</span> : Don libre de
+            </span>
+            <input type="number" class="editable editable-num" id="donBienfaiteur"> €
+        </p>
+		
+		<p class="ml-30">
+            <span class="clickable-row" onclick="toggleCheck(this, 'type')">
+                <span class="checkbox" data-group="type"></span>
+                <span class="bold">Membre sympathisant </span> : Don libre virement de <input type="number" class="editable editable-num" id="donBienfaiteur"> € / mois
+            </span>
+        </p>
+		
+		
+    </div>
+
+    <!-- Mode de paiement -->
+    <div class="section">
+        <p class="bold underline">Je joins mon règlement par :</p>
+        <p class="ml-30">
+            <span class="clickable-row" onclick="toggleCheck(this, 'paiement')">
+                <span class="checkbox" data-group="paiement"></span> Virement
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'paiement')">
+                <span class="checkbox" data-group="paiement"></span> Espèce
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'paiement')">
+                <span class="checkbox" data-group="paiement"></span> Chèque Numéro <input type="text" class="editable editable-medium" id="numeroPaiement"></span>
+			
+			</span>
+        </p>
+    </div>
+
+<div class="section">
+<p class="bold underline">Je m’engage par la présente adhésion à respecté les statuts et le règlement intérieur de l’association l’Arche de Mallo</p>
+		
+</div>		
+
+    <!-- Signature -->
+    <div class="signature-section">
+        <table class="signature-table">
+            <tr>
+                <td>
+                    <p><span class="bold">Fait à :</span> <input type="text" class="editable editable-medium" id="lieu"></p>
+                </td>
+                <td>
+                    <p><span class="bold">Le :</span> <input type="date" class="editable editable-date" id="date"></p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p class="signature-label">Signature :</p>
+                    </td>
+            </tr>
+        </table>
+    </div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+<script src="formulaires-arche-mallo.js"></script>
+</body>
+</html>
