@@ -205,7 +205,7 @@ function resetForm() {
     if (!confirm('Voulez-vous vraiment reinitialiser le formulaire ? Toutes les donnees saisies seront perdues.')) return;
 
     var today      = getTodayISO();
-    var excludeIds = ['dateNaissance', 'dateNaissancePersonne'];
+    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntipuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin'];
 
     document.querySelectorAll('input.editable').forEach(function(input) {
         if (input.type === 'date') {
@@ -254,7 +254,7 @@ function getTodayISO() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     var today      = getTodayISO();
-    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntiPuces', 'prochainAntiPuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto'];
+    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntipuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin'];
 
     document.querySelectorAll('input[type="date"].editable').forEach(function(el) {
         if (!excludeIds.includes(el.id) && !el.value) {
@@ -300,4 +300,81 @@ function makeDraggable() {
     document.addEventListener('touchmove',  onMove, { passive: false });
     document.addEventListener('mouseup',  onEnd);
     document.addEventListener('touchend', onEnd);
+}
+
+
+
+// ============================================================
+// SIGNATURE TACTILE
+// ============================================================
+function creerSignature(containerId, width, height) {
+    width  = width  || 280;
+    height = height || 120;
+
+    var container = document.getElementById(containerId);
+    if (!container) return;
+
+    var wrap   = document.createElement('div');
+    wrap.className = 'signature-pad-wrap';
+
+    var canvas = document.createElement('canvas');
+    canvas.width  = width;
+    canvas.height = height;
+    wrap.appendChild(canvas);
+    container.appendChild(wrap);
+
+    var btn = document.createElement('button');
+    btn.textContent = 'Effacer';
+    container.appendChild(btn);
+
+    var ctx     = canvas.getContext('2d');
+    var drawing = false;
+    var signed  = false;
+
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+
+    function hint() {
+        ctx.fillStyle = '#bbb';
+        ctx.font      = 'italic 12px Arial';
+        ctx.fillText('Signez ici...', 8, height / 2);
+    }
+    hint();
+
+    function getPos(e) {
+        var rect  = canvas.getBoundingClientRect();
+        var point = e.touches ? e.touches[0] : e;
+        return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+    }
+    function start(e) {
+        e.preventDefault();
+        if (!signed) { ctx.clearRect(0, 0, width, height); signed = true; }
+        drawing = true;
+        var pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+    function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
+    function stop() { drawing = false; }
+
+    canvas.addEventListener('mousedown',  start);
+    canvas.addEventListener('mousemove',  draw);
+    canvas.addEventListener('mouseup',    stop);
+    canvas.addEventListener('mouseleave', stop);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove',  draw,  { passive: false });
+    canvas.addEventListener('touchend',   stop);
+
+    btn.addEventListener('click', function() {
+        ctx.clearRect(0, 0, width, height);
+        signed = false;
+        hint();
+    });
 }

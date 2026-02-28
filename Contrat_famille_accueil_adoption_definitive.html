@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrat famille d'accueil en vue d'adoption définitive - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Famille_Accueil_Adoption">
+
+<div class="buttons">
+    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
+    </div>
+
+
+<div class="page-container">
+<div class="content">
+
+<!-- En-tête -->
+<div class="header-adoption">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+            </p>
+        </div>
+    </div>
+    <div class="header-adoption-right">
+        Date : <input type="date" class="editable editable-date" id="dateAdoption">
+    </div>
+</div>
+
+    <h2>Contrat de famille d'accueil en vue d'adoption définitive</h2>
+
+    <div>
+        Conformément à la législation en vigueur, une période de 7 jours de mise en famille d'accueil
+        est obligatoire avant toute adoption définitive.
+    </div>
+
+    <div>
+        <label>Je soussigné(e)</label>
+        <input type="text" id="nom" class="editable editable-medium" placeholder="Nom complet">
+    </div>
+
+    <div>
+        <label>Domicilié(e) à</label>
+        <input type="text" id="adresse" class="editable editable-medium" placeholder="Adresse complète">
+    </div>
+
+    <div>
+        <label>M'engage à accueillir temporairement le chat</label>
+        <input type="text" id="chat" class="editable editable-medium" placeholder="Nom du chat">
+    </div>
+
+    <div class="row">
+        <p>
+    Du <input type="date" class="editable editable-date" id="date_debut">
+    &nbsp;&nbsp;
+    Au <input type="date" class="editable editable-date" id="date_fin">
+    &nbsp;&nbsp;
+    afin d'evaluer son adaptation a mon foyer.
+		</p>
+	</div>
+	
+    <p>Si aucune opposition n'est formulée au terme des 7 jours, l'adoption sera considérée
+    comme définitive et le transfert du chat sera acté.</p>
+
+    <div>
+        <h3>ENGAGEMENT DE LA FAMILLE D'ACCUEIL</h3>
+        <p>Pendant cette période, je m'engage à :</p>
+        <ul>
+            <li>Prendre soin du chat et veiller à son bien-être</li>
+            <li>Respecter les recommandations de l'association (alimentation, soins, etc...)</li>
+            <li>Informer l'association en cas de problème de comportement ou de santé</li>
+            <li>Ne pas céder, vendre ou donner l'animal à un tiers</li>
+            <li>Rendre le chat à l'association si l'adoption ne se concrétise pas</li>
+        </ul>
+    </div>
+
+    <div>
+        <label>Fait à Autrechêne, le</label>
+        <input type="date" id="date_signature" class="editable editable-date">
+    </div>
+<!-- Signature -->
+<div class="signature-section grid">
+<div class="signature-box">
+    <p class="bold">Signature de la famille d'accueil :</p>
+    <div id="sig1"></div>
+</div>
+<div class="signature-box">
+    <p class="bold">Signature du representant de l'Arche :</p>
+    <div id="sig2"></div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+
+<script src="formulaires-arche-mallo.js"></script>
+<script>
+creerSignature('sig1');
+creerSignature('sig2');
+</script>
+
+</body>
+</html>

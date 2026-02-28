@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulaire de dépôt chat/chaton - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Formulaire_depot_chat">
+
+
+<div class="buttons">
+    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
+</div>
+
+<div class="page-container">
+<div class="content">
+
+ <!-- En-tête -->
+<div class="header-info">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+            </p>
+        </div>
+    </div>
+
+
+ 
+    <div class="title strong blue underline">Formulaire de dépôt chat / chaton</div>
+    <div class="section">
+        <p><span class ="bold">
+		L’association L’ARCHE DE MALLO, déclarée en préfecture de Belfort le 25 novembre 2021 sous le n°W901006456, représentée par Mallory ORTEGA
+		</span>
+		</p>
+		
+	</div>	
+    <div class="section">
+        <p>
+            <span class="bold">Nom :</span>
+            <input type="text" class="editable editable-medium" id="nom" placeholder="Nom du déposant"
+			oninput="majNomComplet()">
+            
+            <span class="bold">Prénom :</span>
+            <input type="text" class="editable editable-medium" id="prenom" placeholder="Prénom"
+			oninput="majNomComplet()">
+        </p>
+        <p>
+            <span class="bold">Adresse :</span>
+            <input type="text" class="editable editable-long" id="adresse" placeholder="Adresse complète">
+        </p>
+        <p>
+            <span class="bold">CP :</span>
+            <input type="text" class="editable editable-short" id="codePostal" placeholder="Code postal">
+            
+            <span class="bold">Ville :</span>
+            <input type="text" class="editable editable-medium" id="ville" placeholder="Ville">
+        </p>
+        <p>
+            <span class="bold">Téléphone :</span>
+            <input type="tel" class="editable editable-tel" id="telephone" placeholder="Numéro de téléphone">
+        </p>
+    </div>
+
+    <div class="section mt-30">
+        <p>
+            Je soussigné(e)
+            <input type="text" class="editable editable-long" id="nomComplet" placeholder="Nom et prénom">
+            avoir déposé ce jour
+            <input type="date" class="editable editable-date" id="dateDepot">
+        </p>
+        <p>
+            <input type="number" class="editable editable-num" id="nombreChats" min="1" value="1">
+            chat(s) / chaton(s) errant(s) de la commune de
+            <input type="text" class="editable editable-medium" id="commune" placeholder="Nom de la commune">
+        </p>
+        <p class="mt-20 red">
+            Par la présente, je déclare confier et céder définitivement le ou les animaux à l'association
+            l'Arche de Mallo dès signature du présent contrat.
+        </p>
+    </div>
+
+    <div class="signature-section mt-30">
+        <p>
+            <span class="bold">Autrechêne, le</span>
+            <input type="date" class="editable editable-date" id="dateFait">
+        </p>
+        <table class="signature-table">
+            <tr>
+                <td>
+                    <p class="bold underline">Signature du dépositaire</p>
+                    <p">(Précédé mention « Lu et approuvé »)</p>
+                    
+                </td>
+                <td>
+                    <p class="bold underline">Signature du représentant de L'Arche de Mallo</p>
+                    <p>(Précédé mention « Lu et approuvé »)</p>
+                    
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+<script>
+function majNomComplet() {
+    var nom    = document.getElementById('nom')    ? document.getElementById('nom').value    : '';
+    var prenom = document.getElementById('prenom') ? document.getElementById('prenom').value : '';
+    var champ  = document.getElementById('nomComplet');
+    if (champ) champ.value = (prenom + ' ' + nom).trim();
+}
+</script>
+
+
+
+<script src="formulaires-arche-mallo.js"></script>
+</body>
+</html>

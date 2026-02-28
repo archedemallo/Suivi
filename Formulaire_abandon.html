@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulaire d'abandon - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Abandon">
+
+<div class="buttons">
+    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
+    </div>
+
+
+<div class="page-container">
+<div class="content">
+
+<!-- En-tête -->
+<div class="header-adoption">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+            </p>
+        </div>
+    </div>
+    <div class="header-adoption-right">
+        Date abandon : <input type="date" class="editable editable-date" id="dateAdoption">
+    </div>
+</div>
+
+    <div class="title">📋 FORMULAIRE D'ABANDON</div>
+
+    <!-- Propriétaire -->
+    <div class="section">
+        <p class="bold underline">Vous :</p>
+        <p><span class="bold">Nom et Prénom :</span>
+            <input type="text" class="editable editable-long" id="nomProprietaire" placeholder="Nom et prénom du propriétaire"
+       oninput="var c=document.getElementById('nomAttestation'); if(c) c.value=this.value;">
+        </p>
+        <p><span class="bold">Adresse :</span>
+            <input type="text" class="editable editable-long" id="adresse" placeholder="Adresse complète">
+        </p>
+        <p><span class="bold">Tél :</span>
+            <input type="tel" class="editable editable-medium" id="telephone" placeholder="Numéro de téléphone">
+        </p>
+    </div>
+
+    <!-- Animal -->
+    <div class="section">
+        <p class="bold underline">Animal :</p>
+        <p><span class="bold">Nom :</span>
+            <input type="text" class="editable editable-long" id="nomAnimal" placeholder="Nom de l'animal">
+        </p>
+        <p><span class="bold">Puce ou tatouage :</span>
+            <input type="text" class="editable editable-medium" id="identification" placeholder="Numéro d'identification">
+        </p>
+        <p>
+            <span class="bold">Sexe :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'sexe')">
+                <span class="checkbox" data-group="sexe"></span> Mâle
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'sexe')">
+                <span class="checkbox" data-group="sexe"></span> Femelle
+            </span>
+        </p>
+        <p><span class="bold">Date de naissance / âge approximatif :</span>
+            <input type="text" class="editable editable-medium" id="dateNaissance" placeholder="Date de naissance ou âge approximatif">
+        </p>
+        <p class="bold">Cause de l'abandon :</p>
+        <textarea class="editable" id="causeAbandon" placeholder="Expliquez les raisons de l'abandon..."></textarea>
+    </div>
+
+    <!-- Comportement -->
+    <div class="section">
+        <p class="bold underline">Comportement :</p>
+        <p><span class="bold">Qualités :</span></p>
+        <textarea class="editable" id="qualites" placeholder="Décrivez les qualités de l'animal..."></textarea>
+
+        <p><span class="bold">Défauts :</span></p>
+        <textarea class="editable" id="defauts" placeholder="Décrivez les défauts de l'animal..."></textarea>
+
+        <p><span class="bold">Lieu de vie :</span>
+            <input type="text" class="editable editable-long" id="lieuVie" placeholder="Intérieur, extérieur, les deux...">
+        </p>
+        <p>
+            <span class="bold">Habitué à sortir :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'sortir')">
+                <span class="checkbox" data-group="sortir"></span> Oui
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'sortir')">
+                <span class="checkbox" data-group="sortir"></span> Non
+            </span>
+        </p>
+        <p>
+            <span class="bold">Autres animaux :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'autresAnimaux')">
+                <span class="checkbox" data-group="autresAnimaux"></span> Oui
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'autresAnimaux')">
+                <span class="checkbox" data-group="autresAnimaux"></span> Non
+            </span>
+        </p>
+    </div>
+
+    <!-- Soins vétérinaires -->
+    <div class="section">
+        <p class="bold underline">Soins vétérinaires :</p>
+        <p>
+            <span class="bold">Identification :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'identificationVeto')">
+                <span class="checkbox" data-group="identificationVeto"></span> Oui
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'identificationVeto')">
+                <span class="checkbox" data-group="identificationVeto"></span> Non
+            </span>
+        </p>
+        <p>
+            <span class="bold">Castré/stérilisé :</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')">
+                <span class="checkbox" data-group="sterilise"></span> Oui
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')">
+                <span class="checkbox" data-group="sterilise"></span> Non
+            </span>
+        </p>
+        <p><span class="bold">Vaccins :</span>
+            <input type="text" class="editable editable-long" id="vaccins" placeholder="Détails des vaccins effectués">
+        </p>
+        <p class="bold">Problème de santé :</p>
+        <textarea class="editable" id="problemeSante" placeholder="Décrivez les éventuels problèmes de santé..."></textarea>
+    </div>
+
+    <!-- Administratif -->
+    <div class="section">
+        <p class="bold underline">Administratif :</p>
+
+        <div>
+            <p class="bold">Vous possédez la carte d'identification ICAD de l'animal :</p>
+            <p>Le changement de détenteur reste gratuit si l'original de la carte d'identification de
+            l'animal (partie haute ou partie B) est en votre possession. Ce document est à adresser
+            à l'ICAD par courrier dûment complété aux coordonnées du nouveau détenteur (un
+            seul et unique détenteur autorisé) et obligatoirement signé par l'ancien détenteur.</p>
+            <p class="bold">⚠️ Attention, un changement de détenteur ne peut être effectué par internet depuis votre
+            espace détenteur.</p>
+        </div>
+
+        <div>
+            <p class="bold">Vous ne possédez pas la carte d'identification de l'animal :</p>
+            <p>Voir annexe sur la page suivante.</p>
+        </div>
+    </div>
+
+    <!-- Attestation -->
+    <div class="section">
+        <p class="bold underline">Attestation sur l'honneur :</p>
+        <p>
+            Je soussigné(e)
+            <input type="text" class="editable editable-long" id="nomAttestation" placeholder="Nom et prénom">
+            propriétaire du dit animal mentionné plus haut, déclare par la présente que je confie et cède
+            définitivement mon animal à l'association L'Arche de Mallo.
+        </p>
+        <p>Il est donc convenu par la signature de ce document que je n'aurai plus aucun droit de
+        propriété et de responsabilité sur l'animal ci-haut mentionné dès signature du présent contrat.</p>
+    </div>
+
+
+    <!-- Signatures -->
+<div class="signature-section">
+    <p>
+        Le <input type="date" class="editable editable-date" id="dateFait">
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        A <input type="text" class="editable editable-medium" id="lieu" value="Autrechene">
+    </p>
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p class="bold">Signature du proprietaire :</p>
+                <p class="small italic">lu et approuve</p>
+                <div style="border:2px solid #333; border-radius:8px; margin-top:8px; display:inline-block; background:#f9f9f9; box-shadow:inset 0 1px 4px rgba(0,0,0,0.15); padding:4px;">
+                    <canvas id="signatureProprietaire" width="280" height="120"
+                            style="display:block; cursor:crosshair; touch-action:none; background:#fff; border-radius:6px;"></canvas>
+                </div>
+                <div style="margin-top:6px;">
+                    <button onclick="effacer('signatureProprietaire')" style="padding:4px 10px; border:1px solid #ccc; border-radius:4px; cursor:pointer; font-size:10pt; background:#f8f9fa;">Effacer</button>
+                </div>
+            </td>
+            <td>
+                <p class="bold">Signature du representant de l'Arche de Mallo :</p>
+                <p class="small italic">lu et approuve</p>
+                <div style="border:2px solid #333; border-radius:8px; margin-top:8px; display:inline-block; background:#f9f9f9; box-shadow:inset 0 1px 4px rgba(0,0,0,0.15); padding:4px;">
+                    <canvas id="signatureAssociation" width="280" height="120"
+                            style="display:block; cursor:crosshair; touch-action:none; background:#fff; border-radius:6px;"></canvas>
+                </div>
+                <div style="margin-top:6px;">
+                    <button onclick="effacer('signatureAssociation')" style="padding:4px 10px; border:1px solid #ccc; border-radius:4px; cursor:pointer; font-size:10pt; background:#f8f9fa;">Effacer</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+
+
+<script src="formulaires-arche-mallo.js"></script>
+
+
+<script>
+function initPad(id) {
+    var canvas  = document.getElementById(id);
+    var ctx     = canvas.getContext('2d');
+    var drawing = false;
+    var signed  = false;
+
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.fillStyle   = '#bbb';
+    ctx.font        = 'italic 12px Arial';
+    ctx.fillText('Signez ici...', 8, 65);
+
+    function getPos(e) {
+        var rect  = canvas.getBoundingClientRect();
+        var point = e.touches ? e.touches[0] : e;
+        return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+    }
+    function start(e) {
+        e.preventDefault();
+        if (!signed) { ctx.clearRect(0, 0, canvas.width, canvas.height); signed = true; }
+        drawing = true;
+        var pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    }
+    function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }
+    function stop() { drawing = false; }
+
+    canvas.addEventListener('mousedown',  start);
+    canvas.addEventListener('mousemove',  draw);
+    canvas.addEventListener('mouseup',    stop);
+    canvas.addEventListener('mouseleave', stop);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove',  draw,  { passive: false });
+    canvas.addEventListener('touchend',   stop);
+}
+
+function effacer(id) {
+    var canvas = document.getElementById(id);
+    var ctx    = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#bbb';
+    ctx.font      = 'italic 12px Arial';
+    ctx.fillText('Signez ici...', 8, 65);
+}
+
+initPad('signatureProprietaire');
+initPad('signatureAssociation');
+</script>
+
+
+</body>
+</html>

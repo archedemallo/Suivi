@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulaire famille d'accueil provisoire - L'Arche de Mallo</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Famille_Accueil_Provisoire">
+
+<div class="buttons">
+    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
+    </div>
+
+<div class="page-container">
+<div class="content">
+
+<!-- En-tête -->
+<div class="header-adoption">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+            </p>
+        </div>
+    </div>
+    <div class="header-adoption-right">
+        Date : <input type="date" class="editable editable-date" id="dateAdoption">
+    </div>
+</div>
+
+    <h2>Formulaire famille d'accueil provisoire</h2>
+
+    <div class="section">
+        <div class="section-title">Informations générales</div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Nom</label>
+                <input type="text" id="nom">
+            </div>
+            <div class="form-group">
+                <label>Prénom</label>
+                <input type="text" id="prenom">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Téléphone</label>
+                <input type="tel" id="telephone">
+            </div>
+            <div class="form-group">
+                <label>Adresse mail</label>
+                <input type="email" id="email">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Adresse</label>
+            <input type="text" id="adresse">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Code postal</label>
+                <input type="text" id="code_postal">
+            </div>
+            <div class="form-group">
+                <label>Ville</label>
+                <input type="text" id="ville">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Informations sur l'animal</div>
+
+        <div class="form-group">
+            <label>Nom de l'animal</label>
+            <input type="text" id="nom_animal">
+        </div>
+
+        <div class="form-group">
+            <label>Son espèce</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="chien" name="espece">
+                <label for="chien">Chien</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="chat" name="espece">
+                <label for="chat">Chat</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="lapin" name="espece">
+                <label for="lapin">Lapin</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="autre" name="espece">
+                <label for="autre">Autre (veuillez préciser) :</label>
+                <input type="text" id="autre_text">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>Date de naissance</label>
+                <input type="date" id="date_naissance">
+            </div>
+            <div class="form-group">
+                <label>Couleur</label>
+                <input type="text" id="couleur">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Sexe</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="male" name="sexe">
+                <label for="male">Mâle</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="femelle" name="sexe">
+                <label for="femelle">Femelle</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Tatouage ou puce</label>
+            <input type="text" id="puce">
+        </div>
+    </div>
+
+    <div class="conditions">
+        <h3>Conditions générales du contrat de famille d'accueil</h3>
+        <ol>
+            <li>La famille d'accueil s'engage à nourrir, héberger et donner une vie de famille à l'animal accueilli</li>
+            <li>L'animal confié est toujours adoptable et doit être présenté à tout adoptant potentiel envoyé par l'association</li>
+            <li>Les frais de nourriture, antiparasite, litière (...) sont à la charge de la famille d'accueil</li>
+            <li>Les frais vétérinaires et vaccins sont à la charge de l'association</li>
+            <li>La famille d'accueil s'engage à prévenir l'association en cas de problème comportemental ou de santé et avant d'engager des soins importants (opération...) pouvant être traité par un vétérinaire avec qui l'association a passé un contrat spécifique (tarifs, suivis...)</li>
+            <li>Si, pour une raison ou une autre, ce contrat devait être rompu, la famille d'accueil s'engage à laisser un délai minimum nécessaire à l'association pour trouver une solution de remplacement ou de transport pour le rapatriement de l'animal</li>
+            <li>La famille d'accueil est toujours prioritaire pour adopter l'animal qu'elle a en accueil</li>
+            <li>Si la famille d'accueil possède déjà des animaux de la même espèce, ils doivent être identifiés, stérilisés et à jour de leurs vaccins</li>
+            <li>La famille s'engage à ne pas prendre en accueil un animal d'une autre association sans notre accord</li>
+            <li>La famille déclare avoir lu et accepté les conditions du présent contrat</li>
+        </ol>
+    </div>
+
+    <div class="form-group">
+        <label>Fait à Autrechêne, le</label>
+        <input type="date" id="date_signature">
+    </div>
+
+    <div class="signature-section grid">
+        <div class="signature-box">
+            <div class="signature-label">Signature du dépositaire</div>
+            <div class="signature-line"></div>
+        </div>
+        <div class="signature-box">
+            <div class="signature-label">Signature d'un représentant<br>De L'Arche de Mallo</div>
+            <div class="signature-line"></div>
+        </div>
+    </div>
+</div>
+
+<script src="formulaires-arche-mallo.js"></script>
+</body>
+</html>
