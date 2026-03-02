@@ -45,21 +45,26 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 
 <!-- Informations animal -->
 <div class="form-group">
-        Nom usuel : <input type="text" class="editable editable-medium" id="nomUsuel">
+        <p><span class="blue">Nom usuel : </span><input type="text" class="editable editable-medium" id="nomUsuel">
+        </p>
 <div class="form-group">
-        Nom d'adoption : <input type="text" class="editable editable-medium" id="nomAdoption">
+    <p>
+        <span class="blue">Nom d'adoption : </span><input type="text" class="editable editable-medium" id="nomAdoption"></p>
 </div>
 <div class="form-group">
-        Sexe :
+    <p>
+        <span class="blue">Sexe :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sexe')"><span class="checkbox" data-group="sexe"></span> Mâle</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sexe')"><span class="checkbox" data-group="sexe"></span> Femelle</span>
+        </p>
 </div>
 
 <div class="form-group">
-        Né(e) le : <input type="date" class="editable editable-date" id="dateNaissance">
+    <p>    <span class="blue">Né(e) le : </span><input type="date" class="editable editable-date" id="dateNaissance">
+        </p>
 </div>
-    <p>N° de puce ou tatouage : <input type="text" class="editable editable-long" id="puce"></p>
-    <p>Couleur : <input type="text" class="editable editable-long" id="couleur"></p>
+    <p><span class="blue">N° de puce ou tatouage : </span><input type="text" class="editable editable-long" id="puce"></p>
+    <p><span class="blue">Couleur : </span><input type="text" class="editable editable-long" id="couleur"></p>
     <p>
         <span class="blue">Stérilisé :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')"><span class="checkbox" data-group="sterilise"></span> OUI</span>
@@ -113,19 +118,19 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 <!-- Adoptant -->
 <div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
 <div class="section">
-    <p>Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant"></p>
-    <p>Adresse : <input type="text" class="editable editable-long" id="adresse"></p>
+    <p><span class="blue">Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant"></p>
+    <p><span class="blue">Adresse : <input type="text" class="editable editable-long" id="adresse"></p>
     <p>
-        Code postal : <input type="text" class="editable editable-short" id="codePostal">
+        <span class="blue">Code postal : </span><input type="text" class="editable editable-short" id="codePostal">
         &nbsp;&nbsp;
-        Ville : <input type="text" class="editable editable-medium" id="ville">
+        <span class="blue">Ville : </span><input type="text" class="editable editable-medium" id="ville">
     </p>
     <p>
-        Téléphone fixe : <input type="tel" class="editable editable-tel" id="telFixe">
+        <span class="blue">Téléphone fixe : </span><input type="tel" class="editable editable-tel" id="telFixe">
         &nbsp;&nbsp;
-        Portable : <input type="tel" class="editable editable-tel" id="portable">
+        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable">
     </p>
-    <p>Email : <input type="email" class="editable editable-email" id="email"></p>
+    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email"></p>
 
  <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
 <div>
@@ -151,7 +156,7 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
         Vous adoptez un chat de + de 7 mois à l'Arche de Mallo avec la stérilisation déjà effectuée
         en date du <input type="date" class="editable editable-date" id="dateSterilisationCas1">
     </p>
-    <p>
+    <p class="italic">
         Vous n'avez rien à fournir, l'ICAD de l'animal restera au nom de l'association pendant 1 mois
         après la date d'adoption afin de valider son adoption définitive.
     </p>
@@ -167,14 +172,14 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     <p>Du fait de son jeune âge, il ne peut donc pas être stérilisé actuellement. Cependant,
     le but de l'Arche de Mallo étant de stopper la prolifération de chats, et de placer ses animaux
     en tant qu'animaux de compagnie et non d'animaux de reproduction.</p>
-    <p>Vous devez vous engager à stériliser votre chat entre 6 et 7 mois d'âge à vos frais,
+    <p class="bold">Vous devez vous engager à stériliser votre chat entre 6 et 7 mois d'âge à vos frais,
     dans la clinique vétérinaire de votre choix.</p>
     <p>Dans le cas d'une pathologie empêchant la stérilisation, un certificat de votre vétérinaire
     devra nous être délivré.</p>
     <p><strong><span class="underline red">IMPORTANT</span></strong> :
     <span class="red">L'ICAD de l'animal restera au nom de l'association jusqu'à réception du certificat de stérilisation
     fourni par votre vétérinaire.</span></p>
-    <p><span class="red">Vous devez envoyer le certificat de stérilisation par e-mail à :</span>
+    <p><span class="red bold">Vous devez envoyer le certificat de stérilisation par e-mail à :</span>
     <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a></p>
     <p><span class="red">Le changement de propriétaire sera effectué à votre nom dès réception du certificat.</span></p>
     <p><span class="red">Si toutefois vous ne respectez pas ce contrat, L'Arche de Mallo se donne le droit de récupérer
@@ -196,27 +201,27 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     <!-- Cases multiples : chaque option est indépendante -->
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        participation de <span class="red">90 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        participation de <span class="red bold">90 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
         la 1ère vaccination TC + tests). <span class="blue">Les frais de stérilisation restent à la charge de l'adoptant.</span>
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        participation de <span class="red">120 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        participation de <span class="red bold">120 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
         la 1ère et 2ème vaccination TC + tests). <span class="blue">Les frais de stérilisation restent à la charge de l'adoptant.</span>
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        participation de <span class="red">150 € </span>pour l'adoption (Comprenant l'identification par puce électronique
+        participation de <span class="red bold">150 € </span>pour l'adoption (Comprenant l'identification par puce électronique
         et la stérilisation + tests)
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        participation de <span class="red">180 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        participation de <span class="red bold">180 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
         la stérilisation + la vaccination TC + tests).
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        participation de <span class="red">220 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
+        participation de <span class="red bold">220 € </span>pour l'adoption (Comprenant l'identification par puce électronique +
         la stérilisation + la 1ère et 2ème vaccination TC + tests).
     </p>
     <p>
@@ -224,16 +229,16 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
         tarif particulier de <input type="number" class="editable editable-num" id="tarifParticulier"><span class="red"> €</span>
     </p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Passeport <span class="red">20 €</span>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Passeport <span class="red bold">20 €</span>
         
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Vaccin de la rage <span class="red">40 €</span>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Vaccin de la rage <span class="red bold">40 €</span>
         
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Test divers maladies <span class="red">40 €</span>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Test divers maladies <span class="red bold">40 €</span>
         
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Radio <span class="red">65 €</span>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Radio <span class="red bold">65 €</span>
     </p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Caisse de transport <span class="red">10 €</span>
+        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Caisse de transport <span class="red bold">10 €</span>
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
@@ -241,12 +246,12 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        Je souhaite adhérer à l'association L'ARCHE DE MALLO <span class="red">(20 € par an).</span> En adhérant, vous soutenez
+        Je souhaite adhérer à l'association L'ARCHE DE MALLO <span class="red bold">(20 € par an).</span> En adhérant, vous soutenez
         notre démarche de protection et vous nous aidez à sauver toujours plus de chats dans le besoin.
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        Reprise d'acompte de <span class="red">50 €</span> pour la réservation
+        Reprise d'acompte de <span class="red bold">50 €</span> pour la réservation
     </p>
     <p>Reste à payer <input type="number" class="editable editable-num" id="resteAPayer"><span class="red"> €</span></p>
     <p class="total-line">Total de la participation : </span><input type="number" class="editable editable-num" id="totalParticipation"> <span class="red"> €</span></p>
@@ -262,18 +267,21 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     </p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
-        Paiement en plusieurs fois : <span class="blue">2 chèques
+        Paiement en plusieurs fois :
+        <span class="blue">
+            <p>2 chèques  :  
         N° <input type="text" class="editable editable-medium" id="cheque1">
         ET <input type="text" class="editable editable-medium" id="cheque2">
+        </p>
     </span></p>
-    <p class="cheques-indent">
-       <span class="blue"> 4 chèques
-        N° <input type="text" class="editable editable-medium" id="cheque3">
-        ET <input type="text" class="editable editable-medium" id="cheque4">
-    </span></p>
-    <p class="cheques-indent"><span class="blue">
-        N° <input type="text" class="editable editable-medium" id="cheque5">
-        ET <input type="text" class="editable editable-medium" id="cheque6">
+    <p 
+       <span class="blue">
+        <p>4 chèques  : 
+        1: <input type="text" class="editable editable-short" id="cheque3">
+        2: <input type="text" class="editable editable-short" id="cheque4">
+        
+        3: <input type="text" class="editable editable-short" id="cheque5">
+        4: <input type="text" class="editable editable-short" id="cheque6">
     </span></p>
 </div>
 <br>
@@ -333,8 +341,8 @@ selon les actes vétérinaires effectués.</p></div>
 <div class="article"><p><strong><span class="underline">Article 13</span></strong> : Reconnais que l'association a fourni les documents
 suivants ce jour :</p>
 <ul>
-    <li>Carnet de santé et/ou passeport n° <input type="text" class="editable editable-medium" id="numeroPasseport"></li>
-    <li>Certificat vétérinaire avant cession daté du <input type="date" class="editable editable-date" id="dateCertificatVeto"></li>
+    <li><span class="blue">Carnet de santé et/ou passeport n° </span><input type="text" class="editable editable-medium" id="numeroPasseport"></li>
+    <li><span class="blue">Certificat vétérinaire avant cession daté du </span><input type="date" class="editable editable-date" id="dateCertificatVeto"></li>
     <li>Copie du certificat ICAD</li>
     <li>Copie du contrat d'adoption</li>
     <li>Copie du certificat d'engagement</li>
@@ -347,13 +355,13 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 <!-- Attestation -->
 <div><strong><span class="highlight-red">ATTESTATION</span></strong></div>
 <div class="section">
-    <p>Je soussigné(e) : <input type="text" class="editable editable-long" id="nomAttestation"></p>
+    <p><span class="blue">Je soussigné(e) :</span> <input type="text" class="editable editable-long" id="nomAttestation"></p>
     <p>Déclare vouloir adopter l'animal désigné dans ce contrat.</p>
     <ul>
         <li>Je m'engage, si celle-ci n'a pas encore été effectuée, à procéder à la stérilisation de l'animal
         avant ses 7 mois (date indiquée dans le contrat) par un vétérinaire de mon choix et nous fournir le
         justificatif de stérilisation.</li>
-        <li>Il est également convenu qu'à partir de la date où je signe le contrat,<span class="red"> tous les frais vétérinaires
+        <li>Il est également convenu qu'à partir de la date où je signe le contrat,<span class="red bold"> tous les frais vétérinaires
         seront à ma charge malgré le fait que le chat soit identifié à l'Arche de Mallo. L'ICAD ne sera modifié
         qu'après réception du certificat de stérilisation établi par le vétérinaire, ou après validation de
         l'adoption soit un mois après signature si l'animal est déjà stérilisé.</span></li>
