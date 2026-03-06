@@ -698,3 +698,11 @@ input[type="date"] {
 @media print {
     .signature-pad-wrap + button { display: none !important; }
 }
+
+
+@media print {
+    .logo-box {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
