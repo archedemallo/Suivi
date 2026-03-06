@@ -165,18 +165,9 @@ async function buildHtmlWithData() {
 
 // ── Logo base64 ───────────────────────────────────────────────────────────────
 async function getLogoBase64() {
-    try {
-        var response = await fetch('logo_arche.png');
-        var blob     = await response.blob();
-        return await new Promise(function(resolve) {
-            var reader    = new FileReader();
-            reader.onload = function() { resolve(reader.result); };
-            reader.readAsDataURL(blob);
-        });
-    } catch(e) {
-        console.warn('Logo non chargé :', e);
-        return '';
-    }
+    // Logo désactivé pour réduire la taille du fichier envoyé à Google
+    // Le PDF sera généré sans logo pour éviter les timeouts
+    return '';
 }
 
 // ============================================================
