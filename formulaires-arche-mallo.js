@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydedBMjH4TteG1e97NUQ7yGfMflZVyx0m3ZXAYP1d_cZv9H8_L4F05Zp5tQZTaTUXWtQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwmPB-cA-2maaO68YdHWl4OJVVWaCj6Fe5dM-YZGr6rziP_xl5ky_vEr4LGFM-FJjLsRw/exec';
 
 let formSaved     = false;
 let savedFilename = '';
@@ -106,7 +106,16 @@ function buildHtmlWithData() {
         html = html.replace(regex, '$1' + val + '$2');
     });
 
-    html = html.replace('<head>', '<head><style>.buttons{display:none!important}</style>');
+    // Cacher les boutons et le canvas de signature (remplacé par l'image)
+    html = html.replace('<head>', '<head><style>.buttons{display:none!important}.signature-pad-wrap{display:none!important}.signature-controls{display:none!important}#sig1-print{display:block!important}</style>');
+
+    // Injecter l'image de signature dans le placeholder
+    var sigImage = getSignatureImage();
+    if (sigImage) {
+        html = html.replace('[[SIGNATURE_IMAGE]]',
+            '<img src="' + sigImage + '" style="max-width:280px;max-height:120px;border:1px solid #ccc;display:block;">');
+    }
+
     return html;
 }
 
@@ -143,15 +152,65 @@ async function sendToGoogle(data) {
 }
 
 // ============================================================
+// VALIDATION CHAMPS OBLIGATOIRES
+// ============================================================
+function validateRequiredFields() {
+    var missing = [];
+    document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+        var label = el.getAttribute('data-label') || el.id || 'Champ inconnu';
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            if (!el.value || el.value.trim() === '') {
+                missing.push(label);
+                el.style.borderBottom = '2px solid red';
+            } else {
+                el.style.borderBottom = '';
+            }
+        }
+    });
+
+    // Vérifier la signature
+    var sigCanvas = document.querySelector('#sig1 canvas');
+    if (sigCanvas) {
+        var ctx = sigCanvas.getContext('2d');
+        var pixels = ctx.getImageData(0, 0, sigCanvas.width, sigCanvas.height).data;
+        var empty  = true;
+        for (var i = 0; i < pixels.length; i += 4) {
+            if (pixels[i + 3] > 0) { empty = false; break; }
+        }
+        if (empty) missing.push('Signature');
+    }
+
+    return missing;
+}
+
+// ============================================================
+// RÉCUPÉRER L'IMAGE DE SIGNATURE
+// ============================================================
+function getSignatureImage() {
+    var canvas = document.querySelector('#sig1 canvas');
+    if (!canvas) return '';
+    return canvas.toDataURL('image/png');
+}
+
+
+// ============================================================
 // BOUTON SAUVEGARDER
 // ============================================================
 async function saveForm() {
+    // Validation des champs obligatoires
+    var missing = validateRequiredFields();
+    if (missing.length > 0) {
+        alert('⚠️ Veuillez remplir les champs obligatoires :\n\n• ' + missing.join('\n• '));
+        return;
+    }
+
     var data     = collectFormData();
     var filename = buildFilename(data);
 
-    data.onglet      = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
-    data.filename    = filename;
-    data.htmlContent = encodeBase64Unicode(buildHtmlWithData());
+    data.onglet         = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
+    data.filename       = filename;
+    data.signatureImage = getSignatureImage();
+    data.htmlContent    = encodeBase64Unicode(buildHtmlWithData());
 
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:bold;font-family:Arial;';
