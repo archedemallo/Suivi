@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDX7NFio-G6q2BBZO0agSRLW6w6MUZChz5kCOFwYP9dd5xv7yokAWCqeMKlwokWNB7qg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydedBMjH4TteG1e97NUQ7yGfMflZVyx0m3ZXAYP1d_cZv9H8_L4F05Zp5tQZTaTUXWtQ/exec';
 
 let formSaved     = false;
 let savedFilename = '';
@@ -81,42 +81,102 @@ function buildFilename(data) {
 // ============================================================
 // CONSTRUIRE HTML AVEC DONNEES
 // ============================================================
-function buildHtmlWithData() {
+async function buildHtmlWithData() {
+    // ── 1. Construire le HTML statique pour le PDF ────────────────────────────
+    // On repart du outerHTML et on remplace les éléments interactifs
+    // par leur équivalent statique lisible par le convertisseur Google
+
     var html = document.documentElement.outerHTML;
 
+    // ── 2. Remplacer les <input> par leur valeur en texte souligné ────────────
     document.querySelectorAll('input.editable').forEach(function(input) {
-        if (!input.id || !input.value) return;
-        var val = input.value
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;');
-        var regex = new RegExp('(id="' + input.id + '")((?:[^>]*?))(>)', 'g');
-        html = html.replace(regex, function(match, id, rest, end) {
-            var cleanRest = rest.replace(/\s+value="[^"]*"/, '');
-            return id + cleanRest + ' value="' + val + '"' + end;
-        });
+        var val  = (input.value || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        var display = val
+            ? '<span style="text-decoration:underline;min-width:80px;display:inline-block;">' + val + '</span>'
+            : '<span style="text-decoration:underline;min-width:80px;display:inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+
+        // Remplacer le tag input complet par le span
+        var escapedId = input.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        var regex = new RegExp('<input[^>]*id="' + escapedId + '"[^>]*>', 'g');
+        html = html.replace(regex, display);
     });
 
+    // ── 3. Remplacer les <textarea> par leur valeur ───────────────────────────
     document.querySelectorAll('textarea.editable').forEach(function(textarea) {
         if (!textarea.id) return;
-        var val = textarea.value
+        var val = (textarea.value || '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-        var regex = new RegExp('(<textarea[^>]*?id="' + textarea.id + '"[^>]*>)[\\s\\S]*?(<\\/textarea>)', 'g');
-        html = html.replace(regex, '$1' + val + '$2');
+            .replace(/>/g, '&gt;')
+            .replace(/\n/g, '<br>');
+        var display = '<div style="border:1px solid #999;min-height:60px;padding:4px;">' + val + '</div>';
+        var escapedId = textarea.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        var regex = new RegExp('<textarea[^>]*id="' + escapedId + '"[^>]*>[\\s\\S]*?<\\/textarea>', 'g');
+        html = html.replace(regex, display);
     });
 
-    // Cacher les boutons et le canvas de signature (remplacé par l'image)
-    html = html.replace('<head>', '<head><style>.buttons{display:none!important}.signature-pad-wrap{display:none!important}.signature-controls{display:none!important}#sig1-print{display:block!important}</style>');
+    // ── 4. Remplacer les cases à cocher par ☑ ou ☐ ──────────────────────────
+    // Cases cochées → ☑, non cochées → ☐
+    html = html.replace(
+        /<span class="checkbox checked"[^>]*><\/span>/g,
+        '<span style="font-size:14px;">☑</span>'
+    );
+    html = html.replace(
+        /<span class="checkbox([^"]*)"[^>]*><\/span>/g,
+        '<span style="font-size:14px;">☐</span>'
+    );
 
-    // Injecter l'image de signature dans le placeholder
+    // ── 5. Logo en base64 ─────────────────────────────────────────────────────
+    // Récupérer le logo depuis un canvas temporaire si disponible
+    var logoBase64 = await getLogoBase64();
+    if (logoBase64) {
+        // Remplacer le div logo-box par une image
+        html = html.replace(
+            /<div class="logo-box"[^>]*><\/div>/g,
+            '<img src="' + logoBase64 + '" style="width:120px;height:80px;object-fit:contain;">'
+        );
+    } else {
+        // Supprimer le div logo vide pour éviter un carré blanc
+        html = html.replace(/<div class="logo-box"[^>]*><\/div>/g, '');
+    }
+
+    // ── 6. Styles pour le PDF ─────────────────────────────────────────────────
+    var pdfStyles = '<style>' +
+        '.buttons{display:none!important}' +
+        '.signature-pad-wrap{display:none!important}' +
+        '.signature-controls{display:none!important}' +
+        '#sig1-print{display:block!important}' +
+        'body{font-family:Arial,sans-serif;font-size:12pt;}' +
+        'input,textarea{display:none!important}' +
+        '</style>';
+    html = html.replace('<head>', '<head>' + pdfStyles);
+
+    // ── 7. Signature ──────────────────────────────────────────────────────────
     var sigImage = getSignatureImage();
     if (sigImage) {
         html = html.replace('[[SIGNATURE_IMAGE]]',
             '<img src="' + sigImage + '" style="max-width:280px;max-height:120px;border:1px solid #ccc;display:block;">');
+    } else {
+        html = html.replace('[[SIGNATURE_IMAGE]]', '');
     }
 
     return html;
+}
+
+// ── Logo base64 ───────────────────────────────────────────────────────────────
+async function getLogoBase64() {
+    try {
+        var response = await fetch('logo_arche.png');
+        var blob     = await response.blob();
+        return await new Promise(function(resolve) {
+            var reader    = new FileReader();
+            reader.onload = function() { resolve(reader.result); };
+            reader.readAsDataURL(blob);
+        });
+    } catch(e) {
+        console.warn('Logo non chargé :', e);
+        return '';
+    }
 }
 
 // ============================================================
@@ -210,7 +270,7 @@ async function saveForm() {
     data.onglet         = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename       = filename;
     data.signatureImage = getSignatureImage();
-    data.htmlContent    = encodeBase64Unicode(buildHtmlWithData());
+    data.htmlContent    = encodeBase64Unicode(await buildHtmlWithData());
 
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:bold;font-family:Arial;';
