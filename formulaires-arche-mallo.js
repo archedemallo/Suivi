@@ -95,6 +95,8 @@ function buildHtmlWithData() {
             return id + cleanRest + ' value="' + val + '"' + end;
         });
     });
+
+    document.querySelectorAll('textarea.editable').forEach(function(textarea) {
         if (!textarea.id) return;
         var val = textarea.value
             .replace(/&/g, '&amp;')
