@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCOKbpFaIqz7u5KnKOkXPTEuIn29UCeUBziyRoJv2mj7LfQKWAo9HOnrzBcl50gAAfWA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOO-K1d_wd-V6Y1GtcmSLE2x799JzttG0IQ2vc447OkqPhFYeiuOlaU3tLQHNxNJe-2g/exec';
 
 let formSaved     = false;
 let savedFilename = '';
