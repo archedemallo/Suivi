@@ -139,7 +139,7 @@ function buildHtmlWithData() {
         '.signature-controls{display:none!important}' +
         '#sig1-print{display:block!important}' +
         'body{font-family:Arial,sans-serif;font-size:12pt;}' +
-        'input,textarea,button{display:none!important}' +
+        'button:not(.btn){display:none!important}' +
         '</style>';
     html = html.replace('<head>', '<head>' + pdfStyles);
 
