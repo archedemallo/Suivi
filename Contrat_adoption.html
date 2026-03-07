@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="formulaires-arche-mallo.css">
 </head>
 <body data-form-id="Adoption">
-<body>
 
 <div class="buttons">
     <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
@@ -454,6 +453,9 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 creerSignature('sig1');
 creerSignature('sig2');
 creerSignature('sig3');
+	   var today = new Date().toISOString().split('T')[0];
+    if (!document.getElementById('dateFait').value) document.getElementById('dateFait').value = today;
+    if (!document.getElementById('dateAdoption').value) document.getElementById('dateAdoption').value = today;
 </script>
 </body>
 </html>
