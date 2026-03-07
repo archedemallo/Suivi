@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLCM31SsHSMOthwjdznLQYLwozZHmoT84s9RYYndFp-wRhsPOPlaENjB6oxQBQbOP1jw/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBEURexbPp_1P4RVP-pc8_Sssi4xKwBVeGYW1doHDELkV-CJsSmhqoY1GKImdHcQBYcg/exec';
 
 let formSaved     = false;
 let savedFilename = '';
@@ -81,7 +81,7 @@ function buildFilename(data) {
 // ============================================================
 // CONSTRUIRE HTML AVEC DONNEES
 // ============================================================
-async function buildHtmlWithData() {
+function buildHtmlWithData() {
     // ── 1. Construire le HTML statique pour le PDF ────────────────────────────
     // On repart du outerHTML et on remplace les éléments interactifs
     // par leur équivalent statique lisible par le convertisseur Google
@@ -129,19 +129,8 @@ async function buildHtmlWithData() {
         );
     });
 
-    // ── 5. Logo en base64 ─────────────────────────────────────────────────────
-    // Récupérer le logo depuis un canvas temporaire si disponible
-    var logoBase64 = await getLogoBase64();
-    if (logoBase64) {
-        // Remplacer le div logo-box par une image
-        html = html.replace(
-            /<div class="logo-box"[^>]*><\/div>/g,
-            '<img src="' + logoBase64 + '" style="width:120px;height:80px;object-fit:contain;">'
-        );
-    } else {
-        // Supprimer le div logo vide pour éviter un carré blanc
-        html = html.replace(/<div class="logo-box"[^>]*><\/div>/g, '');
-    }
+    // ── 5. Logo ───────────────────────────────────────────────────────────────
+    // On garde le div.logo-box intact — Google Apps Script le remplacera par l'image
 
     // ── 6. Styles pour le PDF ─────────────────────────────────────────────────
     var pdfStyles = '<style>' +
@@ -150,7 +139,7 @@ async function buildHtmlWithData() {
         '.signature-controls{display:none!important}' +
         '#sig1-print{display:block!important}' +
         'body{font-family:Arial,sans-serif;font-size:12pt;}' +
-        'button:not(.btn){display:none!important}' +
+        'input,textarea,button{display:none!important}' +
         '</style>';
     html = html.replace('<head>', '<head>' + pdfStyles);
 
@@ -166,12 +155,8 @@ async function buildHtmlWithData() {
     return html;
 }
 
-// ── Logo base64 ───────────────────────────────────────────────────────────────
-async function getLogoBase64() {
-    // Logo désactivé pour réduire la taille du fichier envoyé à Google
-    // Le PDF sera généré sans logo pour éviter les timeouts
-    return '';
-}
+
+
 
 // ============================================================
 // ENCODAGE BASE64 UNICODE
@@ -264,7 +249,7 @@ async function saveForm() {
     data.onglet         = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename       = filename;
     data.signatureImage = getSignatureImage();
-    data.htmlContent    = encodeBase64Unicode(await buildHtmlWithData());
+    data.htmlContent    = encodeBase64Unicode(buildHtmlWithData());
 
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:bold;font-family:Arial;';
