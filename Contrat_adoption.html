@@ -45,11 +45,11 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 
 <!-- Informations animal -->
 <div class="form-group">
-        <p><span class="blue">Nom usuel : </span><input type="text" class="editable editable-medium" id="nomUsuel">
+        <p><span class="blue">Nom usuel : </span><input type="text" class="editable editable-medium" id="nomUsuel" data-required="true" data-label="Nom usuel">
         </p>
 <div class="form-group">
     <p>
-        <span class="blue">Nom d'adoption : </span><input type="text" class="editable editable-medium" id="nomAdoption"></p>
+        <span class="blue">Nom d'adoption : </span><input type="text" class="editable editable-medium" id="nomAdoption" data-required="true" data-label="Nom adoption"></p>
 </div>
 <div class="form-group">
     <p>
@@ -64,7 +64,7 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
         </p>
 </div>
     <p><span class="blue">N° de puce ou tatouage : </span><input type="text" class="editable editable-long" id="puce"></p>
-    <p><span class="blue">Couleur : </span><input type="text" class="editable editable-long" id="couleur"></p>
+    <p><span class="blue">Couleur : </span><input type="text" class="editable editable-long" id="couleur" data-required="true" data-label="Couleur"></p>
     <p>
         <span class="blue">Stérilisé :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')"><span class="checkbox" data-group="sterilise"></span> OUI</span>
@@ -118,19 +118,19 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 <!-- Adoptant -->
 <div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
 <div class="section">
-    <p><span class="blue">Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant"></p>
-    <p><span class="blue">Adresse : <input type="text" class="editable editable-long" id="adresse"></p>
+    <p><span class="blue">Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant"></p>
+    <p><span class="blue">Adresse : <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
-        <span class="blue">Code postal : </span><input type="text" class="editable editable-short" id="codePostal">
+        <span class="blue">Code postal : </span><input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
         &nbsp;&nbsp;
-        <span class="blue">Ville : </span><input type="text" class="editable editable-medium" id="ville">
+        <span class="blue">Ville : </span><input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
     </p>
     <p>
         <span class="blue">Téléphone fixe : </span><input type="tel" class="editable editable-tel" id="telFixe">
         &nbsp;&nbsp;
-        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable">
+        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Portable>
     </p>
-    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email"></p>
+    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email></p>
 
  <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
 <div>
@@ -418,11 +418,23 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
         <tr>
             <td>
                 <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
-                <div class="signature-line"></div>
+                <!-- Zone de signature tactile -->
+	<div class="section mt-20">
+		<p class="bold underline">Signature :</p>
+		<div id="sig1"></div>
+		<div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+	</div>
+
             </td>
             <td>
                 <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
-                <div class="signature-line"></div>
+            <!-- Zone de signature tactile -->
+	<div class="section mt-20">
+		<p class="bold underline">Signature :</p>
+		<div id="sig2"></div>
+		<div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+	</div>
+    
             </td>
         </tr>
     </table>
@@ -432,5 +444,9 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 </div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
+<script>
+creerSignature('sig1');
+creerSignature('sig2');
+</script>
 </body>
 </html>
