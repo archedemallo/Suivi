@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOO-K1d_wd-V6Y1GtcmSLE2x799JzttG0IQ2vc447OkqPhFYeiuOlaU3tLQHNxNJe-2g/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydedBMjH4TteG1e97NUQ7yGfMflZVyx0m3ZXAYP1d_cZv9H8_L4F05Zp5tQZTaTUXWtQ/exec';
 
 let formSaved     = false;
 let savedFilename = '';
@@ -116,15 +116,18 @@ async function buildHtmlWithData() {
     });
 
     // ── 4. Remplacer les cases à cocher par ☑ ou ☐ ──────────────────────────
-    // Cases cochées → ☑, non cochées → ☐
-    html = html.replace(
-        /<span class="checkbox checked"[^>]*><\/span>/g,
-        '<span style="font-size:14px;">☑</span>'
-    );
-    html = html.replace(
-        /<span class="checkbox([^"]*)"[^>]*><\/span>/g,
-        '<span style="font-size:14px;">☐</span>'
-    );
+    // On travaille sur le DOM pour avoir l'état réel des cases
+    document.querySelectorAll('.checkbox').forEach(function(cb) {
+        var isChecked = cb.classList.contains('checked');
+        var symbol = isChecked ? '☑' : '☐';
+        // Récupérer le texte parent
+        var parent = cb.parentElement;
+        var escapedOuter = cb.outerHTML
+            .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        html = html.replace(cb.outerHTML,
+            '<span style="font-size:14px;font-family:Arial;">' + symbol + '</span>'
+        );
+    });
 
     // ── 5. Logo en base64 ─────────────────────────────────────────────────────
     // Récupérer le logo depuis un canvas temporaire si disponible
@@ -147,7 +150,7 @@ async function buildHtmlWithData() {
         '.signature-controls{display:none!important}' +
         '#sig1-print{display:block!important}' +
         'body{font-family:Arial,sans-serif;font-size:12pt;}' +
-        'input,textarea{display:none!important}' +
+        'input,textarea,button{display:none!important}' +
         '</style>';
     html = html.replace('<head>', '<head>' + pdfStyles);
 
