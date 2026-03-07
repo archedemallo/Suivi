@@ -115,24 +115,31 @@ function buildHtmlWithData() {
         );
     });
 
-    // Cacher les boutons, canvas et bouton Effacer — afficher la signature image
+    // Cacher les boutons, canvas et bouton Effacer — afficher toutes les signatures images
     html = html.replace('<head>', '<head><style>' +
         '.buttons{display:none!important}' +
         '.signature-pad-wrap{display:none!important}' +
         '.signature-controls{display:none!important}' +
-        '#sig1-print{display:block!important}' +
+        '[id$="-print"]{display:block!important}' +
         'button{display:none!important}' +
         'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
         '</style>');
 
-    // Injecter l'image de signature dans le placeholder
-    var sigImage = getSignatureImage();
-    if (sigImage) {
-        html = html.replace('[[SIGNATURE_IMAGE]]',
-            '<img src="' + sigImage + '" style="max-width:280px;max-height:120px;border:1px solid #ccc;display:block;">');
-    } else {
-        html = html.replace('[[SIGNATURE_IMAGE]]', '');
-    }
+    // Injecter les images de signature dans les placeholders
+    // Chercher toutes les signatures disponibles (sig1, sig2, sig3...)
+    var sigIds = ['sig1', 'sig2', 'sig3', 'sig4'];
+    sigIds.forEach(function(sigId) {
+        var canvas = document.querySelector('#' + sigId + ' canvas');
+        if (canvas) {
+            var sigImage = canvas.toDataURL('image/png');
+            var printId = sigId + '-print';
+            // Remplacer le [[SIGNATURE_IMAGE]] dans le div correspondant
+            var regex = new RegExp('(id="' + printId + '"[^>]*>)\\[\\[SIGNATURE_IMAGE\\]\\]', 'g');
+            html = html.replace(regex, '$1<img src="' + sigImage + '" style="max-width:280px;max-height:120px;border:1px solid #ccc;display:block;">');
+        }
+    });
+    // Effacer les placeholders non remplis
+    html = html.replace(/\[\[SIGNATURE_IMAGE\]\]/g, '');
 
     return html;
 }
@@ -227,7 +234,7 @@ async function saveForm() {
 
     data.onglet         = document.body.getAttribute('data-form-id') || document.title.substring(0, 30);
     data.filename       = filename;
-    data.signatureImage = getSignatureImage();
+    data.signatureImage = getSignatureImage(); // sig1 pour compatibilité
     data.htmlContent    = encodeBase64Unicode(buildHtmlWithData());
 
     var overlay = document.createElement('div');
