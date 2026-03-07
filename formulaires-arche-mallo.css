@@ -588,22 +588,6 @@ input[type="date"] {
         display: none !important;
     }
 
-@media print {
-    .signature-pad-wrap + button { display: none !important; }
-}
-
-}
-canvas {
-    display: none !important;
-}
-@media print {
-    .logo-box {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-}
-
-   
     .page-container {
         padding: 0;
     }
@@ -711,4 +695,6 @@ canvas {
     background: #f8f9fa;
 }
 .signature-pad-wrap + button:hover { background: #e9ecef; }
-
+@media print {
+    .signature-pad-wrap + button { display: none !important; }
+}
