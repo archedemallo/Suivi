@@ -82,68 +82,49 @@ function buildFilename(data) {
 // CONSTRUIRE HTML AVEC DONNEES
 // ============================================================
 function buildHtmlWithData() {
-    // ── 1. Construire le HTML statique pour le PDF ────────────────────────────
-    // On repart du outerHTML et on remplace les éléments interactifs
-    // par leur équivalent statique lisible par le convertisseur Google
-
     var html = document.documentElement.outerHTML;
 
-    // ── 2. Remplacer les <input> par leur valeur en texte souligné ────────────
     document.querySelectorAll('input.editable').forEach(function(input) {
-        var val  = (input.value || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        var display = val
-            ? '<span style="text-decoration:underline;min-width:80px;display:inline-block;">' + val + '</span>'
-            : '<span style="text-decoration:underline;min-width:80px;display:inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
-
-        // Remplacer le tag input complet par le span
-        var escapedId = input.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        var regex = new RegExp('<input[^>]*id="' + escapedId + '"[^>]*>', 'g');
-        html = html.replace(regex, display);
+        if (!input.id || !input.value) return;
+        var val = input.value
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;');
+        var regex = new RegExp('(id="' + input.id + '")((?:[^>]*?))(>)', 'g');
+        html = html.replace(regex, function(match, id, rest, end) {
+            var cleanRest = rest.replace(/\s+value="[^"]*"/, '');
+            return id + cleanRest + ' value="' + val + '"' + end;
+        });
     });
 
-    // ── 3. Remplacer les <textarea> par leur valeur ───────────────────────────
     document.querySelectorAll('textarea.editable').forEach(function(textarea) {
         if (!textarea.id) return;
-        var val = (textarea.value || '')
+        var val = textarea.value
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\n/g, '<br>');
-        var display = '<div style="border:1px solid #999;min-height:60px;padding:4px;">' + val + '</div>';
-        var escapedId = textarea.id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        var regex = new RegExp('<textarea[^>]*id="' + escapedId + '"[^>]*>[\\s\\S]*?<\\/textarea>', 'g');
-        html = html.replace(regex, display);
+            .replace(/>/g, '&gt;');
+        var regex = new RegExp('(<textarea[^>]*?id="' + textarea.id + '"[^>]*>)[\\s\\S]*?(<\\/textarea>)', 'g');
+        html = html.replace(regex, '$1' + val + '$2');
     });
 
-    // ── 4. Remplacer les cases à cocher par ☑ ou ☐ ──────────────────────────
-    // On travaille sur le DOM pour avoir l'état réel des cases
+    // Remplacer les cases à cocher par ☑ ou ☐ selon leur état réel
     document.querySelectorAll('.checkbox').forEach(function(cb) {
         var isChecked = cb.classList.contains('checked');
         var symbol = isChecked ? '☑' : '☐';
-        // Récupérer le texte parent
-        var parent = cb.parentElement;
-        var escapedOuter = cb.outerHTML
-            .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         html = html.replace(cb.outerHTML,
-            '<span style="font-size:14px;font-family:Arial;">' + symbol + '</span>'
+            '<span style="font-size:14px;font-family:Arial;vertical-align:middle;">' + symbol + '</span>'
         );
     });
 
-    // ── 5. Logo ───────────────────────────────────────────────────────────────
-    // On garde le div.logo-box intact — Google Apps Script le remplacera par l'image
-
-    // ── 6. Styles pour le PDF ─────────────────────────────────────────────────
-    var pdfStyles = '<style>' +
+    // Cacher les boutons, canvas et bouton Effacer — afficher la signature image
+    html = html.replace('<head>', '<head><style>' +
         '.buttons{display:none!important}' +
         '.signature-pad-wrap{display:none!important}' +
         '.signature-controls{display:none!important}' +
         '#sig1-print{display:block!important}' +
-        'body{font-family:Arial,sans-serif;font-size:12pt;}' +
-        'button:not(.btn){display:none!important}' +
-        '</style>';
-    html = html.replace('<head>', '<head>' + pdfStyles);
+        'button{display:none!important}' +
+        '</style>');
 
-    // ── 7. Signature ──────────────────────────────────────────────────────────
+    // Injecter l'image de signature dans le placeholder
     var sigImage = getSignatureImage();
     if (sigImage) {
         html = html.replace('[[SIGNATURE_IMAGE]]',
@@ -151,13 +132,9 @@ function buildHtmlWithData() {
     } else {
         html = html.replace('[[SIGNATURE_IMAGE]]', '');
     }
-console.log('logo-box présent:', html.indexOf('logo-box') >= 0);
-    
+
     return html;
 }
-
-
-
 
 // ============================================================
 // ENCODAGE BASE64 UNICODE
