@@ -151,7 +151,8 @@ function buildHtmlWithData() {
     } else {
         html = html.replace('[[SIGNATURE_IMAGE]]', '');
     }
-
+console.log('logo-box présent:', html.indexOf('logo-box') >= 0);
+    
     return html;
 }
 
