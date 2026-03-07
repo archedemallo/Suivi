@@ -95,8 +95,6 @@ function buildHtmlWithData() {
             return id + cleanRest + ' value="' + val + '"' + end;
         });
     });
-
-    document.querySelectorAll('textarea.editable').forEach(function(textarea) {
         if (!textarea.id) return;
         var val = textarea.value
             .replace(/&/g, '&amp;')
@@ -122,6 +120,7 @@ function buildHtmlWithData() {
         '.signature-controls{display:none!important}' +
         '#sig1-print{display:block!important}' +
         'button{display:none!important}' +
+        'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
         '</style>');
 
     // Injecter l'image de signature dans le placeholder
