@@ -48,7 +48,7 @@
             <input type="text" class="editable editable-medium" id="nomMaman">
         </p>
         <p><span class="bold">Nom provisoire du chaton :</span>
-            <input type="text" class="editable editable-long" id="nomChat">
+            <input type="text" class="editable editable-long" id="nomChat" data-required="true" data-label="nom Chaton provisoire">
         </p>
         <p>
             <span class="bold">Né(e) le :</span>
@@ -72,7 +72,7 @@
             <input type="text" class="editable editable-medium" id="identification">
             <br>
             <span class="bold">Robe, couleur :</span>
-            <input type="text" class="editable editable-medium" id="couleur">
+            <input type="text" class="editable editable-medium" id="couleur" data-required="true" data-label="couleur Chaton">
         </p>
         <p><span class="bold">Signes particuliers :</span>
             <input type="text" class="editable editable-long" id="signesParticuliers">
@@ -83,16 +83,16 @@
     <div class="section">
         <p>
             <span class="bold">Je soussigné(e) M/Mme</span>
-            <input type="text" class="editable editable-long" id="nomComplet">,
-            <br>né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne">
-            <br>et résidant <input type="text" class="editable editable-long" id="adresse">
+            <input type="text" class="editable editable-long" id="nomComplet" data-required="true" data-label="nom adoptant">,
+            <br>né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="date naissance adoptant">
+            <br>et résidant <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="adresse adoptant">
         </p>
         <p>
             <span class="bold">Téléphone :</span>
-            <input type="tel" class="editable editable-tel" id="telephone">
+            <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="telephone adoptant">
             
             <span class="bold">E-mail :</span>
-            <input type="email" class="editable editable-email" id="email">
+            <input type="email" class="editable editable-email" id="email" data-required="true" data-label="email adoptant">
         </p>
         <p>
             m'engage à adopter à l'association « l'Arche de Mallo » le chaton décrit ci-dessus
@@ -194,11 +194,15 @@
                 <td>
                     <p class="underline bold">L'Arche de Mallo :</p>
                     <p>(Signature précédée de la mention "Lu et approuvé")</p>
-                                    </td>
+                                    <div id="sig1"></div>
+                    <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+                </td>
                 <td>
                     <p class="underline bold">L'adoptant :</p>
                     <p>(Signature précédée de la mention "Lu et approuvé")</p>
-                                    </td>
+                                   <div id="sig2"></div>
+                    <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+                </td>
             </tr>
         </table>
     </div>
@@ -207,5 +211,16 @@
 </div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
+<script>
+    creerSignature('sig1');
+    creerSignature('sig2');
+    var today = new Date().toISOString().split('T')[0];
+    ['dateReservation','dateFait','dateAdoption'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && !el.value) el.value = today;
+    });
+</script>
+	
+	
 </body>
 </html>
