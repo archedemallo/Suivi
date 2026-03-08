@@ -8,7 +8,6 @@
 </head>
 <body data-form-id="Contrat_reservation_chat">
 
-<body>
 
 <!-- Boutons flottants -->
 <div class="buttons">
@@ -50,7 +49,7 @@
     <div class="section">
         <p>
             <span class="bold">Nom provisoire du chat :</span>
-            <input type="text" class="editable editable-long" id="nomChat">
+            <input type="text" class="editable editable-long" id="nomChat" data-required="true" data-label="nom Chat">
         </p>
         <p>
 <p>
@@ -72,7 +71,7 @@
             <input type="text" class="editable editable-medium" id="identification">
             
             <br><span class="bold">Robe, couleur :</span>
-            <input type="text" class="editable editable-medium" id="couleur">
+            <input type="text" class="editable editable-medium" id="couleur"data-required="true" data-label="couleur chat">
         </p>
         <p>
             <span class="bold">Signes particuliers :</span>
@@ -84,16 +83,16 @@
     <div class="section">
         <p>
             <span class="bold">Je soussigné(e) M/Mme</span>
-            <input type="text" class="editable editable-long" id="nomComplet">,
-            <br>né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne">
-            et résidant <input type="text" class="editable editable-long" id="adresse">
+            <input type="text" class="editable editable-long" id="nomComplet" data-required="true" data-label="nom adoptant">,
+            <br>né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="date de naissance adoptant">
+            et résidant <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="adresse adoptant">
         </p>
         <p>
             <span class="bold">Téléphone :</span>
-            <input type="tel" class="editable editable-tel" id="telephone">
+            <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="telephone adoptant">
             
             <span class="bold">E-mail :</span>
-            <input type="email" class="editable editable-email" id="email">
+            <input type="email" class="editable editable-email" id="email" data-required="true" data-label="mail adoptant">
         </p>
         <p>
             m'engage à adopter à l'association « l'Arche de Mallo » le chat décrit ci-dessus
@@ -203,11 +202,13 @@
             <tr>
                 <td>
                     <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
-                    <div class="signature-line"></div>
+                    <div id="sig1"></div>
+                    <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </td>
                 <td>
                     <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
-                    <div class="signature-line"></div>
+                    <div id="sig2"></div>
+                    <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </td>
             </tr>
         </table>
@@ -217,5 +218,17 @@
 </div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
+
+<script>
+    creerSignature('sig1');
+    creerSignature('sig2');
+    var today = new Date().toISOString().split('T')[0];
+    ['dateReservation','dateFait','dateAdoption'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && !el.value) el.value = today;
+    });
+</script>
+
+	
 </body>
 </html>
