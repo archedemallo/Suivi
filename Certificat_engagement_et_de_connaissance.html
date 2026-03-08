@@ -148,14 +148,15 @@
 
 <p> <span class="bold">Certificat délivré au moins 7 jours avant la cession.</span></p>
 
+
 <!-- Signature adoptant -->
 <div class="signature-section mt-30">
     <p class="bold underline">L'adoptant :</p>
     <p>
         Je soussigné(e)
-        <input type="text" class="editable editable-long" id="nomAdoptant" placeholder="Nom et prénom de l'adoptant">
+        <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" placeholder="Nom et prénom de l'adoptant">
         résidant à
-        <input type="text" class="editable editable-long" id="adresseAdoptant" placeholder="Adresse complète">
+        <input type="text" class="editable editable-long" id="adresseAdoptant" data-required="true" data-label="Adresse" placeholder="Adresse complète">
         atteste avoir pris connaissance de toutes les informations ci-dessus.
     </p>
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAdoptant"></p>
@@ -165,6 +166,12 @@
         « Je m'engage à respecter les besoins et l'intégrité de l'animal cédé tout au long de sa vie »</span>
     </div>
     <textarea class="editable" id="mentionManuscrite" placeholder="Recopiez ici la mention manuscrite avant de signer..."></textarea>
+
+    <div class="section mt-20">
+        <p class="bold underline">Signature de l'adoptant :</p>
+        <div id="sig1"></div>
+        <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+    </div>
 </div>
 
 <!-- Signature association -->
@@ -172,11 +179,22 @@
     <p class="bold underline">L'Arche de Mallo :</p>
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAssociation"></p>
     <p class="mention-manuscrite"><span class="bold">Signature du représentant de l'association L'Arche de Mallo</span></p>
+
+    <div class="section mt-20">
+        <div id="sig2"></div>
+        <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
     </div>
+</div>
 
 </div><!-- /content -->
 </div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
-</body>
-</html>
+<script>
+    creerSignature('sig1');
+    creerSignature('sig2');
+    var today = new Date().toISOString().split('T')[0];
+    if (!document.getElementById('dateAdoptant').value) document.getElementById('dateAdoptant').value = today;
+    if (!document.getElementById('dateAssociation').value) document.getElementById('dateAssociation').value = today;
+</script>
+
