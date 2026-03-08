@@ -608,6 +608,12 @@ input[type="date"] {
     br  { line-height: 0.8; }
     h2  { font-size: 13px; margin: 5px 0; }
 
+    .logo-box {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background-image: url('logo_arche.png') !important;
+    }
+
     .page-break {
         page-break-before: always;
     }
