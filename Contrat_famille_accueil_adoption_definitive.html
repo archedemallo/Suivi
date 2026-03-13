@@ -9,10 +9,9 @@
 <body data-form-id="Famille_Accueil_Adoption">
 
 <div class="buttons">
-    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-save" onclick="saveForm()">💾 Sauvegarder</button>
     <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
-    </div>
-
+</div>
 
 <div class="page-container">
 <div class="content">
@@ -32,79 +31,109 @@
         </div>
     </div>
     <div class="header-adoption-right">
-        Date : <input type="date" class="editable editable-date" id="dateAdoption">
+        Date : <input type="date" class="editable editable-date" id="date_signature">
     </div>
 </div>
 
-    <h2>Contrat de famille d'accueil en vue d'adoption définitive</h2>
+<h2>Contrat de famille d'accueil en vue d'adoption définitive</h2>
 
-    <div>
-        Conformément à la législation en vigueur, une période de 7 jours de mise en famille d'accueil
-        est obligatoire avant toute adoption définitive.
-    </div>
+<div class="section">
+    <p>Conformément à la législation en vigueur, une période de 7 jours de mise en famille d'accueil
+    est obligatoire avant toute adoption définitive.</p>
 
-    <div>
-        <label>Je soussigné(e)</label>
-        <input type="text" id="nom" class="editable editable-medium" placeholder="Nom complet">
-    </div>
+    <p>
+        Je soussigné(e)
+            </p>
+       <p>
+        <span class="blue bold">Nom :</span>
+        <input type="text" class="editable editable-medium" id="nom" data-required="true" data-label="Nom">
+        &nbsp;&nbsp;
+        <span class="blue bold">Prénom :</span>
+        <input type="text" class="editable editable-medium" id="prenom" data-required="true" data-label="Prénom">
+    </p>
+    <p>
+        <span class="blue bold">Téléphone :</span>
+        <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone">
+        &nbsp;&nbsp;
+        <span class="blue bold">Adresse mail :</span>
+        <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
+    </p>
+    <p>
+        <span class="blue bold">Adresse :</span>
+        <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse">
+    </p>
+    <p>
+        <span class="blue bold">Code postal :</span>
+        <input type="text" class="editable editable-short" id="code_postal">
+        &nbsp;&nbsp;
+        <span class="blue bold">Ville :</span>
+        <input type="text" class="editable editable-medium" id="ville">
+    </p>
+         <p>
+        <span class="blue bold">Email :</span>
+        <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Email">
+    </p>
+    <p>
+        M'engage à accueillir temporairement le chat
+        <input type="text" class="editable editable-medium" id="nom_chat" data-required="true" data-label="Nom du chat">
+    </p>
+    <p>
+        Du <input type="date" class="editable editable-date" id="date_debut">
+        &nbsp;&nbsp;
+        Au <input type="date" class="editable editable-date" id="date_fin">
+        &nbsp;&nbsp;
+        afin d'évaluer son adaptation à mon foyer.
+    </p>
 
-    <div>
-        <label>Domicilié(e) à</label>
-        <input type="text" id="adresse" class="editable editable-medium" placeholder="Adresse complète">
-    </div>
-
-    <div>
-        <label>M'engage à accueillir temporairement le chat</label>
-        <input type="text" id="chat" class="editable editable-medium" placeholder="Nom du chat">
-    </div>
-
-    <div class="row">
-        <p>
-    Du <input type="date" class="editable editable-date" id="date_debut">
-    &nbsp;&nbsp;
-    Au <input type="date" class="editable editable-date" id="date_fin">
-    &nbsp;&nbsp;
-    afin d'evaluer son adaptation a mon foyer.
-		</p>
-	</div>
-	
     <p>Si aucune opposition n'est formulée au terme des 7 jours, l'adoption sera considérée
     comme définitive et le transfert du chat sera acté.</p>
-
-    <div>
-        <h3>ENGAGEMENT DE LA FAMILLE D'ACCUEIL</h3>
-        <p>Pendant cette période, je m'engage à :</p>
-        <ul>
-            <li>Prendre soin du chat et veiller à son bien-être</li>
-            <li>Respecter les recommandations de l'association (alimentation, soins, etc...)</li>
-            <li>Informer l'association en cas de problème de comportement ou de santé</li>
-            <li>Ne pas céder, vendre ou donner l'animal à un tiers</li>
-            <li>Rendre le chat à l'association si l'adoption ne se concrétise pas</li>
-        </ul>
-    </div>
-
-    <div>
-        <label>Fait à Autrechêne, le</label>
-        <input type="date" id="date_signature" class="editable editable-date">
-    </div>
-<!-- Signature -->
-<div class="signature-section grid">
-<div class="signature-box">
-    <p class="bold">Signature de la famille d'accueil :</p>
-    <div id="sig1"></div>
 </div>
-<div class="signature-box">
-    <p class="bold">Signature du representant de l'Arche :</p>
-    <div id="sig2"></div>
+
+<!-- Engagement -->
+<div class="section">
+    <p class="bold underline">ENGAGEMENT DE LA FAMILLE D'ACCUEIL</p>
+    <p>Pendant cette période, je m'engage à :</p>
+    <ul>
+        <li>Prendre soin du chat et veiller à son bien-être</li>
+        <li>Respecter les recommandations de l'association (alimentation, soins, etc...)</li>
+        <li>Informer l'association en cas de problème de comportement ou de santé</li>
+        <li>Ne pas céder, vendre ou donner l'animal à un tiers</li>
+        <li>Rendre le chat à l'association si l'adoption ne se concrétise pas</li>
+    </ul>
+</div>
+
+<!-- Signatures -->
+<div class="section mt-30">
+    <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="date_fait"></p>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p class="bold underline">Signature de la famille d'accueil :</p>
+                <div id="sig1"></div>
+                <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+            </td>
+            <td>
+                <p class="bold underline">Signature du représentant de L'Arche de Mallo :</p>
+                <div id="sig2"></div>
+                <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+            </td>
+        </tr>
+    </table>
+</div>
 
 </div><!-- /content -->
 </div><!-- /page-container -->
 
-
 <script src="formulaires-arche-mallo.js"></script>
 <script>
-creerSignature('sig1');
-creerSignature('sig2');
+    creerSignature('sig1');
+    creerSignature('sig2');
+    var today = new Date().toISOString().split('T')[0];
+    ['date_signature','date_fait'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && !el.value) el.value = today;
+    });
 </script>
 
 </body>
