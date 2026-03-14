@@ -26,7 +26,7 @@
                 8 ter rue d'Eschène<br>
                 90140 AUTRECHÊNE<br>
                 07.71.64.69.89<br>
-                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+                <a href="/cdn-cgi/l/email-protection#f9988b9a919c9d9c9498959596b99e94989095d79a9694" class="blue"><span class="__cf_email__" data-cfemail="d8b9aabbb0bdbcbdb5b9b4b4b798bfb5b9b1b4f6bbb7b5">[email&#160;protected]</span></a>
             </p>
         </div>
     </div>
@@ -117,8 +117,8 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 <!-- Adoptant -->
 <div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
 <div class="section">
-    <p><span class="blue">Mr ou Mme : </span><input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" oninput="var c=document.getElementById('nomAttestation'); if(c) c.value=this.value;"></p>
-    <p><span class="blue">Adresse : </span><input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
+    <p><span class="blue">Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" oninput="var c=document.getElementById('nomAttestation'); if(c) c.value=this.value;"></p>
+    <p><span class="blue">Adresse : <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
         <span class="blue">Code postal : </span><input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
         &nbsp;&nbsp;
@@ -127,19 +127,56 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     <p>
         <span class="blue">Téléphone fixe : </span><input type="tel" class="editable editable-tel" id="telFixe">
         &nbsp;&nbsp;
-        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Portable">
+        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Portable>
     </p>
-    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
-    <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
-</div>
-    <span class="clickable-row" onclick="toggleCheck(this)">
-        <span class="checkbox"></span> Photocopie pièce d'identité
-    </span>
-</div>
-<div>
-    <span class="clickable-row" onclick="toggleCheck(this)">
-        <span class="checkbox"></span> Photocopie justificatif de domicile
-    </span>
+    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email></p>
+
+ <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
+
+<div class="section">
+    <p class="bold blue">Pièce d'identité :</p>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin:8px 0;">
+        <div>
+            <p class="small">Recto</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoCNI_recto" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_CNI_recto')">
+            </label>
+            <div id="preview_CNI_recto" style="margin-top:6px;"></div>
+        </div>
+        <div>
+            <p class="small">Verso</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoCNI_verso" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_CNI_verso')">
+            </label>
+            <div id="preview_CNI_verso" style="margin-top:6px;"></div>
+        </div>
+    </div>
+
+    <p class="bold blue mt-20">Justificatif de domicile :</p>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin:8px 0;">
+        <div>
+            <p class="small">Page 1</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoDomicile_1" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_Domicile_1')">
+            </label>
+            <div id="preview_Domicile_1" style="margin-top:6px;"></div>
+        </div>
+        <div>
+            <p class="small">Page 2</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoDomicile_2" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_Domicile_2')">
+            </label>
+            <div id="preview_Domicile_2" style="margin-top:6px;"></div>
+        </div>
+    </div>
 </div>
 <br>
 
@@ -184,16 +221,11 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     l'animal sans conditions. Un suivi de cet engagement sera tenu par l'association.</span></p>
 </div>
 
-<p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
-
-	<!-- Case Lu et approuvé -->
-    <p class="mt-20">
-        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
-            <span class="checkbox" data-group="luApprouve"></span>
-            <span class="bold"> Lu et approuvé</span>
-        </span>
-    </p>
- </p>
+<p>
+    Date : <input type="date" class="editable editable-date" id="dateEngagement">
+    &nbsp;&nbsp;
+    Signature, précédée de la mention « lu et approuvé » :
+</p>
 	                <!-- Zone de signature tactile -->
 	<div class="section mt-20">
 		<p class="bold underline">Signature :</p>
@@ -424,17 +456,18 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 <div class="section mt-30">
     <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
 
-        <table class="signature-table">
-        <tr>
-            <td>
-                <p>L'Arche de Mallo :</p>
-				    <!-- Case Lu et approuvé -->
+    <!-- Case Lu et approuvé -->
     <p class="mt-20">
         <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
             <span class="checkbox" data-group="luApprouve"></span>
             <span class="bold"> Lu et approuvé</span>
         </span>
     </p>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
                 <div class="section mt-20">
                     <p class="bold underline">Signature :</p>
                     <div id="sig2"></div>
@@ -442,14 +475,7 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
                 </div>
             </td>
             <td>
-                <p>L'adoptant(e) :</p>
-				    <!-- Case Lu et approuvé -->
-    <p class="mt-20">
-        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
-            <span class="checkbox" data-group="luApprouve"></span>
-            <span class="bold"> Lu et approuvé</span>
-        </span>
-    </p>
+                <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
                 <div class="section mt-20">
                     <p class="bold underline">Signature :</p>
                     <div id="sig3"></div>
@@ -473,6 +499,87 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
+
+    // Aperçu miniature après prise de photo
+    function aperçuPhoto(input, previewId) {
+        var preview = document.getElementById(previewId);
+        if (!input.files || !input.files[0]) return;
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = '<img src="' + e.target.result + '" style="max-width:120px;max-height:90px;border:1px solid #ccc;border-radius:4px;display:block;">'
+                + '<span style="font-size:10px;color:green;">✔ Photo ajoutée</span>';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    // Redimensionner une image avant envoi (max 1200px, qualité 0.7)
+    function redimensionnerImage(file, callback) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = new Image();
+            img.onload = function() {
+                var canvas = document.createElement('canvas');
+                var max = 1200;
+                var w = img.width, h = img.height;
+                if (w > max || h > max) {
+                    if (w > h) { h = Math.round(h * max / w); w = max; }
+                    else       { w = Math.round(w * max / h); h = max; }
+                }
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                callback(canvas.toDataURL('image/jpeg', 0.7).split(',')[1]);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Envoi des photos à Apps Script
+    async function envoyerPhotos(nomAdoptant, nomChat, dateStr) {
+        var photos = [
+            { id: 'photoCNI_recto',  type: 'CNI_Recto'   },
+            { id: 'photoCNI_verso',  type: 'CNI_Verso'    },
+            { id: 'photoDomicile_1', type: 'Domicile_1'   },
+            { id: 'photoDomicile_2', type: 'Domicile_2'   },
+        ];
+        var nom  = (nomAdoptant || 'Inconnu').replace(/\s+/g, '_');
+        var chat = (nomChat     || 'Chat'   ).replace(/\s+/g, '_');
+        var date = (dateStr     || today    );
+
+        for (var i = 0; i < photos.length; i++) {
+            var input = document.getElementById(photos[i].id);
+            if (!input || !input.files || !input.files[0]) continue;
+            var file     = input.files[0];
+            var filename = nom + '_' + chat + '_' + photos[i].type + '_' + date;
+            await new Promise(function(resolve) {
+                var f = file, fn = filename;
+                redimensionnerImage(f, function(base64) {
+                    fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action:      'photo',
+                            onglet:      'Adoption',
+                            filename:    fn,
+                            imageBase64: base64,
+                            mimeType:    'image/jpeg'
+                        })
+                    }).then(resolve).catch(resolve);
+                });
+            });
+        }
+    }
+
+    // Surcharge saveForm pour envoyer les photos après la sauvegarde principale
+    var _saveFormOriginal = saveForm;
+    saveForm = async function() {
+        await _saveFormOriginal();
+        var nomAdoptant = (document.getElementById('nomAdoptant') || {}).value || '';
+        var nomChat     = (document.getElementById('nomUsuel')    || {}).value || '';
+        var date        = (document.getElementById('dateAdoption')|| {}).value || today;
+        await envoyerPhotos(nomAdoptant, nomChat, date);
+    };
 </script>
 
 </body>
