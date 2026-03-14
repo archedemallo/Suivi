@@ -17,7 +17,23 @@
 <div class="content">
 
 <!-- En-tête -->
-<div id="entete"></div>
+<div class="header-adoption">
+    <div>
+        <div class="logo-box"></div>
+        <div class="header-info mt-20">
+            <p class="bold">Association L'ARCHE DE MALLO</p>
+            <p>
+                8 ter rue d'Eschène<br>
+                90140 AUTRECHÊNE<br>
+                07.71.64.69.89<br>
+                <a href="/cdn-cgi/l/email-protection#f9988b9a919c9d9c9498959596b99e94989095d79a9694" class="blue"><span class="__cf_email__" data-cfemail="d8b9aabbb0bdbcbdb5b9b4b4b798bfb5b9b1b4f6bbb7b5">[email&#160;protected]</span></a>
+            </p>
+        </div>
+    </div>
+    <div class="header-adoption-right">
+        Date adoption : <input type="date" class="editable editable-date" id="dateAdoption">
+    </div>
+</div>
 
 <div class="title">Contrat d'adoption responsable</div>
 
@@ -26,6 +42,7 @@ L'association <em>L'ARCHE DE MALLO</em>, déclarée en préfecture de Belfort le
 sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confier l'animal suivant :
 </p>
 
+<br>
 <!-- Informations animal -->
 <div class="form-group">
         <p><span class="blue">Nom usuel : </span><input type="text" class="editable editable-medium" id="nomUsuel" data-required="true" data-label="Nom usuel">
@@ -99,36 +116,34 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 </div>
 
 <!-- Adoptant -->
+<br>
 <div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
 <div class="section">
-    <!-- Civilite -->
-<div class="section">
+    <p><span class="blue">Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" oninput="var c=document.getElementById('nomAttestation'); if(c) c.value=this.value;"></p>
+    <p><span class="blue">Adresse : <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
-            <span class="checkbox" data-group="civilite"></span>
-            <span class="blue">Monsieur</span>
-        </span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
-            <span class="checkbox" data-group="civilite"></span>
-            <span class="blue">Madame</span>
-        </span>
-    </p>
-    <p><span class="blue">Nom :</span> <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom"></p>
-    <p><span class="blue">Prenom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom"></p>
-    <p><span class="blue">Adresse :</span> <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
-    <p>
-        <span class="blue">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
+        <span class="blue">Code postal : </span><input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
         &nbsp;&nbsp;
-        <span class="blue">Ville :</span> <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
+        <span class="blue">Ville : </span><input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
     </p>
-    <p><span class="blue">Portable :</span> <input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Téléphone portable"></p>
-    <p><span class="blue">Email :</span> <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
-</div>
-	
+    <p>
+        <span class="blue">Téléphone fixe : </span><input type="tel" class="editable editable-tel" id="telFixe">
+        &nbsp;&nbsp;
+        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Portable">
+    </p>
+    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
+
  <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
 
 <div class="section">
-    <p class="bold blue">Pièce d'identité :</p>
+    <p class="bold blue">Pièce d'identité :
+        <span class="clickable-row" onclick="toggleCheck(this, 'cni_statut')">
+            <span class="checkbox" data-group="cni_statut"></span> Déjà fournie
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'cni_statut')">
+            <span class="checkbox" data-group="cni_statut"></span> À fournir
+        </span>
+    </p>
     <div style="display:flex; gap:20px; flex-wrap:wrap; margin:8px 0;">
         <div>
             <p class="small">Recto</p>
@@ -150,7 +165,14 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
         </div>
     </div>
 
-    <p class="bold blue mt-20">Justificatif de domicile :</p>
+    <p class="bold blue mt-20">Justificatif de domicile :
+        <span class="clickable-row" onclick="toggleCheck(this, 'domicile_statut')">
+            <span class="checkbox" data-group="domicile_statut"></span> Déjà fourni
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'domicile_statut')">
+            <span class="checkbox" data-group="domicile_statut"></span> À fournir
+        </span>
+    </p>
     <div style="display:flex; gap:20px; flex-wrap:wrap; margin:8px 0;">
         <div>
             <p class="small">Page 1</p>
@@ -209,26 +231,18 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     <span class="red">L'ICAD de l'animal restera au nom de l'association jusqu'à réception du certificat de stérilisation
     fourni par votre vétérinaire.</span></p>
     <p><span class="red bold">Vous devez envoyer le certificat de stérilisation par e-mail à :</span>
-    <a href="/cdn-cgi/l/email-protection#1c7d6e7f74797879717d7070735c7b717d7570327f7371" class="blue"><span class="__cf_email__" data-cfemail="a6c7d4c5cec3c2c3cbc7cacac9e6c1cbc7cfca88c5c9cb">[email&#160;protected]</span></a></p>
+    <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a></p>
     <p><span class="red">Le changement de propriétaire sera effectué à votre nom dès réception du certificat.</span></p>
     <p><span class="red">Si toutefois vous ne respectez pas ce contrat, L'Arche de Mallo se donne le droit de récupérer
     l'animal sans conditions. Un suivi de cet engagement sera tenu par l'association.</span></p>
 </div>
 
-<p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
-
-	
-	<!-- Case Lu et approuvé -->
-    <p class="mt-20">
-        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
-            <span class="checkbox" data-group="luApprouve"></span>
-            <span class="bold"> Lu et approuvé</span>
-        </span>
-    </p>
-	
-	
-	
-	<!-- Zone de signature tactile -->
+<p>
+    Date : <input type="date" class="editable editable-date" id="dateEngagement">
+    &nbsp;&nbsp;
+    Signature, précédée de la mention « lu et approuvé » :
+</p>
+	                <!-- Zone de signature tactile -->
 	<div class="section mt-20">
 		<p class="bold underline">Signature :</p>
 		<div id="sig1"></div>
@@ -449,39 +463,37 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 <br>
 <div>
 
+<p class="bold">Fait en deux exemplaires (dont un remis à l’adoptant)</p>
+<p class="bold">Chaque feuillets doit être paraphés, le dernier feuillet également daté et signé.</p>
+</div>
+
+
 <!-- Signatures -->
 <div class="section mt-30">
     <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
 
-       <table class="signature-table">
-        <tr>
-            <td>
-                <p>L'Arche de Mallo :<br></p>
-			
-				<!-- Case Lu et approuvé -->
+    <!-- Case Lu et approuvé -->
     <p class="mt-20">
         <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
             <span class="checkbox" data-group="luApprouve"></span>
             <span class="bold"> Lu et approuvé</span>
         </span>
     </p>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
                 <div class="section mt-20">
-                    <p class="bold underline">Signature de l'Arche de Mallo :</p>
+                    <p class="bold underline">Signature :</p>
                     <div id="sig2"></div>
                     <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </div>
             </td>
             <td>
-                <p>L'adoptant(e) :<br></p>
-				<!-- Case Lu et approuvé -->
-    <p class="mt-20">
-        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
-            <span class="checkbox" data-group="luApprouve"></span>
-            <span class="bold"> Lu et approuvé</span>
-        </span>
-    </p>
+                <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
                 <div class="section mt-20">
-                    <p class="bold underline">Signature de l'adoptant(e) :</p>
+                    <p class="bold underline">Signature :</p>
                     <div id="sig3"></div>
                     <div id="sig3-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </div>
@@ -495,9 +507,6 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 
 <script src="formulaires-arche-mallo.js"></script>
 <script>
-creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date adoption :' });
-	
-	creerSignature('sig1');
     creerSignature('sig2');
     creerSignature('sig3');
     var today = new Date().toISOString().split('T')[0];
