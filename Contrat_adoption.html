@@ -117,20 +117,30 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
 <!-- Adoptant -->
 <div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
 <div class="section">
-    <p><span class="blue">Mr ou Mme : <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" oninput="var c=document.getElementById('nomAttestation'); if(c) c.value=this.value;"></p>
-    <p><span class="blue">Adresse : <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
+    <!-- Civilite -->
+<div class="section">
     <p>
-        <span class="blue">Code postal : </span><input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
-        &nbsp;&nbsp;
-        <span class="blue">Ville : </span><input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
+        <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+            <span class="checkbox" data-group="civilite"></span>
+            <span class="bold blue">Monsieur</span>
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+            <span class="checkbox" data-group="civilite"></span>
+            <span class="bold blue">Madame</span>
+        </span>
     </p>
+    <p><span class="bold blue">Nom :</span> <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom"></p>
+    <p><span class="bold blue">Prenom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom"></p>
+    <p><span class="bold blue">Adresse :</span> <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
-        <span class="blue">Téléphone fixe : </span><input type="tel" class="editable editable-tel" id="telFixe">
+        <span class="bold blue">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
         &nbsp;&nbsp;
-        <span class="blue">Portable : </span><input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Portable>
+        <span class="bold blue">Ville :</span> <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
     </p>
-    <p><span class="blue">Email : </span><input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email></p>
-
+    <p><span class="bold blue">Portable :</span> <input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Téléphone portable"></p>
+    <p><span class="bold blue">Email :</span> <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
+</div>
+	
  <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
 
 <div class="section">
@@ -221,12 +231,20 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     l'animal sans conditions. Un suivi de cet engagement sera tenu par l'association.</span></p>
 </div>
 
-<p>
-    Date : <input type="date" class="editable editable-date" id="dateEngagement">
-    &nbsp;&nbsp;
-    Signature, précédée de la mention « lu et approuvé » :
-</p>
-	                <!-- Zone de signature tactile -->
+<p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
+
+	
+	<!-- Case Lu et approuvé -->
+    <p class="mt-20">
+        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
+            <span class="checkbox" data-group="luApprouve"></span>
+            <span class="bold"> Lu et approuvé</span>
+        </span>
+    </p>
+	
+	
+	
+	<!-- Zone de signature tactile -->
 	<div class="section mt-20">
 		<p class="bold underline">Signature :</p>
 		<div id="sig1"></div>
@@ -467,17 +485,32 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
     <table class="signature-table">
         <tr>
             <td>
-                <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
+                <p>L'Arche de Mallo :<br></p>
+			
+				<!-- Case Lu et approuvé -->
+    <p class="mt-20">
+        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
+            <span class="checkbox" data-group="luApprouve"></span>
+            <span class="bold"> Lu et approuvé</span>
+        </span>
+    </p>
                 <div class="section mt-20">
-                    <p class="bold underline">Signature :</p>
+                    <p class="bold underline">Signature de l'Arche de Mallo :</p>
                     <div id="sig2"></div>
                     <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </div>
             </td>
             <td>
-                <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
+                <p>L'adoptant(e) :<br></p>
+				<!-- Case Lu et approuvé -->
+    <p class="mt-20">
+        <span class="clickable-row" onclick="toggleCheck(this, 'luApprouve')">
+            <span class="checkbox" data-group="luApprouve"></span>
+            <span class="bold"> Lu et approuvé</span>
+        </span>
+    </p>
                 <div class="section mt-20">
-                    <p class="bold underline">Signature :</p>
+                    <p class="bold underline">Signature de l'adoptant(e) :</p>
                     <div id="sig3"></div>
                     <div id="sig3-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </div>
