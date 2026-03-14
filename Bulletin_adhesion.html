@@ -62,7 +62,7 @@
                     8 ter rue d'Eschene<br>
                     90140 AUTRECHENE<br>
                     07.71.64.69.89<br>
-                    <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+                    <a href="/cdn-cgi/l/email-protection#6b0a1908030e0f0e060a0707042b0c060a020745080406" class="blue"><span class="__cf_email__" data-cfemail="0d6c7f6e65686968606c6161624d6a606c6461236e6260">[email&#160;protected]</span></a>
                 </p>
             </div>
         </td>
@@ -180,12 +180,14 @@
 </div>
 
 </div><!-- /content -->
-</div><!-- /page-container -->
-
+</d</div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
 <script>
-creerSignature('sig1');
+    creerSignature("sig1");
+    var today = new Date().toISOString().split("T")[0];
+    var el = document.getElementById("date");
+    if (el && !el.value) el.value = today;
 </script>
 
 </body>
