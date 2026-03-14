@@ -4,14 +4,44 @@
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVdtWVMudq5r9d-q7gfOH3yDbH12QMLNJV4gkeljWy1p74T8bTfnxXIUdxUuNgvchImA/exec';
 
-'<p class="bold">Association L\'ARCHE DE MALLO</p>' +
-'<p>' +
-    '8 ter rue d\'Eschène<br>' +
-    '90140 AUTRECHÊNE<br>' +
-    '07.71.64.69.89<br>' +
-    '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
-'</p>' +
+// ============================================================
+// EN-TÊTE ASSOCIATION
+// ============================================================
+function creerEntete(options) {
+    options = options || {};
+    var dateId    = options.dateId    || 'dateAdoption';
+    var dateLabel = options.dateLabel || 'Date :';
+    var titre     = options.titre     || '';
 
+    var el = document.getElementById('entete');
+    if (!el) return;
+
+    el.innerHTML =
+        '<div class="header-adoption">' +
+            '<div style="display:flex;align-items:center;gap:20px;">' +
+                '<div class="logo-box"></div>' +
+                '<div class="header-info">' +
+                    '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
+                    '<p>' +
+                        '8 ter rue d\'Eschène<br>' +
+                        '90140 AUTRECHÊNE<br>' +
+                        '07.71.64.69.89<br>' +
+                        '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
+                    '</p>' +
+                '</div>' +
+            '</div>' +
+            '<div class="header-adoption-right">' +
+                dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '">' +
+            '</div>' +
+        '</div>' +
+        (titre ? '<div class="title">' + titre + '</div>' : '');
+
+    // Pré-remplir la date à aujourd'hui
+    var dateEl = document.getElementById(dateId);
+    if (dateEl && !dateEl.value) {
+        dateEl.value = new Date().toISOString().split('T')[0];
+    }
+}
 
 
 let formSaved     = false;
@@ -458,9 +488,6 @@ function creerSignature(containerId, width, height) {
     }
     function stop() { drawing = false; }
 
-
-creerEntete({ dateId: 'date_signature', dateLabel: 'Date :' });
-    
     canvas.addEventListener('mousedown',  start);
     canvas.addEventListener('mousemove',  draw);
     canvas.addEventListener('mouseup',    stop);
