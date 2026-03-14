@@ -27,7 +27,7 @@
                 8 ter rue d'Eschène<br>
                 90140 AUTRECHÊNE<br>
                 07.71.64.69.89<br>
-                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
+                <a href="/cdn-cgi/l/email-protection#11706372797475747c707d7d7e51767c70787d3f727e7c" class="blue"><span class="__cf_email__" data-cfemail="fb9a8998939e9f9e969a979794bb9c969a9297d5989496">[email&#160;protected]</span></a>
             </p>
         </div>
     </div>
@@ -42,14 +42,14 @@
     <div class="section">
         <p class="bold underline">Vous :</p>
         <p><span class="bold">Nom et Prénom :</span>
-            <input type="text" class="editable editable-long" id="nomProprietaire" placeholder="Nom et prénom du propriétaire"
+            <input type="text" class="editable editable-long" id="nomProprietaire" data-required="true" data-label="Nom et prénom"
        oninput="var c=document.getElementById('nomAttestation'); if(c) c.value=this.value;">
         </p>
         <p><span class="bold">Adresse :</span>
-            <input type="text" class="editable editable-long" id="adresse" placeholder="Adresse complète">
+            <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse">
         </p>
         <p><span class="bold">Tél :</span>
-            <input type="tel" class="editable editable-medium" id="telephone" placeholder="Numéro de téléphone">
+            <input type="tel" class="editable editable-medium" id="telephone" data-required="true" data-label="Téléphone">
         </p>
     </div>
 
@@ -182,26 +182,16 @@
     <table class="signature-table">
         <tr>
             <td>
-                <p class="bold">Signature du proprietaire :</p>
-                <p class="small italic">lu et approuve</p>
-                <div style="border:2px solid #333; border-radius:8px; margin-top:8px; display:inline-block; background:#f9f9f9; box-shadow:inset 0 1px 4px rgba(0,0,0,0.15); padding:4px;">
-                    <canvas id="signatureProprietaire" width="280" height="120"
-                            style="display:block; cursor:crosshair; touch-action:none; background:#fff; border-radius:6px;"></canvas>
-                </div>
-                <div style="margin-top:6px;">
-                    <button onclick="effacer('signatureProprietaire')" style="padding:4px 10px; border:1px solid #ccc; border-radius:4px; cursor:pointer; font-size:10pt; background:#f8f9fa;">Effacer</button>
-                </div>
+                <p class="bold">Signature du propriétaire :</p>
+                <p class="small italic">lu et approuvé</p>
+                <div id="sig1"></div>
+                <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
             </td>
             <td>
-                <p class="bold">Signature du representant de l'Arche de Mallo :</p>
-                <p class="small italic">lu et approuve</p>
-                <div style="border:2px solid #333; border-radius:8px; margin-top:8px; display:inline-block; background:#f9f9f9; box-shadow:inset 0 1px 4px rgba(0,0,0,0.15); padding:4px;">
-                    <canvas id="signatureAssociation" width="280" height="120"
-                            style="display:block; cursor:crosshair; touch-action:none; background:#fff; border-radius:6px;"></canvas>
-                </div>
-                <div style="margin-top:6px;">
-                    <button onclick="effacer('signatureAssociation')" style="padding:4px 10px; border:1px solid #ccc; border-radius:4px; cursor:pointer; font-size:10pt; background:#f8f9fa;">Effacer</button>
-                </div>
+                <p class="bold">Signature du représentant de l'Arche de Mallo :</p>
+                <p class="small italic">lu et approuvé</p>
+                <div id="sig2"></div>
+                <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
             </td>
         </tr>
     </table>
@@ -210,69 +200,22 @@
 </div><!-- /content -->
 </div><!-- /page-container -->
 
-
-
 <script src="formulaires-arche-mallo.js"></script>
-
-
 <script>
-function initPad(id) {
-    var canvas  = document.getElementById(id);
-    var ctx     = canvas.getContext('2d');
-    var drawing = false;
-    var signed  = false;
+    creerSignature('sig1');
+    creerSignature('sig2');
+    var today = new Date().toISOString().split('T')[0];
+    ['dateAdoption','dateFait'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && !el.value) el.value = today;
+    });
+</script>
 
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth   = 2;
-    ctx.lineCap     = 'round';
-    ctx.fillStyle   = '#bbb';
-    ctx.font        = 'italic 12px Arial';
-    ctx.fillText('Signez ici...', 8, 65);
-
-    function getPos(e) {
-        var rect  = canvas.getBoundingClientRect();
-        var point = e.touches ? e.touches[0] : e;
-        return { x: point.clientX - rect.left, y: point.clientY - rect.top };
-    }
-    function start(e) {
-        e.preventDefault();
-        if (!signed) { ctx.clearRect(0, 0, canvas.width, canvas.height); signed = true; }
-        drawing = true;
-        var pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    }
-    function draw(e) {
-        if (!drawing) return;
-        e.preventDefault();
-        var pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    }
-    function stop() { drawing = false; }
-
-    canvas.addEventListener('mousedown',  start);
-    canvas.addEventListener('mousemove',  draw);
-    canvas.addEventListener('mouseup',    stop);
-    canvas.addEventListener('mouseleave', stop);
-    canvas.addEventListener('touchstart', start, { passive: false });
-    canvas.addEventListener('touchmove',  draw,  { passive: false });
-    canvas.addEventListener('touchend',   stop);
+</body>
+</html>
 }
 
 function effacer(id) {
     var canvas = document.getElementById(id);
     var ctx    = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#bbb';
-    ctx.font      = 'italic 12px Arial';
-    ctx.fillText('Signez ici...', 8, 65);
-}
-
-initPad('signatureProprietaire');
-initPad('signatureAssociation');
-</script>
-
-
-</body>
-</html>
+    ctx.clearR
