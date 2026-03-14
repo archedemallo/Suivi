@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbweJvL7VkcA4VPhaxXCsTJpTIobIOycN75yu1sGyXNCTG8nxvhfdfVDvBXvbcOodHlfbA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVdtWVMudq5r9d-q7gfOH3yDbH12QMLNJV4gkeljWy1p74T8bTfnxXIUdxUuNgvchImA/exec';
 
 '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
 '<p>' +
@@ -458,6 +458,9 @@ function creerSignature(containerId, width, height) {
     }
     function stop() { drawing = false; }
 
+
+creerEntete({ dateId: 'date_signature', dateLabel: 'Date :' });
+    
     canvas.addEventListener('mousedown',  start);
     canvas.addEventListener('mousemove',  draw);
     canvas.addEventListener('mouseup',    stop);
