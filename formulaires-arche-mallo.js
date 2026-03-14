@@ -4,6 +4,16 @@
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbweJvL7VkcA4VPhaxXCsTJpTIobIOycN75yu1sGyXNCTG8nxvhfdfVDvBXvbcOodHlfbA/exec';
 
+'<p class="bold">Association L\'ARCHE DE MALLO</p>' +
+'<p>' +
+    '8 ter rue d\'Eschène<br>' +
+    '90140 AUTRECHÊNE<br>' +
+    '07.71.64.69.89<br>' +
+    '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
+'</p>' +
+
+
+
 let formSaved     = false;
 let savedFilename = '';
 
