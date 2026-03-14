@@ -378,12 +378,19 @@ function getTodayISO() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     var today      = getTodayISO();
-    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntipuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin'];
+    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntipuces', 'dateAntiPuces', 'dateVaccin', 'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin'];
 
     document.querySelectorAll('input[type="date"].editable').forEach(function(el) {
         if (!excludeIds.includes(el.id) && !el.value) {
             el.value = today;
         }
+    });
+
+    // Forcer le vidage des dates qui ne doivent pas se remplir automatiquement
+    // (annule l'autofill de Chrome)
+    excludeIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.value = '';
     });
 
     makeDraggable();
