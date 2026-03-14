@@ -69,8 +69,19 @@ function toggleCheck(element, groupName) {
         });
     }
     box.classList.toggle('checked');
-}
 
+var luApprouve = document.querySelector('#luApprouve1');
+if (luApprouve && !luApprouve.classList.contains('checked')) {
+    missing.push('Lu et approuvé (L\'Arche de Mallo)');
+}
+var luApprouve = document.querySelector('#luApprouve2');
+if (luApprouve && !luApprouve.classList.contains('checked')) {
+    missing.push('Lu et approuvé (L\'Arche de Mallo)');
+}var luApprouve = document.querySelector('#luApprouve3');
+if (luApprouve && !luApprouve.classList.contains('checked')) {
+    missing.push('Lu et approuvé (L\'Arche de Mallo)');
+}
+}
 // ============================================================
 // COLLECTE DES DONNEES
 // ============================================================
