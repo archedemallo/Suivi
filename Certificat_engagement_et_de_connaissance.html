@@ -156,9 +156,9 @@
     <p class="bold underline">L'adoptant :</p>
     <p>
         Je soussigné(e)
-        <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" placeholder="Nom et prénom de l'adoptant">
+        <input type="text" class="editable" style="width:350px;" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" placeholder="Nom et prénom de l'adoptant">
         résidant à
-        <input type="text" class="editable editable-long" id="adresseAdoptant" data-required="true" data-label="Adresse" placeholder="Adresse complète">
+        <input type="text" class="editable" style="width:100%;" id="adresseAdoptant" data-required="true" data-label="Adresse" placeholder="Adresse complète">
         atteste avoir pris connaissance de toutes les informations ci-dessus.
     </p>
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAdoptant"></p>
@@ -167,6 +167,15 @@
         Signature de l'adoptant précédée de la mention manuscrite :<br>
         « Je m'engage à respecter les besoins et l'intégrité de l'animal cédé tout au long de sa vie »</span>
     </div>
+
+    <!-- Case à cocher obligatoire -->
+    <p class="mt-20">
+        <span class="clickable-row" onclick="toggleCheck(this)" id="checkEngagement">
+            <span class="checkbox"></span>
+            <span class="bold"> Je m'engage à respecter les besoins et l'intégrité de l'animal cédé tout au long de sa vie</span>
+        </span>
+    </p>
+
     <textarea class="editable" id="mentionManuscrite" placeholder="Recopiez ici la mention manuscrite avant de signer..."></textarea>
 
     <div class="section mt-20">
@@ -175,6 +184,7 @@
         <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
     </div>
 </div>
+    
 
 <!-- Signature association -->
 <div class="signature-section mt-30">
@@ -198,5 +208,18 @@
     var today = new Date().toISOString().split('T')[0];
     if (!document.getElementById('dateAdoptant').value) document.getElementById('dateAdoptant').value = today;
     if (!document.getElementById('dateAssociation').value) document.getElementById('dateAssociation').value = today;
+
+// Validation spécifique au certificat
+var _validateOriginal = validateRequiredFields;
+validateRequiredFields = function() {
+    var missing = _validateOriginal();
+    // Case engagement obligatoire
+    var engagement = document.getElementById('checkEngagement');
+    if (engagement && !engagement.querySelector('.checkbox').classList.contains('checked')) {
+        missing.push('Engagement à respecter les besoins de l\'animal');
+    }
+    return missing;
+};
+    
 </script>
 
