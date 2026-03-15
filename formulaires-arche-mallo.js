@@ -249,6 +249,14 @@ function validateRequiredFields() {
         }
     });
 
+    // Vérifier les groupes de cases à cocher rendus obligatoires
+    ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
+        if (document.body.getAttribute('data-required-group-' + group) === 'true') {
+            var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
+            if (!checked) missing.push('Résultat ' + group.replace('resultat', ''));
+        }
+    });
+    
     return missing;
 }
 
