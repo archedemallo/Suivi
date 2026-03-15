@@ -520,14 +520,13 @@ function majNomAttestation() {
 }
 	
     // Aperçu miniature après prise de photo
-    function aperçuPhoto(input, previewId) {
+// APRÈS — fonction corrigée
+function aperçuPhoto(input, previewId) {
     var preview = document.getElementById(previewId);
     if (!input.files || !input.files[0]) return;
     var nomFichier = input.files[0].name;
     preview.innerHTML = '<span style="font-size:11px;color:green;">✔ ' + nomFichier + '</span>';
-};
-        reader.readAsDataURL(input.files[0]);
-    }
+}
 
     // Redimensionner une image avant envoi (max 1200px, qualité 0.7)
     function redimensionnerImage(file, callback) {
