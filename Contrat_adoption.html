@@ -521,13 +521,11 @@ function majNomAttestation() {
 	
     // Aperçu miniature après prise de photo
     function aperçuPhoto(input, previewId) {
-        var preview = document.getElementById(previewId);
-        if (!input.files || !input.files[0]) return;
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            preview.innerHTML = '<img src="' + e.target.result + '" style="max-width:120px;max-height:90px;border:1px solid #ccc;border-radius:4px;display:block;">'
-                + '<span style="font-size:10px;color:green;">✔ Photo ajoutée</span>';
-        };
+    var preview = document.getElementById(previewId);
+    if (!input.files || !input.files[0]) return;
+    var nomFichier = input.files[0].name;
+    preview.innerHTML = '<span style="font-size:11px;color:green;">✔ ' + nomFichier + '</span>';
+};
         reader.readAsDataURL(input.files[0]);
     }
 
