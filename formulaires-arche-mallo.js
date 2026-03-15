@@ -168,7 +168,10 @@ function buildHtmlWithData() {
     // Cacher les boutons, canvas et bouton Effacer — afficher toutes les signatures images
     html = html.replace('<head>', '<head><style>' +
         '.buttons{display:none!important}' +
-'.no-print{display:none!important}' +                        
+'.no-print{display:none!important}' +   
+'#nom,#prenom,#adresse,#email,#nomAttestation{width:250px!important;min-width:unset!important;}' +
+'#numeroPaiement,#cheque1,#cheque2,#cheque3,#cheque4,#cheque5,#cheque6{width:120px!important;min-width:unset!important;}' +
+                        
         '.signature-pad-wrap{display:none!important}' +
         '.signature-controls{display:none!important}' +
         '[id$="-print"]{display:block!important}' +
