@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVdtWVMudq5r9d-q7gfOH3yDbH12QMLNJV4gkeljWy1p74T8bTfnxXIUdxUuNgvchImA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfeSZEgGVitKitIGG77sZy2DqcpKfqf-aw89xAEtnp4Kekf-RqfFQ__0wnzgcGF0JsjQ/exec';
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
@@ -180,6 +180,21 @@ function buildHtmlWithData() {
     // Effacer les placeholders non remplis
     html = html.replace(/\[\[SIGNATURE_IMAGE\]\]/g, '');
 
+    
+// Dates : format français + masque invisible si vide
+    html = html.replace(
+        /<input([^>]*?)type="date"([^>]*?)value="([^"]*)"([^>]*?)>/g,
+        function(match, before, middle, val, after) {
+            var affichage = '';
+            if (val) {
+                var parts = val.split('-');
+                if (parts.length === 3) affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
+            }
+            return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:100px;padding:0 2px;">'
+                + affichage + '</span>';
+        }
+    );
+    
     return html;
 }
 
