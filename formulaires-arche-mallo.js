@@ -242,15 +242,11 @@ function validateRequiredFields() {
 
     // Vérifier les signatures (sig1, sig2, sig3 selon ce qui existe)
     ['sig1', 'sig2', 'sig3'].forEach(function(sigId) {
-        var canvas = document.querySelector('#' + sigId + ' canvas');
-        if (!canvas) return;
-        var ctx    = canvas.getContext('2d');
-        var pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        var empty  = true;
-        for (var i = 0; i < pixels.length; i += 4) {
-            if (pixels[i + 3] > 0) { empty = false; break; }
+        var container = document.getElementById(sigId);
+        if (!container) return;
+        if (!container._signed) {
+            missing.push('Signature (' + sigId + ')');
         }
-        if (empty) missing.push('Signature (' + sigId + ')');
     });
 
     return missing;
@@ -446,6 +442,7 @@ function makeDraggable() {
 // ============================================================
 // SIGNATURE TACTILE
 // ============================================================
+
 function creerSignature(containerId, width, height) {
     width  = width  || 280;
     height = height || 120;
@@ -470,6 +467,9 @@ function creerSignature(containerId, width, height) {
     var drawing = false;
     var signed  = false;
 
+    // FLAG : indique qu'une signature a été tracée
+    container._signed = false;
+
     ctx.strokeStyle = '#000';
     ctx.lineWidth   = 2;
     ctx.lineCap     = 'round';
@@ -490,6 +490,7 @@ function creerSignature(containerId, width, height) {
         e.preventDefault();
         if (!signed) { ctx.clearRect(0, 0, width, height); signed = true; }
         drawing = true;
+        container._signed = true;  // FLAG activé
         var pos = getPos(e);
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
@@ -514,6 +515,9 @@ function creerSignature(containerId, width, height) {
     btn.addEventListener('click', function() {
         ctx.clearRect(0, 0, width, height);
         signed = false;
+        container._signed = false;  // FLAG remis à zéro
         hint();
     });
 }
+
+
