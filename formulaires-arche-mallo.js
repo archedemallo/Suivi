@@ -305,7 +305,7 @@ async function saveForm() {
     // Validation des champs obligatoires
     var missing = validateRequiredFields();
     if (missing.length > 0) {
-        alert('⚠️ Veuillez remplir les champs obligatoires :\n\n• ' + missing.join('\n• '));
+       afficherMessage('⚠️ Veuillez remplir les champs obligatoires :<br><br>• ' + missing.join('<br>• '), 'erreur');
         return;
     }
 
@@ -342,11 +342,32 @@ async function saveForm() {
             btnPrint.className   = 'btn btn-print';
             btnPrint.disabled    = false;
         }
-        alert('Sauvegarde reussie ! Vous pouvez maintenant imprimer.');
+        afficherMessage('✅ Mail généré<br>Vous pouvez maintenant imprimer si besoin.');
     } else {
         alert('Erreur lors de la sauvegarde. Verifiez votre connexion.');
     }
 }
+
+// ============================================================
+// Fonction afficher message
+// ============================================================
+function afficherMessage(texte, type) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+
+    var couleurBordure = (type === 'erreur') ? '#c00000' : '#28a745';
+
+    var boite = document.createElement('div');
+    boite.style.cssText = 'background:white;border-radius:10px;padding:30px 40px;max-width:400px;width:90%;box-shadow:0 4px 20px rgba(0,0,0,0.3);border-top:4px solid ' + couleurBordure + ';font-family:Calibri,Arial,sans-serif;text-align:center;';
+    boite.innerHTML =
+        '<p style="font-size:15px;line-height:1.6;margin:0 0 20px;">' + texte + '</p>' +
+        '<button onclick="this.closest(\'div[style*=fixed]\').remove()" ' +
+        'style="background:' + couleurBordure + ';color:white;border:none;padding:10px 30px;border-radius:5px;cursor:pointer;font-size:14px;font-weight:bold;">OK</button>';
+
+    overlay.appendChild(boite);
+    document.body.appendChild(overlay);
+}
+
 
 // ============================================================
 // BOUTON IMPRIMER
