@@ -20,7 +20,7 @@ function creerEntete(options) {
         '<div class="header-adoption">' +
             '<div style="display:flex;align-items:center;gap:20px;">' +
                 '<div class="logo-box"></div>' +
-                '<div class="header-info">' +
+                '<div class="header-info" style="font-size:11pt;">' + adresse + '</div>' +
                     '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
                     '<p>' +
                         '8 ter rue d\'Eschène<br>' +
@@ -78,15 +78,16 @@ function collectFormData() {
     document.querySelectorAll('input.editable, textarea.editable').forEach(function(el) {
         if (el.id) data[el.id] = el.value;
     });
-    document.querySelectorAll('.checkbox.checked').forEach(function(cb) {
-        var group = cb.getAttribute('data-group');
+    
+ // Collecter les cases multi-sélection (data-checked-group)
+    document.querySelectorAll('.checkbox.checked[data-checked-group]').forEach(function(cb) {
+        var group = cb.getAttribute('data-checked-group');
         var label = cb.parentElement.textContent.trim();
-        if (group) {
-            data['check_' + group] = data['check_' + group]
-                ? data['check_' + group] + ', ' + label
-                : label;
-        }
+        data['check_' + group] = data['check_' + group]
+            ? data['check_' + group] + ', ' + label
+            : label;
     });
+    
     document.querySelectorAll('input[type="checkbox"]:checked').forEach(function(cb) {
         var label = document.querySelector('label[for="' + cb.id + '"]');
         var key   = 'check_' + (cb.name || cb.id);
@@ -162,6 +163,11 @@ function buildHtmlWithData() {
         '[id$="-print"]{display:block!important}' +
         'button{display:none!important}' +
         'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
+'#puce,#nom,#prenom,#adresse,#email,#nomAttestation{min-width:300px!important;width:auto!important;}' +
+        'label[style*="background:#0563c1"]{display:none!important}' +
+'.preview-wrap p.small{display:none!important}' +
+                        'label[style*="background:#0563c1"]{display:none!important}' +
+'.preview-wrap p.small{display:none!important}' +
         '</style>');
 
     // Injecter les images de signature dans les placeholders
@@ -182,18 +188,20 @@ function buildHtmlWithData() {
 
     
 // Dates : format français + masque invisible si vide
-    html = html.replace(
-        /<input([^>]*?)type="date"([^>]*?)value="([^"]*)"([^>]*?)>/g,
-        function(match, before, middle, val, after) {
-            var affichage = '';
-            if (val) {
-                var parts = val.split('-');
-                if (parts.length === 3) affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
-            }
-            return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:100px;padding:0 2px;">'
-                + affichage + '</span>';
+   html = html.replace(
+    /<input([^>]*?)type="date"([^>]*?)>/g,
+    function(match) {
+        var valMatch = match.match(/value="([^"]*)"/);
+        var val = valMatch ? valMatch[1] : '';
+        var affichage = '';
+        if (val) {
+            var parts = val.split('-');
+            if (parts.length === 3) affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
         }
-    );
+        return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:100px;padding:0 2px;">'
+            + affichage + '</span>';
+    }
+);
     
     return html;
 }
