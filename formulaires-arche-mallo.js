@@ -256,6 +256,19 @@ function validateRequiredFields() {
             if (!checked) missing.push('Résultat ' + group.replace('resultat', ''));
         }
     });
+
+
+
+    // Vérifier le format des champs email
+    document.querySelectorAll('input[type="email"].editable').forEach(function(el) {
+        if (!el.value || el.value.trim() === '') return; // déjà géré par data-required
+        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+        if (!valid) {
+            missing.push('Email invalide : ' + el.value);
+            el.style.borderBottom = '2px solid red';
+        }
+    });
+
     
     return missing;
 }
