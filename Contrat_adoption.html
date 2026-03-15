@@ -115,8 +115,8 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
             <span class="blue">Madame</span>
         </span>
     </p>
-    <p><span class="blue">Nom :</span> <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom"></p>
-    <p><span class="blue">Prenom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom"></p>
+    <p><span class="blue">Nom :</span> <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom" oninput="majNomAttestation()"></p>
+    <p><span class="blue">Prenom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom" oninput="majNomAttestation()"></p>
     <p><span class="blue">Adresse :</span> <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
         <span class="blue">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
@@ -534,6 +534,14 @@ creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date adoption :' });
         if (el && !el.value) el.value = today;
     });
 
+// remplie le nom de la partie je soussigné avec le nom de l'adoptant
+function majNomAttestation() {
+    var nom    = document.getElementById('nom')    ? document.getElementById('nom').value    : '';
+    var prenom = document.getElementById('prenom') ? document.getElementById('prenom').value : '';
+    var champ  = document.getElementById('nomAttestation');
+    if (champ) champ.value = (prenom + ' ' + nom).trim();
+}
+	
     // Aperçu miniature après prise de photo
     function aperçuPhoto(input, previewId) {
         var preview = document.getElementById(previewId);
