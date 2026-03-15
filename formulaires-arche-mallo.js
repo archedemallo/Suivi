@@ -69,18 +69,6 @@ function toggleCheck(element, groupName) {
         });
     }
     box.classList.toggle('checked');
-
-var luApprouve = document.querySelector('#luApprouve1');
-if (luApprouve && !luApprouve.classList.contains('checked')) {
-    missing.push('Lu et approuvé (L\'Arche de Mallo)');
-}
-var luApprouve = document.querySelector('#luApprouve2');
-if (luApprouve && !luApprouve.classList.contains('checked')) {
-    missing.push('Lu et approuvé (L\'Arche de Mallo)');
-}var luApprouve = document.querySelector('#luApprouve3');
-if (luApprouve && !luApprouve.classList.contains('checked')) {
-    missing.push('Lu et approuvé (L\'Arche de Mallo)');
-}
 }
 // ============================================================
 // COLLECTE DES DONNEES
@@ -244,17 +232,26 @@ function validateRequiredFields() {
         }
     });
 
-    // Vérifier la signature
-    var sigCanvas = document.querySelector('#sig1 canvas');
-    if (sigCanvas) {
-        var ctx = sigCanvas.getContext('2d');
-        var pixels = ctx.getImageData(0, 0, sigCanvas.width, sigCanvas.height).data;
+    // Vérifier les cases "Lu et approuvé"
+    ['luApprouve1', 'luApprouve2', 'luApprouve3'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && !el.querySelector('.checkbox').classList.contains('checked')) {
+            missing.push('Lu et approuvé');
+        }
+    });
+
+    // Vérifier les signatures (sig1, sig2, sig3 selon ce qui existe)
+    ['sig1', 'sig2', 'sig3'].forEach(function(sigId) {
+        var canvas = document.querySelector('#' + sigId + ' canvas');
+        if (!canvas) return;
+        var ctx    = canvas.getContext('2d');
+        var pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         var empty  = true;
         for (var i = 0; i < pixels.length; i += 4) {
             if (pixels[i + 3] > 0) { empty = false; break; }
         }
-        if (empty) missing.push('Signature');
-    }
+        if (empty) missing.push('Signature (' + sigId + ')');
+    });
 
     return missing;
 }
