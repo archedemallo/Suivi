@@ -158,6 +158,7 @@ function buildHtmlWithData() {
     // Cacher les boutons, canvas et bouton Effacer — afficher toutes les signatures images
     html = html.replace('<head>', '<head><style>' +
         '.buttons{display:none!important}' +
+'.no-print{display:none!important}' +                        
         '.signature-pad-wrap{display:none!important}' +
         '.signature-controls{display:none!important}' +
         '[id$="-print"]{display:block!important}' +
@@ -165,9 +166,6 @@ function buildHtmlWithData() {
         'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
 '#puce,#nom,#prenom,#adresse,#email,#nomAttestation{min-width:300px!important;width:auto!important;}' +
         'label[style*="background:#0563c1"]{display:none!important}' +
-'.preview-wrap p.small{display:none!important}' +
-                        'label[style*="background:#0563c1"]{display:none!important}' +
-'.preview-wrap p.small{display:none!important}' +
         '</style>');
 
     // Injecter les images de signature dans les placeholders
