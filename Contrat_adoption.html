@@ -56,32 +56,33 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     </p>
     <p>
        <span class="blue"> Vermifugé :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vermifuge')"><span class="checkbox" data-group="vermifuge"></span> OUI</span>
-        le <input type="date" class="editable editable-date" id="dateVermifuge">
-        AVEC <input type="text" class="editable editable-medium" id="produitVermifuge">
-        <span class="clickable-row" onclick="toggleCheck(this, 'vermifuge')"><span class="checkbox" data-group="vermifuge"></span> NON</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vermifuge'); majObligatoire('vermifuge', ['dateVermifuge'])"><span class="checkbox" data-group="vermifuge"></span> OUI</span>
+le <input type="date" class="editable editable-date" id="dateVermifuge">
+AVEC <input type="text" class="editable editable-medium" id="produitVermifuge">
+<span class="clickable-row" onclick="toggleCheck(this, 'vermifuge'); majObligatoire('vermifuge', ['dateVermifuge'])"><span class="checkbox" data-group="vermifuge"></span> NON</span>
     </p>
     <p><span class="blue">Prochain vermifuge : </span>le <input type="date" class="editable editable-date" id="prochainVermifuge"></p>
     <p>
        <span class="blue"> Anti-Puces :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'antipuces')"><span class="checkbox" data-group="antipuces"></span> OUI</span>
-        le <input type="date" class="editable editable-date" id="dateAntiPuces">
-        AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
-        <span class="clickable-row" onclick="toggleCheck(this, 'antipuces')"><span class="checkbox" data-group="antipuces"></span> NON</span>
+       <span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> OUI</span>
+le <input type="date" class="editable editable-date" id="dateAntiPuces">
+AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
+<span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> NON</span> 
     </p>
+	
     <p><span class="blue">Prochain Anti-puces et tiques :</span> le <input type="date" class="editable editable-date" id="dateprochainAntiPuces"></p>
     <p>
         <span class="blue">Testé(e) FIV/FEL :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'testFIV')"><span class="checkbox" data-group="testFIV"></span> OUI</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'testFIV')"><span class="checkbox" data-group="testFIV"></span> NON</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'testFIV'); majObligatoire('testFIV', ['resultatFIV'])"><span class="checkbox" data-group="testFIV"></span> OUI</span>
+<span class="clickable-row" onclick="toggleCheck(this, 'testFIV'); majObligatoire('testFIV', ['resultatFIV'])"><span class="checkbox" data-group="testFIV"></span> NON</span>
         Si oui :
         <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> NÉGATIF</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> POSITIF</span>
     </p>
     <p><span class="blue">
         Test diarrhée :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee')"><span class="checkbox" data-group="testDiarrhee"></span> OUI</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee')"><span class="checkbox" data-group="testDiarrhee"></span> NON</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee'); majObligatoire('testDiarrhee', ['resultatDiarrhee'])"><span class="checkbox" data-group="testDiarrhee"></span> OUI</span>
+<span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee'); majObligatoire('testDiarrhee', ['resultatDiarrhee'])"><span class="checkbox" data-group="testDiarrhee"></span> NON</span>
          Si oui :
         <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> NÉGATIF</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> POSITIF</span>
@@ -92,10 +93,10 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
         <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> Primo</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> Secundo</span>
     </p>
-    <p>
-        Date de vaccin : <input type="date" class="editable editable-date" id="dateVaccin">
-        
-        Date de rappel : <input type="date" class="editable editable-date" id="dateRappel">
+    <p><span class="blue">
+        Date de vaccin : </span><input type="date" class="editable editable-date" id="dateVaccin">
+        <span class="blue">
+        Date de rappel : </span><input type="date" class="editable editable-date" id="dateRappel">
     </p>
 </div>
 <br>
@@ -589,6 +590,31 @@ function majNomAttestation() {
         }
     }
 
+	// signature obligatoire
+	function majObligatoire(group, champIds) {
+    var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
+    var estOui  = checked && checked.parentElement.textContent.trim().toUpperCase().startsWith('OUI');
+    champIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) {
+            // Pour resultatFIV/resultatDiarrhee : ce sont des cases à cocher, pas des inputs
+            // On mémorise juste le groupe comme requis via un flag sur le document
+            document.body.setAttribute('data-required-group-' + id, estOui ? 'true' : '');
+            return;
+        }
+        if (estOui) {
+            el.setAttribute('data-required', 'true');
+            el.setAttribute('data-label', el.getAttribute('data-label') || id);
+        } else {
+            el.removeAttribute('data-required');
+            el.style.borderBottom = '';
+        }
+    });
+}
+
+
+
+	
     // Surcharge saveForm pour envoyer les photos après la sauvegarde principale
     var _saveFormOriginal = saveForm;
     saveForm = async function() {
