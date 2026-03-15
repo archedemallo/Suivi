@@ -715,3 +715,17 @@ input[type="date"] {
 @media print {
     .signature-pad-wrap + button { display: none !important; }
 }
+
+/* Entete date a doite */
+@media print {
+    .header-adoption {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+    }
+    .header-adoption-right {
+        text-align: right;
+        white-space: nowrap;
+    }
+}
