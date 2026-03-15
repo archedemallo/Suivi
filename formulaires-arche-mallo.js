@@ -9,32 +9,42 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywe3GDr_GFW4B7
 // ============================================================
 function creerEntete(options) {
     options = options || {};
-    var dateId    = options.dateId    || 'dateAdoption';
+    var dateId    = options.dateId    || null;
     var dateLabel = options.dateLabel || 'Date :';
     var titre     = options.titre     || '';
 
     var el = document.getElementById('entete');
     if (!el) return;
 
+    var adresse =
+        '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
+        '<p style="font-size:11pt;">8 ter rue d\'Eschène<br>' +
+        '90140 AUTRECHÊNE<br>' +
+        '07.71.64.69.89<br>' +
+        '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a></p>';
+
+    var today = new Date().toISOString().split('T')[0];
+
+    var rightHtml = dateId
+        ? '<div class="header-adoption-right">' + dateLabel +
+          ' <input type="date" class="editable editable-date" id="' + dateId + '"></div>'
+        : '<div></div>';
+
     el.innerHTML =
         '<div class="header-adoption">' +
             '<div style="display:flex;align-items:center;gap:20px;">' +
                 '<div class="logo-box"></div>' +
-                '<div class="header-info" style="font-size:11pt;">' + adresse + '</div>' +
-                    '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
-                    '<p>' +
-                        '8 ter rue d\'Eschène<br>' +
-                        '90140 AUTRECHÊNE<br>' +
-                        '07.71.64.69.89<br>' +
-                        '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
-                    '</p>' +
-                '</div>' +
+                '<div class="header-info">' + adresse + '</div>' +
             '</div>' +
-            '<div class="header-adoption-right">' +
-                dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '">' +
-            '</div>' +
+            rightHtml +
         '</div>' +
         (titre ? '<div class="title">' + titre + '</div>' : '');
+
+    if (dateId) {
+        var dateEl = document.getElementById(dateId);
+        if (dateEl && !dateEl.value) dateEl.value = today;
+    }
+}
 
     // Pré-remplir la date à aujourd'hui
     var dateEl = document.getElementById(dateId);
@@ -166,6 +176,8 @@ function buildHtmlWithData() {
         'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
 '#puce,#nom,#prenom,#adresse,#email,#nomAttestation{min-width:300px!important;width:auto!important;}' +
         'label[style*="background:#0563c1"]{display:none!important}' +
+'.no-print{display:none!important}' +
+'[for="photoCNI_recto"],[for="photoCNI_verso"],[for="photoDomicile_1"],[for="photoDomicile_2"]{display:none!important}' +
         '</style>');
 
     // Injecter les images de signature dans les placeholders
@@ -185,18 +197,18 @@ function buildHtmlWithData() {
     html = html.replace(/\[\[SIGNATURE_IMAGE\]\]/g, '');
 
     
-// Dates : format français + masque invisible si vide
-   html = html.replace(
+// Dates : format français + vide si non renseigné
+html = html.replace(
     /<input([^>]*?)type="date"([^>]*?)>/g,
     function(match) {
         var valMatch = match.match(/value="([^"]*)"/);
         var val = valMatch ? valMatch[1] : '';
         var affichage = '';
-        if (val) {
+        if (val && val.match(/^\d{4}-\d{2}-\d{2}$/)) {
             var parts = val.split('-');
-            if (parts.length === 3) affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
+            affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
         }
-        return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:100px;padding:0 2px;">'
+        return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:80px;padding:0 2px;">'
             + affichage + '</span>';
     }
 );
