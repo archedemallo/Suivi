@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contrat d'adoption</title>
+<title>Contrat_adoption</title>
 <link rel="stylesheet" href="formulaires-arche-mallo.css">
 </head>
 <body data-form-id="Adoption">
@@ -497,9 +497,7 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 </div><!-- /content -->
 </div><!-- /page-container -->
 
-<script src="formulaires-arche-mallo.js">
-	
-</script>
+<script src="formulaires-arche-mallo.js"></script>
 <script>
 creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date adoption :' });
 	
@@ -616,11 +614,11 @@ function aperçuPhoto(input, previewId) {
     var _saveFormOriginal = saveForm;
     saveForm = async function() {
         await _saveFormOriginal();
-        var prenom      = (document.getElementById('prenom')     || {}).value || '';
-        var nom         = (document.getElementById('nom')        || {}).value || '';
+        var prenom      = (document.getElementById('prenom')      || {}).value || '';
+        var nom         = (document.getElementById('nom')         || {}).value || '';
         var nomAdoptant = (prenom + ' ' + nom).trim();
-        var nomChat     = (document.getElementById('nomUsuel')   || {}).value || '';
-        var dateRaw     = (document.getElementById('dateAdoption') || {}).value || today;
+        var nomChat     = (document.getElementById('nomUsuel')    || {}).value || '';
+        var dateRaw     = (document.getElementById('dateAdoption')|| {}).value || today;
         var dateFr      = dateRaw ? dateRaw.split('-').reverse().join('-') : today;
         await envoyerPhotos(nomAdoptant, nomChat, dateFr);
     };
