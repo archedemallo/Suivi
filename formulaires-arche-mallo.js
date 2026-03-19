@@ -2,49 +2,39 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXEY8HMTM7Es6LpaYz0mBcH7NTgjDWt-l272VJsjigV9EldsAf1LgMu6tYBGxfrsGCyQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbywe3GDr_GFW4B7l5KFPFbA6NM0JL1vPnlVdU8tG7Ix3BEcSo-J6FgBaRTSb4_eheiBXA/exec';
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
 // ============================================================
 function creerEntete(options) {
     options = options || {};
-    var dateId    = options.dateId    || null;
+    var dateId    = options.dateId    || 'dateAdoption';
     var dateLabel = options.dateLabel || 'Date :';
     var titre     = options.titre     || '';
 
     var el = document.getElementById('entete');
     if (!el) return;
 
-    var adresse =
-        '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
-        '<p style="font-size:11pt;">8 ter rue d\'Eschène<br>' +
-        '90140 AUTRECHÊNE<br>' +
-        '07.71.64.69.89<br>' +
-        '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a></p>';
-
-    var today = new Date().toISOString().split('T')[0];
-
-    var rightHtml = dateId
-        ? '<div class="header-adoption-right">' + dateLabel +
-          ' <input type="date" class="editable editable-date" id="' + dateId + '"></div>'
-        : '<div></div>';
-
     el.innerHTML =
         '<div class="header-adoption">' +
             '<div style="display:flex;align-items:center;gap:20px;">' +
                 '<div class="logo-box"></div>' +
-                '<div class="header-info">' + adresse + '</div>' +
+                '<div class="header-info" style="font-size:11pt;">' + adresse + '</div>' +
+                    '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
+                    '<p>' +
+                        '8 ter rue d\'Eschène<br>' +
+                        '90140 AUTRECHÊNE<br>' +
+                        '07.71.64.69.89<br>' +
+                        '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
+                    '</p>' +
+                '</div>' +
             '</div>' +
-            rightHtml +
+            '<div class="header-adoption-right">' +
+                dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '">' +
+            '</div>' +
         '</div>' +
         (titre ? '<div class="title">' + titre + '</div>' : '');
-
-    if (dateId) {
-        var dateEl = document.getElementById(dateId);
-        if (dateEl && !dateEl.value) dateEl.value = today;
-    }
-}
 
     // Pré-remplir la date à aujourd'hui
     var dateEl = document.getElementById(dateId);
@@ -168,10 +158,6 @@ function buildHtmlWithData() {
     // Cacher les boutons, canvas et bouton Effacer — afficher toutes les signatures images
     html = html.replace('<head>', '<head><style>' +
         '.buttons{display:none!important}' +
-'.no-print{display:none!important}' +   
-'#nom,#prenom,#adresse,#email,#nomAttestation{width:250px!important;min-width:unset!important;}' +
-'#numeroPaiement,#cheque1,#cheque2,#cheque3,#cheque4,#cheque5,#cheque6{width:120px!important;min-width:unset!important;}' +
-                        
         '.signature-pad-wrap{display:none!important}' +
         '.signature-controls{display:none!important}' +
         '[id$="-print"]{display:block!important}' +
@@ -179,8 +165,9 @@ function buildHtmlWithData() {
         'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
 '#puce,#nom,#prenom,#adresse,#email,#nomAttestation{min-width:300px!important;width:auto!important;}' +
         'label[style*="background:#0563c1"]{display:none!important}' +
-'.no-print{display:none!important}' +
-'[for="photoCNI_recto"],[for="photoCNI_verso"],[for="photoDomicile_1"],[for="photoDomicile_2"]{display:none!important}' +
+'.preview-wrap p.small{display:none!important}' +
+                        'label[style*="background:#0563c1"]{display:none!important}' +
+'.preview-wrap p.small{display:none!important}' +
         '</style>');
 
     // Injecter les images de signature dans les placeholders
@@ -200,18 +187,18 @@ function buildHtmlWithData() {
     html = html.replace(/\[\[SIGNATURE_IMAGE\]\]/g, '');
 
     
-// Dates : format français + vide si non renseigné
-html = html.replace(
+// Dates : format français + masque invisible si vide
+   html = html.replace(
     /<input([^>]*?)type="date"([^>]*?)>/g,
     function(match) {
         var valMatch = match.match(/value="([^"]*)"/);
         var val = valMatch ? valMatch[1] : '';
         var affichage = '';
-        if (val && val.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        if (val) {
             var parts = val.split('-');
-            affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
+            if (parts.length === 3) affichage = parts[2] + '/' + parts[1] + '/' + parts[0];
         }
-        return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:80px;padding:0 2px;">'
+        return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:100px;padding:0 2px;">'
             + affichage + '</span>';
     }
 );
