@@ -79,6 +79,13 @@ function collectFormData() {
         if (el.id) data[el.id] = el.value;
     });
     
+	
+	// Collecter le sexe (cases à cocher)
+	var sexeCoche = document.querySelector('.checkbox[data-group="sexe"].checked');
+	if (sexeCoche) {
+		data['sexe'] = sexeCoche.parentElement.textContent.trim();
+	}
+	
  // Collecter les cases multi-sélection (data-checked-group)
     document.querySelectorAll('.checkbox.checked[data-checked-group]').forEach(function(cb) {
         var group = cb.getAttribute('data-checked-group');
@@ -165,8 +172,6 @@ function buildHtmlWithData() {
         'input.editable{border:none!important;border-bottom:1px solid #333!important;background:transparent!important;-webkit-appearance:none!important;box-shadow:none!important;outline:none!important;}' +
 '#puce,#nom,#prenom,#adresse,#email,#nomAttestation{min-width:300px!important;width:auto!important;}' +
         'label[style*="background:#0563c1"]{display:none!important}' +
-'.preview-wrap p.small{display:none!important}' +
-                        'label[style*="background:#0563c1"]{display:none!important}' +
 '.preview-wrap p.small{display:none!important}' +
         '</style>');
 
@@ -271,6 +276,27 @@ function validateRequiredFields() {
             missing.push('Signature (' + sigId + ')');
         }
     });
+
+// Paiement : au moins un mode obligatoire
+var paiementCoche   = document.querySelector('.checkbox[data-group="paiement"].checked');
+var pay2cheques     = document.getElementById('pay_2cheques');
+if (!paiementCoche && !(pay2cheques && pay2cheques.classList.contains('checked'))) {
+    missing.push('Mode de paiement (Virement, CB, Espèce, Chèque ou Paiement en plusieurs fois)');
+}
+// N° chèque obligatoire si Chèque coché
+var payCheque = document.getElementById('pay_cheque');
+if (payCheque && payCheque.classList.contains('checked')) {
+    var numPaiement = document.getElementById('numeroPaiement');
+    if (!numPaiement || !numPaiement.value.trim()) missing.push('Numéro de chèque');
+}
+// N°1 et N°2 obligatoires si 2 chèques coché
+if (pay2cheques && pay2cheques.classList.contains('checked')) {
+    ['cheque1','cheque2'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el || !el.value.trim()) missing.push('Numéro ' + id.replace('cheque','chèque ') + ' (2 chèques)');
+    });
+}
+
 
     // Vérifier les groupes de cases à cocher rendus obligatoires
     ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
@@ -585,4 +611,32 @@ function creerSignature(containerId, width, height) {
     });
 }
 
-
+function majObligatoire(group, champIds, valeursOui) {
+    valeursOui = valeursOui || ['OUI'];
+    var checked  = document.querySelector('.checkbox[data-group="' + group + '"].checked');
+    var estActif = false;
+    if (checked) {
+        var texte = checked.parentElement.textContent.trim().toUpperCase();
+        estActif  = valeursOui.some(function(v) { return texte.startsWith(v.toUpperCase()); });
+    }
+    // Cas 1 / Cas 2 : testés via leur id direct
+    if (group === 'cas1direct') {
+        var c = document.getElementById('cas1_check');
+        estActif = c ? c.classList.contains('checked') : false;
+    }
+    if (group === 'cas2direct') {
+        var c = document.getElementById('cas2_check');
+        estActif = c ? c.classList.contains('checked') : false;
+    }
+    champIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) { document.body.setAttribute('data-required-group-' + id, estActif ? 'true' : ''); return; }
+        if (estActif) {
+            el.setAttribute('data-required', 'true');
+            el.setAttribute('data-label', el.getAttribute('data-label') || id);
+        } else {
+            el.removeAttribute('data-required');
+            el.style.borderBottom = '';
+        }
+    });
+}
