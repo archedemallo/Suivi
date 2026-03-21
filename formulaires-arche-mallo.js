@@ -20,7 +20,7 @@ function creerEntete(options) {
         '<div class="header-adoption">' +
             '<div style="display:flex;align-items:center;gap:20px;">' +
                 '<div class="logo-box"></div>' +
-                '<div class="header-info" style="font-size:11pt;">' + adresse + '</div>' +
+                '<div class="header-info" style="font-size:11pt;">' +
                     '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
                     '<p>' +
                         '8 ter rue d\'Eschène<br>' +
