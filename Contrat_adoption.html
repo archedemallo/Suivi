@@ -64,7 +64,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitVermifuge">
     <p><span class="blue">Prochain vermifuge : </span>le <input type="date" class="editable editable-date" id="prochainVermifuge"></p>
     <p>
        <span class="blue"> Anti-Puces :</span>
-       <span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> OUI</span>
+       <span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces','dateprochainAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> OUI</span>
 le <input type="date" class="editable editable-date" id="dateAntiPuces">
 AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
 <span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> NON</span> 
@@ -89,9 +89,9 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
     </p>
     <p><span class="blue">
         Vaccin Coryza-Typhus :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> NON</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> Primo</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin')"><span class="checkbox" data-group="vaccin"></span> Secundo</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin'); majObligatoire('vaccin', ['dateVaccin','dateRappel'], ['Primo','Secundo'])"><span class="checkbox" data-group="vaccin"></span> NON</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin'); majObligatoire('vaccin', ['dateVaccin','dateRappel'], ['Primo','Secundo'])"><span class="checkbox" data-group="vaccin"></span> Primo</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin'); majObligatoire('vaccin', ['dateVaccin','dateRappel'], ['Primo','Secundo'])"><span class="checkbox" data-group="vaccin"></span> Secundo</span>
     </p>
     <p><span class="blue">
         Date de vaccin : </span><input type="date" class="editable editable-date" id="dateVaccin">
@@ -100,6 +100,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
     </p>
 </div>
 <br>
+	<div class="page-break"></div>
 	
 <!-- Adoptant -->
 <div><strong><span class="highlight-red">ADOPTANT</strong></span></div>
@@ -124,7 +125,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
         &nbsp;&nbsp;
         <span class="blue">Ville :</span> <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
     </p>
-    <p><span class="blue">Portable :</span> <input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Téléphone portable"></p>
+    <p><span class="blue">Portable :</span> <input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Téléphone portable" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></p>
     <p><span class="blue">Email :</span> <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
 </div>
 	
@@ -191,7 +192,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
 </div>
 <br>
 
-
+<div class="page-break"></div>
 <!-- Engagement stérilisation -->
 <div><strong><span class="highlight-red">ENGAGEMENT À LA STÉRILISATION</strong></span></div>
 
@@ -235,6 +236,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
 <br>
 <br>
 <br>
+<div class="page-break"></div>
 
 <!-- Frais d'adoption -->
 <div><strong><span class="highlight-red">Frais d'adoption :</strong></span></div>
@@ -300,31 +302,38 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
     <!-- Paiement : multi-sélection -->
     <p><strong><span class="blue">Paiement effectué par :</span></strong></p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox" data-checked-group="paiement"></span></span> Virement
-<span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox" data-checked-group="paiement"></span></span> CB
-<span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox" data-checked-group="paiement"></span></span> Espèce
-<span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox" data-checked-group="paiement"></span></span> Chèque
-        <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement"></span>
+        <span class="clickable-row" onclick="toggleCheck(this,'paiement')">
+    <span class="checkbox" data-group="paiement" id="pay_virement"></span></span> Virement
+<span class="clickable-row" onclick="toggleCheck(this,'paiement')">
+    <span class="checkbox" data-group="paiement" id="pay_cb"></span></span> CB
+	<span class="clickable-row" onclick="toggleCheck(this,'paiement')">
+    <span class="checkbox" data-group="paiement" id="pay_espece"></span></span> Espèce
+<span class="clickable-row" onclick="toggleCheck(this,'paiement')">
+    <span class="checkbox" data-group="paiement" id="pay_cheque"></span></span> Chèque
+        <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
     </p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
+        <span class="clickable-row" onclick="toggleCheck(this,'paiement_plusieurs')">
+    <span class="checkbox" data-group="paiement_plusieurs" id="pay_2cheques"></span></span>
+
         Paiement en plusieurs fois :
         <span class="blue">
             <p>2 chèques  :  
-        N° <input type="text" class="editable editable-medium" id="cheque1">
-        ET <input type="text" class="editable editable-medium" id="cheque2">
+        N° <input type="text" class="editable editable-medium" id="cheque1" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        ET <input type="text" class="editable editable-medium" id="cheque2" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </p>
     </span></p>
     <p 
        <span class="blue">
         <p>4 chèques  : 
-        1: <input type="text" class="editable editable-short" id="cheque3">
-        2: <input type="text" class="editable editable-short" id="cheque4">
-        3: <input type="text" class="editable editable-short" id="cheque5">
-        4: <input type="text" class="editable editable-short" id="cheque6">
+        1: <input type="text" class="editable editable-short" id="cheque3" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        2: <input type="text" class="editable editable-short" id="cheque4" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        3: <input type="text" class="editable editable-short" id="cheque5" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        4: <input type="text" class="editable editable-short" id="cheque6" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
     </span></p>
 </div>
 <br>
+<div class="page-break"></div>
 
 <!-- Obligations -->
 <div><strong><span class="highlight-red">LES OBLIGATIONS DE L'ADOPTANT</span></strong></div><br>
