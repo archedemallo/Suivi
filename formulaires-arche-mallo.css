@@ -591,8 +591,8 @@ input[type="date"] {
     body {
         background: white;
         margin: 8mm;
-        font-size: 14px;
-        line-height: 1.6;
+        font-size: 11pt;
+        line-height: 1.5;
     }
 
     .buttons {
@@ -610,24 +610,61 @@ input[type="date"] {
     }
 
     .editable {
-        border: none;
+        border: none !important;
+        border-bottom: 1px solid #333 !important;
+        background: transparent !important;
+        display: inline !important;
+        padding: 0 2px !important;
     }
 
-    p   { margin: 2px 0; }
+    /* Champs sur la même ligne que leur label */
+    p { 
+        margin: 3px 0; 
+        white-space: nowrap;
+        overflow: visible;
+    }
     ul, ol { margin: 3px 0 3px 15px; }
     li  { margin: 2px 0; }
     br  { line-height: 0.8; }
-    h2  { font-size: 13px; margin: 5px 0; }
+    h2  { font-size: 12pt; margin: 5px 0; }
 
+    /* Logo : forcer l'affichage à l'impression */
     .logo-box {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         background-image: url('logo_arche.png') !important;
+        width: 120px !important;
+        height: 80px !important;
+        display: block !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+    }
+
+    /* Vermifugé et Anti-puces : réduire la taille pour tenir sur une ligne */
+    #dateVermifuge, #produitVermifuge,
+    #dateAntiPuces, #produitAntiPuces {
+        font-size: 9pt !important;
+    }
+    .editable-medium {
+        width: 150px !important;
+    }
+
+    /* Forcer les champs longs à rester inline */
+    #puce, #couleur, #nom, #prenom, #adresse, #email, #nomAttestation,
+    #nomUsuel, #nomAdoption {
+        display: inline !important;
+        width: auto !important;
+        min-width: 200px !important;
     }
 
     .page-break {
         page-break-before: always;
     }
+    
+    /* Masquer boutons photo et aperçus */
+    .no-print { display: none !important; }
+    label[style*="background:#0563c1"] { display: none !important; }
 }
 
 /* --- RESPONSIVE --- */
