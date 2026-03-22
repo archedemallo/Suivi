@@ -302,14 +302,14 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
     <!-- Paiement : multi-sélection -->
     <p><strong><span class="blue">Paiement effectué par :</span></strong></p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this,'paiement')">
-    <span class="checkbox" data-group="paiement" id="pay_virement"></span></span> Virement
-<span class="clickable-row" onclick="toggleCheck(this,'paiement')">
-    <span class="checkbox" data-group="paiement" id="pay_cb"></span></span> CB
-	<span class="clickable-row" onclick="toggleCheck(this,'paiement')">
-    <span class="checkbox" data-group="paiement" id="pay_espece"></span></span> Espèce
-<span class="clickable-row" onclick="toggleCheck(this,'paiement')">
-    <span class="checkbox" data-group="paiement" id="pay_cheque"></span></span> Chèque
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_virement"></span></span> Virement
+<span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_cb"></span></span> CB
+<span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_espece"></span></span> Espèce
+<span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_cheque"></span></span> Chèque
         <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
     </p>
     <p>
@@ -617,6 +617,11 @@ function aperçuPhoto(input, previewId) {
 }
 
 
+	
+function toggleCheckMulti(element) {
+    var box = element.querySelector('.checkbox');
+    if (box) box.classList.toggle('checked');
+}
 
 	
 // Surcharge saveForm pour envoyer les photos après la sauvegarde principale
