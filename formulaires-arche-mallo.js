@@ -318,6 +318,15 @@ if (pay2cheques && pay2cheques.classList.contains('checked')) {
         }
     });
 
+	// Marquer en rouge tous les data-required vides (déjà fait pour les inputs)
+// Ajouter pour les dates conditionnelles :
+['dateAntiPuces','dateprochainAntiPuces','dateVaccin','dateRappel',
+ 'dateSterilisationCas1','dateLimiteSterilisation'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.getAttribute('data-required') === 'true' && !el.value) {
+        el.style.borderBottom = '2px solid red';
+    }
+});
     
     return missing;
 }
