@@ -302,7 +302,8 @@ if (pay2cheques && pay2cheques.classList.contains('checked')) {
     ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
         if (document.body.getAttribute('data-required-group-' + group) === 'true') {
             var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
-            if (!checked) missing.push('Résultat ' + group.replace('resultat', ''));
+            var lib = { resultatFIV: 'Résultat FIV/FEL (Négatif ou Positif)', resultatDiarrhee: 'Résultat test diarrhée (Négatif ou Positif)' };
+if (!checked) missing.push(lib[group] || group);
         }
     });
 
