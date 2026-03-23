@@ -302,7 +302,10 @@ function validateRequiredFields() {
     if (pay2cheques && pay2cheques.classList.contains('checked')) {
         ['cheque1', 'cheque2'].forEach(function(id) {
             var el = document.getElementById(id);
-            if (!el || !el.value.trim()) missing.push('Numéro chèque ' + id.replace('cheque', '') + ' (2 chèques)');
+            if (!el || !el.value.trim()) {
+                missing.push('Numéro chèque ' + id.replace('cheque', '') + ' (2 chèques)');
+                if (el) el.style.borderBottom = '2px solid red';   // ← rouge
+            }
         });
     }
 
@@ -311,12 +314,25 @@ function validateRequiredFields() {
         resultatFIV:      'Résultat FIV/FEL (Négatif ou Positif)',
         resultatDiarrhee: 'Résultat test diarrhée (Négatif ou Positif)'
     };
+	
     ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
         if (document.body.getAttribute('data-required-group-' + group) === 'true') {
             var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
-            if (!checked) missing.push(libRes[group]);
+            if (!checked) {
+                missing.push(libRes[group]);
+                // Mettre en rouge les cases NÉGATIF et POSITIF
+                document.querySelectorAll('.checkbox[data-group="' + group + '"]').forEach(function(cb) {
+                    cb.style.outline = '2px solid red';
+                    cb.style.outlineOffset = '1px';
+                });
+            } else {
+                // Retirer le rouge si une case est cochée
+                document.querySelectorAll('.checkbox[data-group="' + group + '"]').forEach(function(cb) {
+                    cb.style.outline = '';
+                });
+            }
         }
-    });
+    });;
 
     // Email format
     document.querySelectorAll('input[type="email"].editable').forEach(function(el) {
