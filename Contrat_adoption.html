@@ -58,17 +58,16 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
        <span class="blue"> Vermifugé :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'vermifuge'); majObligatoire('vermifuge', ['dateVermifuge'])"><span class="checkbox" data-group="vermifuge"></span> OUI</span>
 le <input type="date" class="editable editable-date" id="dateVermifuge">
-AVEC <input type="text" class="editable editable-medium" id="produitVermifuge">
-<span class="clickable-row" onclick="toggleCheck(this, 'vermifuge'); majObligatoire('vermifuge', ['dateVermifuge'])"><span class="checkbox" data-group="vermifuge"></span> NON</span>
+AVEC <input type="text" class="editable editable-medium" id="produitVermifuge" data-label="Produit vermifuge">
+<span class="clickable-row" onclick="toggleCheck(this, 'vermifuge'); majObligatoire('vermifuge', ['dateVermifuge','produitVermifuge'])"><span class="checkbox" data-group="vermifuge"></span> NON</span>
     </p>
     <p><span class="blue">Prochain vermifuge : </span>le <input type="date" class="editable editable-date" id="prochainVermifuge"></p>
     <p>
        <span class="blue"> Anti-Puces :</span>
        <span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces','dateprochainAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> OUI</span>
 le <input type="date" class="editable editable-date" id="dateAntiPuces">
-AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
-<span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); 
-    majObligatoire('antipuces', ['dateAntiPuces','dateprochainAntiPuces'])">
+AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" data-label="Produit anti-puces">
+<span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces','dateprochainAntiPuces','produitAntiPuces'])">
     <span class="checkbox" data-group="antipuces"></span> NON</span>
     </p>
 	
