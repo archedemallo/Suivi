@@ -18,7 +18,7 @@ function creerEntete(options) {
 
     el.innerHTML =
         '<div class="header-adoption">' +
-            <div style="display:flex;align-items:center;gap:20px;flex:1;">' +
+            '<div style="display:flex;align-items:center;gap:20px;flex:1;">' +
                 '<div class="logo-box"></div>' +
                 '<div class="header-info" style="font-size:11pt;">' +
                     '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
