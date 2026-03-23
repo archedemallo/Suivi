@@ -264,7 +264,7 @@ function validateRequiredFields() {
     ['luApprouve1', 'luApprouve2', 'luApprouve3'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.querySelector('.checkbox').classList.contains('checked')) {
-            missing.push('Lu et approuvé');
+            missing.push('Lu et approuvé (à cocher en bas du contrat)');
         }
     });
 
@@ -273,7 +273,8 @@ function validateRequiredFields() {
         var container = document.getElementById(sigId);
         if (!container) return;
         if (!container._signed) {
-            missing.push('Signature ' + (sigId === 'sig1' ? "de l'Arche de Mallo" : "de l'adoptant"));
+           var sigLabels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
+missing.push(sigLabels[sigId] || 'Signature manquante');
         }
     });
 
@@ -328,7 +329,41 @@ if (!checked) missing.push(lib[group] || group);
         el.style.borderBottom = '2px solid red';
     }
 });
-    
+
+// Paiement : au moins un mode obligatoire
+    var paiementCoche = document.querySelector('#pay_virement.checked, #pay_cb.checked, #pay_espece.checked, #pay_cheque.checked');
+    var pay2cheques   = document.getElementById('pay_2cheques');
+    if (!paiementCoche && !(pay2cheques && pay2cheques.classList.contains('checked'))) {
+        missing.push('Mode de règlement (au moins un à cocher)');
+    }
+    // N° chèque obligatoire si Chèque coché
+    var payCheque = document.getElementById('pay_cheque');
+    if (payCheque && payCheque.classList.contains('checked')) {
+        var numPaiement = document.getElementById('numeroPaiement');
+        if (!numPaiement || !numPaiement.value.trim()) {
+            missing.push('Numéro de chèque');
+        }
+    }
+    // N°1 et N°2 obligatoires si 2 chèques coché
+    if (pay2cheques && pay2cheques.classList.contains('checked')) {
+        ['cheque1','cheque2'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el || !el.value.trim()) missing.push('Numéro chèque ' + id.replace('cheque','') + ' (2 chèques)');
+        });
+    }
+
+    // Dates conditionnelles : marquer en rouge si obligatoires et vides
+    ['dateAntiPuces','dateprochainAntiPuces','dateVaccin','dateRappel',
+     'dateSterilisationCas1','dateLimiteSterilisation','dateVermifuge'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.getAttribute('data-required') === 'true' && !el.value) {
+            el.style.borderBottom = '2px solid red';
+        }
+    });
+
+    return missing;
+}
+	
     return missing;
 }
 
