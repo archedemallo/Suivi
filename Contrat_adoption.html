@@ -67,7 +67,9 @@ AVEC <input type="text" class="editable editable-medium" id="produitVermifuge">
        <span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces','dateprochainAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> OUI</span>
 le <input type="date" class="editable editable-date" id="dateAntiPuces">
 AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
-<span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); majObligatoire('antipuces', ['dateAntiPuces'])"><span class="checkbox" data-group="antipuces"></span> NON</span> 
+<span class="clickable-row" onclick="toggleCheck(this, 'antipuces'); 
+    majObligatoire('antipuces', ['dateAntiPuces','dateprochainAntiPuces'])">
+    <span class="checkbox" data-group="antipuces"></span> NON</span>
     </p>
 	
     <p><span class="blue">Prochain Anti-puces et tiques :</span> le <input type="date" class="editable editable-date" id="dateprochainAntiPuces"></p>
@@ -117,13 +119,13 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
             <span class="blue">Madame</span>
         </span>
     </p>
-    <p><span class="blue">Nom :</span> <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom" oninput="majNomAttestation()"></p>
-    <p><span class="blue">Prénom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom" oninput="majNomAttestation()"></p>
+    <p><span class="blue">Nom :</span> <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom" oninput="majNomAttestation(); this.value=this.value.toUpperCase()""></p>
+    <p><span class="blue">Prénom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom" oninput="majNomAttestation(); this.value=this.value.toUpperCase()"></p>
     <p><span class="blue">Adresse :</span> <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
         <span class="blue">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
         &nbsp;&nbsp;
-        <span class="blue">Ville :</span> <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville">
+        <span class="blue">Ville :</span> <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p><span class="blue">Portable :</span> <input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Téléphone portable" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></p>
     <p><span class="blue">Email :</span> <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
@@ -199,9 +201,12 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
 <div class="cas-box">
     <p><span class="red">CAS 1 :</span></p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this, 'cas')"><span class="checkbox" data-group="cas"></span></span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'cas'); majObligatoire('cas1direct', ['dateSterilisationCas1'])">
+    <span class="checkbox" data-group="cas" id="cas1_check"></span></span>
         Vous adoptez un chat de + de 7 mois à l'Arche de Mallo avec la stérilisation déjà effectuée
-        en date du <input type="date" class="editable editable-date" id="dateSterilisationCas1">
+        en date du <input type="date" class="editable editable-date" id="dateSterilisationCas1" data-label="Date stérilisation (Cas 1)">
+
+<!-- CAS 2 -->
     </p>
     <p class="italic">
         Vous n'avez rien à fournir, l'ICAD de l'animal restera au nom de l'association pendant 1 mois
@@ -212,9 +217,10 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces">
 <div class="cas-box">
     <p><span class="red">CAS 2 :</span></p>
     <p>
-        <span class="clickable-row" onclick="toggleCheck(this, 'cas')"><span class="checkbox" data-group="cas"></span></span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'cas'); majObligatoire('cas2direct', ['dateLimiteSterilisation'])">
+    <span class="checkbox" data-group="cas" id="cas2_check"></span></span>
         Vous adoptez aujourd'hui un chaton de - de 6 mois à L'Arche de Mallo,
-        la stérilisation est à effectuer avant le <input type="date" class="editable editable-date" id="dateLimiteSterilisation">
+        la stérilisation est à effectuer avant le <input type="date" class="editable editable-date" id="dateLimiteSterilisation" data-label="Date limite stérilisation (Cas 2)">
     </p>
     <p>Du fait de son jeune âge, il ne peut donc pas être stérilisé actuellement. Cependant,
     le but de l'Arche de Mallo étant de stopper la prolifération de chats, et de placer ses animaux
@@ -457,11 +463,6 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 
 
 
-
-
-
-	
-
 <div class="section mt-30">
     <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
 
@@ -506,6 +507,10 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
 </div><!-- /page-container -->
 
 
+
+
+
+	
 <script src="formulaires-arche-mallo.js"></script>
 <script>
 creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date adoption :' });
@@ -595,18 +600,29 @@ function aperçuPhoto(input, previewId) {
     }
 
 	// signature obligatoire
-	function majObligatoire(group, champIds) {
-    var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
-    var estOui  = checked && checked.parentElement.textContent.trim().toUpperCase().startsWith('OUI');
+	function majObligatoire(group, champIds, valeursOui) {
+    valeursOui = valeursOui || ['OUI'];
+    var checked  = document.querySelector('.checkbox[data-group="' + group + '"].checked');
+    var estActif = false;
+    if (checked) {
+        var texte = checked.parentElement.textContent.trim().toUpperCase();
+        estActif  = valeursOui.some(function(v) { return texte.startsWith(v.toUpperCase()); });
+    }
+    if (group === 'cas1direct') {
+        var c = document.getElementById('cas1_check');
+        estActif = c ? c.classList.contains('checked') : false;
+    }
+    if (group === 'cas2direct') {
+        var c = document.getElementById('cas2_check');
+        estActif = c ? c.classList.contains('checked') : false;
+    }
     champIds.forEach(function(id) {
         var el = document.getElementById(id);
         if (!el) {
-            // Pour resultatFIV/resultatDiarrhee : ce sont des cases à cocher, pas des inputs
-            // On mémorise juste le groupe comme requis via un flag sur le document
-            document.body.setAttribute('data-required-group-' + id, estOui ? 'true' : '');
+            document.body.setAttribute('data-required-group-' + id, estActif ? 'true' : '');
             return;
         }
-        if (estOui) {
+        if (estActif) {
             el.setAttribute('data-required', 'true');
             el.setAttribute('data-label', el.getAttribute('data-label') || id);
         } else {
@@ -615,7 +631,6 @@ function aperçuPhoto(input, previewId) {
         }
     });
 }
-
 
 	
 function toggleCheckMulti(element) {
