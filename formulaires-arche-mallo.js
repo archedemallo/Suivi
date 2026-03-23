@@ -246,8 +246,11 @@ async function sendToGoogle(data) {
 // ============================================================
 // VALIDATION CHAMPS OBLIGATOIRES
 // ============================================================
+
 function validateRequiredFields() {
     var missing = [];
+
+    // Champs input avec data-required
     document.querySelectorAll('[data-required="true"]').forEach(function(el) {
         var label = el.getAttribute('data-label') || el.id || 'Champ inconnu';
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
@@ -260,82 +263,32 @@ function validateRequiredFields() {
         }
     });
 
-    // Vérifier les cases "Lu et approuvé"
-    ['luApprouve1', 'luApprouve2', 'luApprouve3'].forEach(function(id) {
+    // Cases "Lu et approuvé"
+    ['luApprouve1', 'luApprouve2'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.querySelector('.checkbox').classList.contains('checked')) {
-            missing.push('Lu et approuvé (à cocher en bas du contrat)');
+            var labels = { luApprouve1: 'Lu et approuvé (Arche de Mallo)', luApprouve2: 'Lu et approuvé (Adoptant)' };
+            missing.push(labels[id]);
         }
     });
 
-    // Vérifier les signatures (sig1, sig2, sig3 selon ce qui existe)
-    ['sig1', 'sig2', 'sig3'].forEach(function(sigId) {
+    // Signatures
+    ['sig1', 'sig2'].forEach(function(sigId) {
         var container = document.getElementById(sigId);
         if (!container) return;
         if (!container._signed) {
-           var sigLabels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
-missing.push(sigLabels[sigId] || 'Signature manquante');
+            var sigLabels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
+            missing.push(sigLabels[sigId] || 'Signature manquante');
         }
     });
 
-// Paiement : au moins un mode obligatoire
-var paiementCoche   = document.querySelector('.checkbox[data-group="paiement"].checked');
-var pay2cheques     = document.getElementById('pay_2cheques');
-if (!paiementCoche && !(pay2cheques && pay2cheques.classList.contains('checked'))) {
-    missing.push('Mode de paiement (Virement, CB, Espèce, Chèque ou Paiement en plusieurs fois)');
-}
-// N° chèque obligatoire si Chèque coché
-var payCheque = document.getElementById('pay_cheque');
-if (payCheque && payCheque.classList.contains('checked')) {
-    var numPaiement = document.getElementById('numeroPaiement');
-    if (!numPaiement || !numPaiement.value.trim()) missing.push('Numéro de chèque');
-}
-// N°1 et N°2 obligatoires si 2 chèques coché
-if (pay2cheques && pay2cheques.classList.contains('checked')) {
-    ['cheque1','cheque2'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (!el || !el.value.trim()) missing.push('Numéro ' + id.replace('cheque','chèque ') + ' (2 chèques)');
-    });
-}
-
-
-    // Vérifier les groupes de cases à cocher rendus obligatoires
-    ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
-        if (document.body.getAttribute('data-required-group-' + group) === 'true') {
-            var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
-            var lib = { resultatFIV: 'Résultat FIV/FEL (Négatif ou Positif)', resultatDiarrhee: 'Résultat test diarrhée (Négatif ou Positif)' };
-if (!checked) missing.push(lib[group] || group);
-        }
-    });
-
-
-
-    // Vérifier le format des champs email
-    document.querySelectorAll('input[type="email"].editable').forEach(function(el) {
-        if (!el.value || el.value.trim() === '') return; // déjà géré par data-required
-        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
-        if (!valid) {
-            missing.push('Email invalide : ' + el.value);
-            el.style.borderBottom = '2px solid red';
-        }
-    });
-
-	// Marquer en rouge tous les data-required vides (déjà fait pour les inputs)
-// Ajouter pour les dates conditionnelles :
-['dateAntiPuces','dateprochainAntiPuces','dateVaccin','dateRappel',
- 'dateSterilisationCas1','dateLimiteSterilisation'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && el.getAttribute('data-required') === 'true' && !el.value) {
-        el.style.borderBottom = '2px solid red';
-    }
-});
-
-// Paiement : au moins un mode obligatoire
+    // Paiement : au moins un mode obligatoire
     var paiementCoche = document.querySelector('#pay_virement.checked, #pay_cb.checked, #pay_espece.checked, #pay_cheque.checked');
     var pay2cheques   = document.getElementById('pay_2cheques');
     if (!paiementCoche && !(pay2cheques && pay2cheques.classList.contains('checked'))) {
         missing.push('Mode de règlement (au moins un à cocher)');
     }
+
     // N° chèque obligatoire si Chèque coché
     var payCheque = document.getElementById('pay_cheque');
     if (payCheque && payCheque.classList.contains('checked')) {
@@ -344,17 +297,41 @@ if (!checked) missing.push(lib[group] || group);
             missing.push('Numéro de chèque');
         }
     }
+
     // N°1 et N°2 obligatoires si 2 chèques coché
     if (pay2cheques && pay2cheques.classList.contains('checked')) {
-        ['cheque1','cheque2'].forEach(function(id) {
+        ['cheque1', 'cheque2'].forEach(function(id) {
             var el = document.getElementById(id);
-            if (!el || !el.value.trim()) missing.push('Numéro chèque ' + id.replace('cheque','') + ' (2 chèques)');
+            if (!el || !el.value.trim()) missing.push('Numéro chèque ' + id.replace('cheque', '') + ' (2 chèques)');
         });
     }
 
+    // Résultat FIV et Diarrhée si OUI coché
+    var libRes = {
+        resultatFIV:      'Résultat FIV/FEL (Négatif ou Positif)',
+        resultatDiarrhee: 'Résultat test diarrhée (Négatif ou Positif)'
+    };
+    ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
+        if (document.body.getAttribute('data-required-group-' + group) === 'true') {
+            var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
+            if (!checked) missing.push(libRes[group]);
+        }
+    });
+
+    // Email format
+    document.querySelectorAll('input[type="email"].editable').forEach(function(el) {
+        if (!el.value || el.value.trim() === '') return;
+        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+        if (!valid) {
+            missing.push('Email invalide : ' + el.value);
+            el.style.borderBottom = '2px solid red';
+        }
+    });
+
     // Dates conditionnelles : marquer en rouge si obligatoires et vides
-    ['dateAntiPuces','dateprochainAntiPuces','dateVaccin','dateRappel',
-     'dateSterilisationCas1','dateLimiteSterilisation','dateVermifuge'].forEach(function(id) {
+    ['dateVermifuge', 'dateAntiPuces', 'dateprochainAntiPuces',
+     'dateVaccin', 'dateRappel',
+     'dateSterilisationCas1', 'dateLimiteSterilisation'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && el.getAttribute('data-required') === 'true' && !el.value) {
             el.style.borderBottom = '2px solid red';
@@ -363,9 +340,13 @@ if (!checked) missing.push(lib[group] || group);
 
     return missing;
 }
-	
-    return missing;
-}
+
+
+
+
+
+
+
 
 // ============================================================
 // RÉCUPÉRER L'IMAGE DE SIGNATURE
