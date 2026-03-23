@@ -273,7 +273,7 @@ function validateRequiredFields() {
         var container = document.getElementById(sigId);
         if (!container) return;
         if (!container._signed) {
-            missing.push('Signature (' + sigId + ')');
+            missing.push('Signature ' + (sigId === 'sig1' ? "de l'Arche de Mallo" : "de l'adoptant"));
         }
     });
 
