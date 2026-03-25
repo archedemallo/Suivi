@@ -109,11 +109,11 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     <!-- Civilite -->
 <div class="section">
     <p id="bloc_civilite">
-        <span class="clickable-row" onclick="toggleCheck(this, 'civilite'); validCivilite()">
+        <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
             <span class="checkbox" data-group="civilite"></span>
             <span class="blue">Monsieur</span>
         </span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'civilite'); validCivilite()">
+        <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
             <span class="checkbox" data-group="civilite"></span>
             <span class="blue">Madame</span>
         </span>
@@ -631,11 +631,7 @@ function aperçuPhoto(input, previewId) {
     });
 }
 
-	function validCivilite() {
-    // Retirer le rouge quand une civilité est cochée
-    var bloc = document.getElementById('bloc_civilite');
-    if (bloc) bloc.style.outline = '';
-}
+
 	
 function toggleCheckMulti(element) {
     var box = element.querySelector('.checkbox');
