@@ -102,6 +102,28 @@ function collectFormData() {
             ? data[key] + ', ' + (label ? label.textContent.trim() : cb.id)
             : (label ? label.textContent.trim() : cb.id);
     });
+    // Collecter les modes de paiement (multi-sélection par id)
+    var modesPaiement = [];
+    var payIds = {
+        'pay_virement': 'Virement',
+        'pay_cb':       'CB',
+        'pay_espece':   'Espèce',
+        'pay_cheque':   'Chèque'
+    };
+    Object.keys(payIds).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.classList.contains('checked')) {
+            modesPaiement.push(payIds[id]);
+        }
+    });
+    var pay2 = document.getElementById('pay_2cheques');
+    if (pay2 && pay2.classList.contains('checked')) {
+        modesPaiement.push('Paiement en plusieurs fois');
+    }
+    if (modesPaiement.length > 0) {
+        data['check_paiement'] = modesPaiement.join(', ');
+    }
+
     return data;
 }
 
@@ -295,6 +317,7 @@ function validateRequiredFields() {
         var numPaiement = document.getElementById('numeroPaiement');
         if (!numPaiement || !numPaiement.value.trim()) {
             missing.push('Numéro de chèque');
+            if (numPaiement) numPaiement.style.borderBottom = '2px solid red';  // ← rouge
         }
     }
 
