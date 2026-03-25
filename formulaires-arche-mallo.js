@@ -304,6 +304,18 @@ function validateRequiredFields() {
         }
     });
 
+	// Civilité obligatoire
+    var civiliteChecked = document.querySelector('.checkbox[data-group="civilite"].checked');
+    if (!civiliteChecked) {
+        missing.push('Civilité (Monsieur ou Madame)');
+        var bloc = document.getElementById('bloc_civilite');
+        if (bloc) {
+            bloc.style.outline = '2px solid red';
+            bloc.style.outlineOffset = '2px';
+            bloc.style.borderRadius = '3px';
+        }
+    }
+	
     // Paiement : au moins un mode obligatoire
     var paiementCoche = document.querySelector('#pay_virement.checked, #pay_cb.checked, #pay_espece.checked, #pay_cheque.checked');
     var pay2cheques   = document.getElementById('pay_2cheques');
@@ -321,15 +333,34 @@ function validateRequiredFields() {
         }
     }
 
-    // N°1 et N°2 obligatoires si 2 chèques coché
+    // Paiement en plusieurs fois : soit 2 chèques remplis, soit au moins 3 des 4 chèques remplis
     if (pay2cheques && pay2cheques.classList.contains('checked')) {
-        ['cheque1', 'cheque2'].forEach(function(id) {
-            var el = document.getElementById(id);
-            if (!el || !el.value.trim()) {
-                missing.push('Numéro chèque ' + id.replace('cheque', '') + ' (2 chèques)');
-                if (el) el.style.borderBottom = '2px solid red';   // ← rouge
-            }
+        var val1 = (document.getElementById('cheque1') || {}).value || '';
+        var val2 = (document.getElementById('cheque2') || {}).value || '';
+        var vals4 = ['cheque3','cheque4','cheque5','cheque6'].map(function(id) {
+            return ((document.getElementById(id) || {}).value || '').trim();
         });
+        var nb4remplis = vals4.filter(function(v) { return v !== ''; }).length;
+
+        var ok2 = val1.trim() && val2.trim();          // les 2 chèques remplis
+        var ok4 = nb4remplis >= 3;                     // au moins 3 des 4 chèques remplis
+
+        if (!ok2 && !ok4) {
+            missing.push('Paiement en plusieurs fois : remplir les 2 chèques OU au moins 3 des 4 chèques');
+            // Mettre en rouge les champs vides selon le contexte
+            if (!ok2) {
+                ['cheque1','cheque2'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el && !el.value.trim()) el.style.borderBottom = '2px solid red';
+                });
+            }
+            if (!ok4) {
+                ['cheque3','cheque4','cheque5','cheque6'].forEach(function(id, i) {
+                    var el = document.getElementById(id);
+                    if (el && !vals4[i]) el.style.borderBottom = '2px solid red';
+                });
+            }
+        }
     }
 
     // Résultat FIV et Diarrhée si OUI coché
