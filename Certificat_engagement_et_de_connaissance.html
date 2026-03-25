@@ -203,9 +203,12 @@
 
 <script src="formulaires-arche-mallo.js"></script>
 <script>
+    creerEntete({ dateId: 'dateCertificat', dateLabel: 'Date :' });
     creerSignature('sig1');
     creerSignature('sig2');
     var today = new Date().toISOString().split('T')[0];
+    var elDate = document.getElementById('dateCertificat');
+    if (elDate && !elDate.value) elDate.value = today;
     if (!document.getElementById('dateAdoptant').value) document.getElementById('dateAdoptant').value = today;
     if (!document.getElementById('dateAssociation').value) document.getElementById('dateAssociation').value = today;
 
