@@ -304,16 +304,20 @@ function validateRequiredFields() {
         }
     });
 
-	// Civilité obligatoire
+// Civilité obligatoire
     var civiliteChecked = document.querySelector('.checkbox[data-group="civilite"].checked');
     if (!civiliteChecked) {
         missing.push('Civilité (Monsieur ou Madame)');
-        var bloc = document.getElementById('bloc_civilite');
-        if (bloc) {
-            bloc.style.outline = '2px solid red';
-            bloc.style.outlineOffset = '2px';
-            bloc.style.borderRadius = '3px';
-        }
+        // Mettre en rouge uniquement les cases à cocher
+        document.querySelectorAll('.checkbox[data-group="civilite"]').forEach(function(cb) {
+            cb.style.outline = '2px solid red';
+            cb.style.outlineOffset = '1px';
+        });
+    } else {
+        // Retirer le rouge si une civilité est cochée
+        document.querySelectorAll('.checkbox[data-group="civilite"]').forEach(function(cb) {
+            cb.style.outline = '';
+        });
     }
 	
     // Paiement : au moins un mode obligatoire
