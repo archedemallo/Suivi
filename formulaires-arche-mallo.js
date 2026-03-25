@@ -368,7 +368,7 @@ function validateRequiredFields() {
     });
 
     // Dates conditionnelles : marquer en rouge si obligatoires et vides
-    ['dateVermifuge', 'dateAntiPuces', 'dateprochainAntiPuces',
+    ['dateVermifuge', 'prochainVermifuge', 'dateAntiPuces', 'dateprochainAntiPuces',
      'dateVaccin', 'dateRappel',
      'dateSterilisationCas1', 'dateLimiteSterilisation'].forEach(function(id) {
         var el = document.getElementById(id);
