@@ -215,14 +215,12 @@
     if (!document.getElementById('dateAssociation').value) document.getElementById('dateAssociation').value = today;
 
 // Validation spécifique au certificat
-var _validateOriginal = validateRequiredFields;
 validateRequiredFields = function() {
-    // Appel de la validation de base (champs data-required uniquement)
     var missing = [];
 
-    // Champs input avec data-required
+    // Champs data-required uniquement
     document.querySelectorAll('[data-required="true"]').forEach(function(el) {
-        var label = el.getAttribute('data-label') || el.id || 'Champ inconnu';
+        var label = el.getAttribute('data-label') || el.id;
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
             if (!el.value || el.value.trim() === '') {
                 missing.push(label);
