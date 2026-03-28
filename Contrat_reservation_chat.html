@@ -23,12 +23,18 @@
 <table class="header-table">
     <tr>
         <td class="col-center">
-            <div class="title">Contrat de réservation</div>
-        </td>
-        <td class="col-right">
-            <img src="chat.png" style="width:80px;height:80px;object-fit:contain;display:block;margin-left:auto;margin-bottom:8px;">
-            <p class="bold">CHAT</p>
-            <p>N° du BOX : <input type="text" class="editable editable-box" id="numeroBox"></p>
+           <!-- Titre centré -->
+<div class="title">Contrat de réservation</div>
+
+<!-- Bloc chat aligné à droite -->
+<div style="text-align:right; margin-bottom:10px;">
+    <img src="chat.png" style="width:80px;height:80px;object-fit:contain;display:inline-block;margin-bottom:4px;">
+    <p class="bold" style="text-align:right;">CHAT</p>
+    <p style="text-align:right;">N° du BOX : <input type="text" class="editable editable-box" id="numeroBox"></p>
+    <p style="text-align:right;" class="small">Date de réservation :
+        <input type="date" class="editable editable-date" id="dateReservation">
+    </p>
+</div>
         </td>
     </tr>
 </table>
