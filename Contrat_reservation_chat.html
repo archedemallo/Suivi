@@ -23,7 +23,7 @@
 <table class="header-table">
     <tr>
         <td class="col-center">
-            <h2>Contrat de réservation</h2>
+            <div class="title">Contrat de réservation</div>
         </td>
         <td class="col-right">
             <img src="chat.png" style="width:80px;height:80px;object-fit:contain;display:block;margin-left:auto;margin-bottom:8px;">
@@ -135,19 +135,19 @@
         <!-- Paiement acompte : MULTI-SÉLECTION (pas de data-group → plusieurs cases cochables) -->
         <p class="bold underline">Afin de garantir ma réservation, je verse ce jour un acompte de 50€ par :</p>
         <p>
-            <span class="clickable-row" onclick="toggleCheck(this)">
-                <span class="checkbox"></span> CB
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this)">
-                <span class="checkbox"></span> Espèce
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this)">
-                <span class="checkbox"></span> Virement
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this)">
-                <span class="checkbox"></span> Chèque.  
-          <span class="blue">  N° <input type="text" class="editable editable-medium" id="numeroPaiement"></span>          
-			</span>
+            <span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_cb"></span> CB
+</span>
+<span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_espece"></span> Espèce
+</span>
+<span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_virement"></span> Virement
+</span>
+<span class="clickable-row" onclick="toggleCheckMulti(this)">
+    <span class="checkbox" id="pay_cheque_resa"></span> Chèque.
+    <span class="blue">N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
+</span>
         </p>
 
         <p class="red">
@@ -179,15 +179,27 @@
         <table class="signature-table">
             <tr>
                 <td>
-                    <p>L'Arche de Mallo :<br>(Signature précédée de la mention "Lu et approuvé")</p>
-                    <div id="sig1"></div>
-                    <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
-                </td>
-                <td>
-                    <p>L'adoptant(e) :<br>(Signature précédée de la mention "Lu et approuvé")</p>
-                    <div id="sig2"></div>
-                    <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
-                </td>
+    <p>L'Arche de Mallo :</p>
+    <p class="mt-20">
+        <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve1_resa">
+            <span class="checkbox"></span>
+            <span class="bold"> Lu et approuvé</span>
+        </span>
+    </p>
+    <div id="sig1"></div>
+    <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+</td>
+<td>
+    <p>L'adoptant(e) :</p>
+    <p class="mt-20">
+        <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve2_resa">
+            <span class="checkbox"></span>
+            <span class="bold"> Lu et approuvé</span>
+        </span>
+    </p>
+    <div id="sig2"></div>
+    <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+</td>
             </tr>
         </table>
     </div>
@@ -271,6 +283,34 @@
             }
         });
 
+// Paiement : au moins un mode obligatoire
+        var payIds = ['pay_cb', 'pay_espece', 'pay_virement', 'pay_cheque_resa'];
+        var paiementCoche = payIds.some(function(id) {
+            var el = document.getElementById(id);
+            return el && el.classList.contains('checked');
+        });
+        if (!paiementCoche) {
+            missing.push('Mode de règlement (au moins un à cocher)');
+            payIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) { el.style.outline = '2px solid red'; el.style.outlineOffset = '1px'; }
+            });
+        } else {
+            payIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.outline = '';
+            });
+        }
+        // N° chèque obligatoire si chèque coché
+        var payCheque = document.getElementById('pay_cheque_resa');
+        if (payCheque && payCheque.classList.contains('checked')) {
+            var numCheque = document.getElementById('numeroPaiement');
+            if (!numCheque || !numCheque.value.trim()) {
+                missing.push('Numéro de chèque');
+                if (numCheque) numCheque.style.borderBottom = '2px solid red';
+            }
+        }
+		
         return missing;
     };
 </script>
