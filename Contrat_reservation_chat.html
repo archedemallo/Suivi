@@ -18,133 +18,111 @@
 <div class="page-container">
 <div class="content">
 
-    <!-- En-tête 3 colonnes -->
-    <table class="header-table">
-        <tr>
-            <td class="col-left">
-                <div class="logo-box"></div>
-                <p class="bold">Association L'ARCHE DE MALLO</p>
-                <p>
-                    8 ter rue d'Eschène<br>
-                    90140 AUTRECHÊNE<br>
-                    07.71.64.69.89<br>
-                    <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
-                </p>
-            </td>
-            <td class="col-center">
-                <h2>Contrat de réservation</h2>
-                <p class="small">Date de réservation :
-                    <input type="date" class="editable editable-date" id="dateReservation">
-                </p>
-            </td>
-            <td class="col-right">
-                <img src="chat.png" style="width:80px;height:80px;object-fit:contain;display:block;margin-left:auto;margin-bottom:8px;">
-                <p class="bold">CHAT</p>
-                <p>N° du BOX : <input type="text" class="editable editable-box" id="numeroBox"></p>
-            </td>
-        </tr>
-    </table>
+    <div id="entete"></div>
+
+<table class="header-table">
+    <tr>
+        <td class="col-center">
+            <h2>Contrat de réservation</h2>
+        </td>
+        <td class="col-right">
+            <img src="chat.png" style="width:80px;height:80px;object-fit:contain;display:block;margin-left:auto;margin-bottom:8px;">
+            <p class="bold">CHAT</p>
+            <p>N° du BOX : <input type="text" class="editable editable-box" id="numeroBox"></p>
+        </td>
+    </tr>
+</table>
 
     <!-- Informations du chat -->
-    <div class="section">
-        <p>
-            <span class="bold">Nom provisoire du chat :</span>
-            <input type="text" class="editable editable-long" id="nomChat" data-required="true" data-label="nom Chat">
-        </p>
-        <p>
-<p>
-    <span class="bold">Né(e) le :</span>
-    <input type="date" class="editable editable-date" id="dateNaissance">
-    
-    <span class="bold">Sexe :</span>
-    <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
-        <span class="checkbox" data-group="exterieur"></span> Mâle
-    </span>
-    <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
-        <span class="checkbox" data-group="exterieur"></span> Femelle
-    </span>
-</p>
+<div class="section">
+    <p>
+        <span class="bold">Nom provisoire du chat :</span>
+        <input type="text" class="editable editable-long" id="nomChat" data-required="true" data-label="Nom du chat">
+    </p>
+    <p>
+        <span class="bold">Né(e) le :</span>
+        <input type="date" class="editable editable-date" id="dateNaissance">
+        
+        <span class="bold">Sexe :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'sexe_chat')" id="bloc_sexe_chat">
+            <span class="checkbox" data-group="sexe_chat"></span> Mâle
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'sexe_chat')">
+            <span class="checkbox" data-group="sexe_chat"></span> Femelle
+        </span>
+    </p>
+    <p>
+        <span class="bold">N° d'identification (puce électronique) :</span>
+        <input type="text" class="editable editable-medium" id="identification" data-required="true" data-label="N° identification">
+        <br><span class="bold">Robe, couleur :</span>
+        <input type="text" class="editable editable-medium" id="couleur" data-required="true" data-label="Couleur du chat">
+    </p>
+    <p>
+        <span class="bold">Signes particuliers :</span>
+        <input type="text" class="editable editable-long" id="signesParticuliers">
+    </p>
+</div>
 
-     
-        <p>
-            <span class="bold">N° d'identification (puce électronique) :</span>
-            <input type="text" class="editable editable-medium" id="identification">
-            
-            <br><span class="bold">Robe, couleur :</span>
-            <input type="text" class="editable editable-medium" id="couleur"data-required="true" data-label="couleur chat">
-        </p>
-        <p>
-            <span class="bold">Signes particuliers :</span>
-            <input type="text" class="editable editable-long" id="signesParticuliers">
-        </p>
-    </div>
-
-    <!-- Identité de l'adoptant -->
-    <div class="section">
-        <p>
-            <span class="bold">Je soussigné(e) M/Mme</span>
-            <input type="text" class="editable editable-long" id="nomComplet" data-required="true" data-label="nom adoptant">,
-            <br>né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="date de naissance adoptant">
-            et résidant <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="adresse adoptant">
-        </p>
-        <p>
-            <span class="bold">Téléphone :</span>
-            <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="telephone adoptant">
-            
-            <span class="bold">E-mail :</span>
-            <input type="email" class="editable editable-email" id="email" data-required="true" data-label="mail adoptant">
-        </p>
-        <p>
-            m'engage à adopter à l'association « l'Arche de Mallo » le chat décrit ci-dessus
-            à compter du <input type="date" class="editable editable-date" id="dateAdoption">
-        </p>
-    </div>
+<!-- Identité de l'adoptant -->
+<div class="section">
+    <p>
+        <span class="bold">Je soussigné(e) M/Mme</span>
+        <input type="text" class="editable editable-long" style="width:500px;" id="nomComplet" data-required="true" data-label="Nom et prénom adoptant">,
+    </p>
+    <p>
+        né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
+    </p>
+    <p>
+        résidant <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse adoptant">
+    </p>
+    <p>
+        <span class="bold">Téléphone :</span>
+        <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        
+        <span class="bold">E-mail :</span>
+        <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
+    </p>
+    <p>
+        m'engage à adopter à l'association « l'Arche de Mallo » le chat décrit ci-dessus
+        à compter du <input type="date" class="editable editable-date" id="dateAdoption">
+    </p>
+</div>
 
     <!-- Logement -->
     <div class="section">
         <p>
-            <span class="bold">Type d'habitation :</span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
-                <span class="checkbox" data-group="habitation"></span> Maison
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
-                <span class="checkbox" data-group="habitation"></span> Appartement
-            </span>
-        </p>
-        <p>
-            <span class="bold">Nombre de m² :</span>
-            <input type="number" class="editable editable-num" id="superficie"> m²
-        </p>
-        <p>
-            <span class="bold">Espace extérieur :</span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
-                <span class="checkbox" data-group="exterieur"></span> OUI
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
-                <span class="checkbox" data-group="exterieur"></span> NON
-            </span>
-        </p>
-        <p>
-            <span class="bold">Autres animaux :</span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
-                <span class="checkbox" data-group="animaux"></span> Chat
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
-                <span class="checkbox" data-group="animaux"></span> Chien
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
-                <span class="checkbox" data-group="animaux"></span> Lapin
-            </span>
-        </p>
-        <p>
-            <span class="bold">Enfants :</span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
-                <span class="checkbox" data-group="enfants"></span> OUI
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
-                <span class="checkbox" data-group="enfants"></span> NON
-            </span>
-        </p>
+    <span class="bold">Type d'habitation :</span>
+    <span id="bloc_habitation">
+        <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
+            <span class="checkbox" data-group="habitation"></span> Maison
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
+            <span class="checkbox" data-group="habitation"></span> Appartement
+        </span>
+    </span>
+</p>
+<p>
+    <span class="bold">Espace extérieur :</span>
+    <span id="bloc_exterieur">
+        <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
+            <span class="checkbox" data-group="exterieur"></span> OUI
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
+            <span class="checkbox" data-group="exterieur"></span> NON
+        </span>
+    </span>
+</p>
+<p>
+    <span class="bold">Enfants :</span>
+    <span id="bloc_enfants">
+        <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
+            <span class="checkbox" data-group="enfants"></span> OUI
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
+            <span class="checkbox" data-group="enfants"></span> NON
+        </span>
+    </span>
+</p>
     </div>
 
     <!-- Engagement & Acompte -->
@@ -218,17 +196,84 @@
 </div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
-
 <script>
+    creerEntete({ dateId: 'dateReservation', dateLabel: 'Date réservation :' });
     creerSignature('sig1');
     creerSignature('sig2');
+
     var today = new Date().toISOString().split('T')[0];
-    ['dateReservation','dateFait','dateAdoption'].forEach(function(id) {
+    ['dateReservation', 'dateFait'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
-</script>
+    // dateAdoption et dateNaissance restent vides
+    ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.value = '';
+    });
 
+    // Validation spécifique à ce formulaire
+    var _validateOriginal = validateRequiredFields;
+    validateRequiredFields = function() {
+        var missing = [];
+
+        // Champs data-required standard
+        document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+            var label = el.getAttribute('data-label') || el.id;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (!el.value || el.value.trim() === '') {
+                    missing.push(label);
+                    el.style.borderBottom = '2px solid red';
+                } else {
+                    el.style.borderBottom = '';
+                }
+            }
+        });
+
+        // Email format
+        var elEmail = document.getElementById('email');
+        if (elEmail && elEmail.value.trim()) {
+            var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
+            if (!valid) {
+                missing.push('Email invalide');
+                elEmail.style.borderBottom = '2px solid red';
+            }
+        }
+
+        // Cases à cocher obligatoires
+        var groupesObligatoires = [
+            { group: 'sexe_chat',  bloc: 'bloc_sexe_chat',  label: 'Sexe du chat' },
+            { group: 'habitation', bloc: 'bloc_habitation',  label: 'Type d\'habitation' },
+            { group: 'exterieur',  bloc: 'bloc_exterieur',   label: 'Espace extérieur' },
+            { group: 'enfants',    bloc: 'bloc_enfants',      label: 'Enfants' }
+        ];
+        groupesObligatoires.forEach(function(item) {
+            var checked = document.querySelector('.checkbox[data-group="' + item.group + '"].checked');
+            if (!checked) {
+                missing.push(item.label);
+                document.querySelectorAll('.checkbox[data-group="' + item.group + '"]').forEach(function(cb) {
+                    cb.style.outline = '2px solid red';
+                    cb.style.outlineOffset = '1px';
+                });
+            } else {
+                document.querySelectorAll('.checkbox[data-group="' + item.group + '"]').forEach(function(cb) {
+                    cb.style.outline = '';
+                });
+            }
+        });
+
+        // Signatures obligatoires
+        ['sig1', 'sig2'].forEach(function(sigId) {
+            var container = document.getElementById(sigId);
+            if (container && !container._signed) {
+                var labels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
+                missing.push(labels[sigId]);
+            }
+        });
+
+        return missing;
+    };
+</script>
 	
 </body>
 </html>
