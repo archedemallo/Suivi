@@ -218,6 +218,12 @@
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
+
+function toggleCheckMulti(element) {
+    var box = element.querySelector('.checkbox');
+    if (box) box.classList.toggle('checked');
+}
+	
     // dateAdoption et dateNaissance restent vides
     ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
         var el = document.getElementById(id);
@@ -311,6 +317,22 @@
             }
         }
 		
+// Lu et approuvé obligatoires
+        ['luApprouve1_resa', 'luApprouve2_resa'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                var cb = el.querySelector('.checkbox');
+                if (!cb.classList.contains('checked')) {
+                    var labels = { luApprouve1_resa: 'Lu et approuvé (Arche de Mallo)', luApprouve2_resa: 'Lu et approuvé (Adoptant)' };
+                    missing.push(labels[id]);
+                    cb.style.outline = '2px solid red';
+                    cb.style.outlineOffset = '1px';
+                } else {
+                    cb.style.outline = '';
+                }
+            }
+        });
+
         return missing;
     };
 </script>
