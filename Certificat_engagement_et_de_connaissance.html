@@ -217,7 +217,21 @@
 // Validation spécifique au certificat
 var _validateOriginal = validateRequiredFields;
 validateRequiredFields = function() {
-    var missing = _validateOriginal();
+    // Appel de la validation de base (champs data-required uniquement)
+    var missing = [];
+
+    // Champs input avec data-required
+    document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+        var label = el.getAttribute('data-label') || el.id || 'Champ inconnu';
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            if (!el.value || el.value.trim() === '') {
+                missing.push(label);
+                el.style.borderBottom = '2px solid red';
+            } else {
+                el.style.borderBottom = '';
+            }
+        }
+    });
 
     // Case engagement obligatoire + rouge
     var engagement = document.getElementById('checkEngagement');
