@@ -156,11 +156,13 @@
     <p class="bold underline">L'adoptant :</p>
     <p>
         Je soussigné(e)
-        <input type="text" class="editable" style="width:350px;" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" placeholder="Nom et prénom de l'adoptant">
-        résidant à
-        <input type="text" class="editable" style="width:100%;" id="adresseAdoptant" data-required="true" data-label="Adresse" placeholder="Adresse complète">
-        atteste avoir pris connaissance de toutes les informations ci-dessus.
+        <input type="text" class="editable editable-long" style="width:500px;" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant">
     </p>
+    <p>
+        résidant à
+        <input type="text" class="editable" style="width:100%;display:block;margin-top:4px;" id="adresseAdoptant" data-required="true" data-label="Adresse">
+    </p>
+    <p>atteste avoir pris connaissance de toutes les informations ci-dessus.</p>
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAdoptant"></p>
 
     <div class="mention-manuscrite mt-20"><span class="bold">
@@ -176,27 +178,27 @@
         </span>
     </p>
 
-    <textarea class="editable" id="mentionManuscrite" placeholder="Recopiez ici la mention manuscrite avant de signer..."></textarea>
-
-    <div class="section mt-20">
-        <p class="bold underline">Signature de l'adoptant :</p>
-        <div id="sig1"></div>
-        <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
-    </div>
+<!-- Signatures côte à côte -->
+    <table class="signature-table mt-30">
+        <tr>
+            <td>
+                <p class="bold underline">Signature de l'adoptant :</p>
+                <div id="sig1"></div>
+                <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+            </td>
+            <td>
+                <p class="bold underline">Signature de l'Arche de Mallo :</p>
+                <div id="sig2"></div>
+                <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+            </td>
+        </tr>
+    </table>
 </div>
+
+
+
+
     
-
-<!-- Signature association -->
-<div class="signature-section mt-30">
-    <p class="bold underline">L'Arche de Mallo :</p>
-    <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAssociation"></p>
-    <p class="mention-manuscrite"><span class="bold">Signature du représentant de l'association L'Arche de Mallo</span></p>
-
-    <div class="section mt-20">
-        <div id="sig2"></div>
-        <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
-    </div>
-</div>
 
 </div><!-- /content -->
 </div><!-- /page-container -->
@@ -216,11 +218,29 @@
 var _validateOriginal = validateRequiredFields;
 validateRequiredFields = function() {
     var missing = _validateOriginal();
-    // Case engagement obligatoire
+
+    // Case engagement obligatoire + rouge
     var engagement = document.getElementById('checkEngagement');
-    if (engagement && !engagement.querySelector('.checkbox').classList.contains('checked')) {
-        missing.push('Engagement à respecter les besoins de l\'animal');
+    if (engagement) {
+        var cb = engagement.querySelector('.checkbox');
+        if (!cb.classList.contains('checked')) {
+            missing.push('Engagement à cocher');
+            cb.style.outline = '2px solid red';
+            cb.style.outlineOffset = '1px';
+        } else {
+            cb.style.outline = '';
+        }
     }
+
+    // Signatures obligatoires
+    ['sig1', 'sig2'].forEach(function(sigId) {
+        var container = document.getElementById(sigId);
+        if (container && !container._signed) {
+            var labels = { sig1: 'Signature de l\'adoptant', sig2: 'Signature de l\'Arche de Mallo' };
+            missing.push(labels[sigId]);
+        }
+    });
+
     return missing;
 };
     
