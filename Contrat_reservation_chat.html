@@ -218,232 +218,133 @@
 	
 <script src="formulaires-arche-mallo.js"></script>
 <script>
-creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date adoption :' });
+    creerEntete({ dateId: 'dateReservation', dateLabel: 'Date réservation :' });
+    creerSignature('sig1');
+    creerSignature('sig2');
 
-creerSignature('sig1');
-creerSignature('sig2');
-var today = new Date().toISOString().split('T')[0];
-['dateAdoption','dateFait'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && !el.value) el.value = today;
-});
+    var today = new Date().toISOString().split('T')[0];
+    ['dateReservation', 'dateFait'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && !el.value) el.value = today;
+    });
+    // Ces dates restent vides par défaut
+    ['dateAdoption', 'dateNaissance'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.value = '';
+    });
 
-function majNomAttestation() {
-    var nom    = document.getElementById('nom')    ? document.getElementById('nom').value    : '';
-    var prenom = document.getElementById('prenom') ? document.getElementById('prenom').value : '';
-    var champ  = document.getElementById('nomAttestation');
-    if (champ) champ.value = (prenom + ' ' + nom).trim().toUpperCase();
-}
+    function toggleCheckMulti(element) {
+        var box = element.querySelector('.checkbox');
+        if (box) box.classList.toggle('checked');
+    }
 
-function aperçuPhoto(input, previewId) {
-    var preview = document.getElementById(previewId);
-    if (!input.files || !input.files[0]) return;
-    preview.innerHTML = '<span style="font-size:11px;color:green;">✔ ' + input.files[0].name + '</span>';
-}
+    // Validation spécifique à ce formulaire
+    validateRequiredFields = function() {
+        var missing = [];
 
-function redimensionnerImage(file, callback) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        var img = new Image();
-        img.onload = function() {
-            var canvas = document.createElement('canvas');
-            var max = 1200, w = img.width, h = img.height;
-            if (w > max || h > max) {
-                if (w > h) { h = Math.round(h * max / w); w = max; }
-                else       { w = Math.round(w * max / h); h = max; }
+        // Champs data-required
+        document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+            var label = el.getAttribute('data-label') || el.id;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (!el.value || el.value.trim() === '') {
+                    missing.push(label);
+                    el.style.borderBottom = '2px solid red';
+                    el.style.outline = '1px solid red';
+                } else {
+                    el.style.borderBottom = '';
+                    el.style.outline = '';
+                }
             }
-            canvas.width = w; canvas.height = h;
-            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-            callback(canvas.toDataURL('image/jpeg', 0.7).split(',')[1]);
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-async function envoyerPhotos(nomAdoptant, nomChat, dateStr) {
-    var photos = [
-        { id: 'photoCNI_recto',  type: 'CNI_Recto'  },
-        { id: 'photoCNI_verso',  type: 'CNI_Verso'   },
-        { id: 'photoDomicile_1', type: 'Domicile_1'  },
-        { id: 'photoDomicile_2', type: 'Domicile_2'  },
-    ];
-    var nom  = (nomAdoptant || 'Inconnu').replace(/\s+/g, '_');
-    var chat = (nomChat     || 'Chat'   ).replace(/\s+/g, '_');
-    var date = (dateStr     || today    );
-    for (var i = 0; i < photos.length; i++) {
-        var input = document.getElementById(photos[i].id);
-        if (!input || !input.files || !input.files[0]) continue;
-        var file = input.files[0];
-        var filename = nom + '_' + chat + '_' + photos[i].type + '_' + date;
-        await new Promise(function(resolve) {
-            var f = file, fn = filename;
-            redimensionnerImage(f, function(base64) {
-                fetch(APPS_SCRIPT_URL, {
-                    method: 'POST', mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'photo', onglet: 'Adoption',
-                        filename: fn, imageBase64: base64, mimeType: 'image/jpeg'
-                    })
-                }).then(resolve).catch(resolve);
-            });
         });
-    }
-}
 
-function majObligatoire(group, champIds, valeursOui) {
-    valeursOui = valeursOui || ['OUI'];
-    var checked  = document.querySelector('.checkbox[data-group="' + group + '"].checked');
-    var estActif = false;
-    if (checked) {
-        var texte = checked.parentElement.textContent.trim().toUpperCase();
-        estActif  = valeursOui.some(function(v) { return texte.startsWith(v.toUpperCase()); });
-    }
-    if (group === 'cas1direct') {
-        var c = document.getElementById('cas1_check');
-        estActif = c ? c.classList.contains('checked') : false;
-    }
-    if (group === 'cas2direct') {
-        var c = document.getElementById('cas2_check');
-        estActif = c ? c.classList.contains('checked') : false;
-    }
-    champIds.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (!el) { document.body.setAttribute('data-required-group-' + id, estActif ? 'true' : ''); return; }
-        if (estActif) {
-            el.setAttribute('data-required', 'true');
-            el.setAttribute('data-label', el.getAttribute('data-label') || id);
-        } else {
-            el.removeAttribute('data-required');
-            el.style.borderBottom = '';
+        // Email format
+        var elEmail = document.getElementById('email');
+        if (elEmail && elEmail.value.trim()) {
+            var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
+            if (!valid) {
+                missing.push('Email invalide');
+                elEmail.style.borderBottom = '2px solid red';
+            }
         }
-    });
-}
 
-function toggleCheckMulti(element) {
-    var box = element.querySelector('.checkbox');
-    if (box) box.classList.toggle('checked');
-}
-
-// ============================================================
-// VALIDATION SPÉCIFIQUE AU CONTRAT D'ADOPTION
-// ============================================================
-var _validateBase = validateRequiredFields;
-validateRequiredFields = function() {
-    var missing = _validateBase();
-
-    // Civilité
-    var civiliteChecked = document.querySelector('.checkbox[data-group="civilite"].checked');
-    if (!civiliteChecked) {
-        missing.push('Civilité (Monsieur ou Madame)');
-        document.querySelectorAll('.checkbox[data-group="civilite"]').forEach(function(cb) {
-            cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
-        });
-    } else {
-        document.querySelectorAll('.checkbox[data-group="civilite"]').forEach(function(cb) {
-            cb.style.outline = '';
-        });
-    }
-
-    // Lu et approuvé
-    ['luApprouve1', 'luApprouve2'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el && !el.querySelector('.checkbox').classList.contains('checked')) {
-            var labels = { luApprouve1: 'Lu et approuvé (Arche de Mallo)', luApprouve2: 'Lu et approuvé (Adoptant)' };
-            missing.push(labels[id]);
-        }
-    });
-
-    // Signatures
-    ['sig1', 'sig2'].forEach(function(sigId) {
-        var container = document.getElementById(sigId);
-        if (container && !container._signed) {
-            var sigLabels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
-            missing.push(sigLabels[sigId]);
-        }
-    });
-
-    // Paiement
-    var paiementCoche = document.querySelector('#pay_virement.checked, #pay_cb.checked, #pay_espece.checked, #pay_cheque.checked');
-    var pay2cheques   = document.getElementById('pay_2cheques');
-    if (!paiementCoche && !(pay2cheques && pay2cheques.classList.contains('checked'))) {
-        missing.push('Mode de règlement (au moins un à cocher)');
-    }
-    var payCheque = document.getElementById('pay_cheque');
-    if (payCheque && payCheque.classList.contains('checked')) {
-        var numPaiement = document.getElementById('numeroPaiement');
-        if (!numPaiement || !numPaiement.value.trim()) {
-            missing.push('Numéro de chèque');
-            if (numPaiement) numPaiement.style.borderBottom = '2px solid red';
-        }
-    }
-    if (pay2cheques && pay2cheques.classList.contains('checked')) {
-        var val1 = (document.getElementById('cheque1') || {}).value || '';
-        var val2 = (document.getElementById('cheque2') || {}).value || '';
-        var vals4 = ['cheque3','cheque4','cheque5','cheque6'].map(function(id) {
-            return ((document.getElementById(id) || {}).value || '').trim();
-        });
-        var ok2 = val1.trim() && val2.trim();
-        var ok4 = vals4.filter(function(v) { return v !== ''; }).length >= 3;
-        if (!ok2 && !ok4) {
-            missing.push('Paiement en plusieurs fois : remplir les 2 chèques OU au moins 3 des 4 chèques');
-            if (!ok2) ['cheque1','cheque2'].forEach(function(id) {
-                var el = document.getElementById(id);
-                if (el && !el.value.trim()) el.style.borderBottom = '2px solid red';
-            });
-            if (!ok4) ['cheque3','cheque4','cheque5','cheque6'].forEach(function(id, i) {
-                var el = document.getElementById(id);
-                if (el && !vals4[i]) el.style.borderBottom = '2px solid red';
-            });
-        }
-    }
-
-    // FIV et Diarrhée
-    var libRes = {
-        resultatFIV:      'Résultat FIV/FEL (Négatif ou Positif)',
-        resultatDiarrhee: 'Résultat test diarrhée (Négatif ou Positif)'
-    };
-    ['resultatFIV', 'resultatDiarrhee'].forEach(function(group) {
-        if (document.body.getAttribute('data-required-group-' + group) === 'true') {
-            var checked = document.querySelector('.checkbox[data-group="' + group + '"].checked');
+        // Cases à cocher obligatoires
+        var groupesObligatoires = [
+            { group: 'sexe_chat',  label: 'Sexe du chat' },
+            { group: 'habitation', label: 'Type d\'habitation' },
+            { group: 'exterieur',  label: 'Espace extérieur' },
+            { group: 'enfants',    label: 'Enfants' }
+        ];
+        groupesObligatoires.forEach(function(item) {
+            var checked = document.querySelector('.checkbox[data-group="' + item.group + '"].checked');
             if (!checked) {
-                missing.push(libRes[group]);
-                document.querySelectorAll('.checkbox[data-group="' + group + '"]').forEach(function(cb) {
-                    cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+                missing.push(item.label);
+                document.querySelectorAll('.checkbox[data-group="' + item.group + '"]').forEach(function(cb) {
+                    cb.style.outline = '2px solid red';
+                    cb.style.outlineOffset = '1px';
                 });
             } else {
-                document.querySelectorAll('.checkbox[data-group="' + group + '"]').forEach(function(cb) {
+                document.querySelectorAll('.checkbox[data-group="' + item.group + '"]').forEach(function(cb) {
                     cb.style.outline = '';
                 });
             }
+        });
+
+        // Paiement : au moins un mode obligatoire
+        var payIds = ['pay_cb', 'pay_espece', 'pay_virement', 'pay_cheque_resa'];
+        var paiementCoche = payIds.some(function(id) {
+            var el = document.getElementById(id);
+            return el && el.classList.contains('checked');
+        });
+        if (!paiementCoche) {
+            missing.push('Mode de règlement (au moins un à cocher)');
+            payIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) { el.style.outline = '2px solid red'; el.style.outlineOffset = '1px'; }
+            });
+        } else {
+            payIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.style.outline = '';
+            });
         }
-    });
 
-    // Dates conditionnelles
-    ['dateVermifuge','prochainVermifuge','dateAntiPuces','dateprochainAntiPuces',
-     'dateVaccin','dateRappel','dateSterilisationCas1','dateLimiteSterilisation'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el && el.getAttribute('data-required') === 'true' && !el.value) {
-            el.style.borderBottom = '2px solid red';
+        // N° chèque obligatoire si chèque coché
+        var payCheque = document.getElementById('pay_cheque_resa');
+        if (payCheque && payCheque.classList.contains('checked')) {
+            var numCheque = document.getElementById('numeroPaiement');
+            if (!numCheque || !numCheque.value.trim()) {
+                missing.push('Numéro de chèque');
+                if (numCheque) numCheque.style.borderBottom = '2px solid red';
+            }
         }
-    });
 
-    return missing;
-};
+        // Lu et approuvé
+        ['luApprouve1_resa', 'luApprouve2_resa'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                var cb = el.querySelector('.checkbox');
+                if (!cb.classList.contains('checked')) {
+                    var labels = { luApprouve1_resa: 'Lu et approuvé (Arche de Mallo)', luApprouve2_resa: 'Lu et approuvé (Adoptant)' };
+                    missing.push(labels[id]);
+                    cb.style.outline = '2px solid red';
+                    cb.style.outlineOffset = '1px';
+                } else {
+                    cb.style.outline = '';
+                }
+            }
+        });
 
-// Surcharge saveForm pour envoyer les photos
-var _saveFormOriginal = saveForm;
-saveForm = async function() {
-    await _saveFormOriginal();
-    var prenom      = (document.getElementById('prenom')       || {}).value || '';
-    var nom         = (document.getElementById('nom')          || {}).value || '';
-    var nomAdoptant = (prenom + ' ' + nom).trim();
-    var nomChat     = (document.getElementById('nomUsuel')     || {}).value || '';
-    var dateRaw     = (document.getElementById('dateAdoption') || {}).value || today;
-    var dateFr      = dateRaw ? dateRaw.split('-').reverse().join('-') : today;
-    await envoyerPhotos(nomAdoptant, nomChat, dateFr);
-};
+        // Signatures
+        ['sig1', 'sig2'].forEach(function(sigId) {
+            var container = document.getElementById(sigId);
+            if (container && !container._signed) {
+                var labels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
+                missing.push(labels[sigId]);
+            }
+        });
+
+        return missing;
+    };
 </script>
 	
 </body>
