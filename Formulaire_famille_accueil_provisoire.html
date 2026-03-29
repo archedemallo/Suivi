@@ -157,13 +157,83 @@
 
 <script src="formulaires-arche-mallo.js"></script>
 <script>
+    creerEntete({ dateId: 'date_signature', dateLabel: 'Date :' });
     creerSignature('sig1');
     creerSignature('sig2');
+
     var today = new Date().toISOString().split('T')[0];
-    ['date_signature','date_fait'].forEach(function(id) {
+    ['date_signature', 'date_fait'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
+
+    // Date naissance animal vide
+    document.addEventListener('DOMContentLoaded', function() {
+        ['date_naissance', 'date_debut', 'date_fin'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+    });
+
+    validateRequiredFields = function() {
+        var missing = [];
+
+        // Champs data-required
+        document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+            var label = el.getAttribute('data-label') || el.id;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (!el.value || el.value.trim() === '') {
+                    missing.push(label);
+                    el.style.borderBottom = '2px solid red';
+                } else {
+                    el.style.borderBottom = '';
+                }
+            }
+        });
+
+        // Email format
+        var elEmail = document.getElementById('email');
+        if (elEmail && elEmail.value.trim()) {
+            var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
+            if (!valid) {
+                missing.push('Email invalide');
+                elEmail.style.borderBottom = '2px solid red';
+            }
+        }
+
+        // Lu et approuvé
+        ['luApprouve1_fa', 'luApprouve2_fa'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                var cb = el.querySelector('.checkbox');
+                if (!cb.classList.contains('checked')) {
+                    var labels = {
+                        luApprouve1_fa: 'Lu et approuvé (Famille d\'accueil)',
+                        luApprouve2_fa: 'Lu et approuvé (Arche de Mallo)'
+                    };
+                    missing.push(labels[id]);
+                    cb.style.outline = '2px solid red';
+                    cb.style.outlineOffset = '1px';
+                } else {
+                    cb.style.outline = '';
+                }
+            }
+        });
+
+        // Signatures
+        ['sig1', 'sig2'].forEach(function(sigId) {
+            var container = document.getElementById(sigId);
+            if (container && !container._signed) {
+                var labels = {
+                    sig1: 'Signature famille d\'accueil',
+                    sig2: 'Signature Arche de Mallo'
+                };
+                missing.push(labels[sigId]);
+            }
+        });
+
+        return missing;
+    };
 </script>
 
 </body>
