@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyz0LvG1xO3bzfIfGWMzQuwXic1Bxgz77yGZnBpkoY-fW1v8heEgV2veoG25ZdfEDaOeQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQjhOadu-lLbkB7SeekUwvNaaGHX4WCBJ096ZKw_drcYd1LK_OvUCHICrkxFnv73Fl3g/exec';
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
