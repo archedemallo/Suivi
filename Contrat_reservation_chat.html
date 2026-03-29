@@ -237,9 +237,8 @@ function toggleCheckMulti(element) {
     });
 
     // Validation spécifique à ce formulaire
-    var _validateOriginal = validateRequiredFields;
-    validateRequiredFields = function() {
-        var missing = [];
+validateRequiredFields = function() {
+    var missing = [];
 
         // Champs data-required standard
         document.querySelectorAll('[data-required="true"]').forEach(function(el) {
