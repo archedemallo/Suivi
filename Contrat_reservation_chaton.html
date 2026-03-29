@@ -67,13 +67,12 @@
             <input type="text" class="editable editable-long" style="width:500px;" id="nomComplet" data-required="true" data-label="Nom et prénom adoptant">,
         </p>
         <p>
-            né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
-            &nbsp;&nbsp; résidant
-        </p>
-        <p>
-            <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse adoptant">
-        </p>
-        <p>
+        né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
+        &nbsp;&nbsp; résidant : <input type="text" class="editable editable-medium" id="ville" data-label="Ville">
+    </p>
+    <p>
+        <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse complète">
+    </p>
             <span class="bold">Téléphone :</span>
             <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             <span class="bold">E-mail :</span>
@@ -230,12 +229,12 @@
         if (el && !el.value) el.value = today;
     });
     // Forcer le vidage APRÈS le remplissage automatique du JS commun
-    setTimeout(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.value = '';
         });
-    }, 0);
+    });
 
     function toggleCheckMulti(element) {
         var box = element.querySelector('.checkbox');
