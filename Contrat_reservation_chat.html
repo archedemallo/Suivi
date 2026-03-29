@@ -77,10 +77,10 @@
     </p>
     <p>
         né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
-        &nbsp;&nbsp; résidant :
+        &nbsp;&nbsp; résidant : <input type="text" class="editable editable-medium" id="ville" data-label="Ville">
     </p>
     <p>
-        <input type="text" class="editable" style="width:100%;display:block;" id="adresse" data-required="true" data-label="Adresse adoptant">
+        <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse complète">
     </p>
     <p>
         <span class="bold">Téléphone :</span>
@@ -229,12 +229,12 @@
         if (el && !el.value) el.value = today;
     });
     // Forcer le vidage APRÈS le remplissage automatique du JS commun
-    setTimeout(function() {
+    document.addEventListener('DOMContentLoaded', function() {
         ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.value = '';
         });
-    }, 0);
+    });
 
     function toggleCheckMulti(element) {
         var box = element.querySelector('.checkbox');
