@@ -28,8 +28,17 @@ body {
     width: 90%;
     max-width: 21cm;
     min-height: 29.7cm;
-    padding: 0;
+    padding: 0 20px;        /* ← ajouter padding gauche/droite */
     margin: 0 auto;
+    overflow-wrap: break-word;   /* ← forcer le retour à la ligne */
+    word-wrap: break-word;
+}
+
+.content-section p {
+    text-align: justify;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 /* --- EN-TÊTE --- */
@@ -622,11 +631,12 @@ input[type="date"] {
     }
 
     /* Champs sur la même ligne que leur label */
-    p { 
-        margin: 3px 0; 
-        white-space: nowrap;
-        overflow: visible;
-    }
+p { 
+    margin: 3px 0; 
+    white-space: normal;    /* ← normal au lieu de nowrap */
+    overflow: visible;
+    word-wrap: break-word;
+}
     ul, ol { margin: 3px 0 3px 15px; }
     li  { margin: 2px 0; }
     br  { line-height: 0.8; }
