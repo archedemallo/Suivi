@@ -162,6 +162,10 @@
         résidant à
         <input type="text" class="editable" style="width:100%;display:block;margin-top:4px;" id="adresseAdoptant" data-required="true" data-label="Adresse">
     </p>
+    <p>
+        <span class="bold">Email :</span>
+        <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
+    </p>    
     <p>atteste avoir pris connaissance de toutes les informations ci-dessus.</p>
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAdoptant"></p>
 
@@ -253,6 +257,18 @@ validateRequiredFields = function() {
         }
     });
 
+// Email format
+    var elEmail = document.getElementById('email');
+    if (elEmail && elEmail.value.trim()) {
+        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
+        if (!valid) {
+            missing.push('Email invalide');
+            elEmail.style.borderBottom = '2px solid red';
+        }
+    }
+
+    return missing;
+    
     return missing;
 };
     
