@@ -225,14 +225,17 @@
     creerSignature('sig2');
 
     var today = new Date().toISOString().split('T')[0];
-    ['dateReservation', 'dateFait'].forEach(function(id) {
+   ['dateReservation', 'dateFait'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
-    ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.value = '';
-    });
+    // Forcer le vidage APRÈS le remplissage automatique du JS commun
+    setTimeout(function() {
+        ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+    }, 0);
 
     function toggleCheckMulti(element) {
         var box = element.querySelector('.checkbox');
@@ -248,10 +251,8 @@
                 if (!el.value || el.value.trim() === '') {
                     missing.push(label);
                     el.style.borderBottom = '2px solid red';
-                    el.style.outline = '1px solid red';
                 } else {
                     el.style.borderBottom = '';
-                    el.style.outline = '';
                 }
             }
         });
