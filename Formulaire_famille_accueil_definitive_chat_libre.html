@@ -43,14 +43,14 @@
 
     <p>
         <span class="blue bold">Nom :</span>
-        <input type="text" class="editable editable-medium" id="nom" data-required="true" data-label="Nom">
+        <input type="text" class="editable editable-medium" id="nom" data-required="true" data-label="Nom" oninput="this.value=this.value.toUpperCase()">
         &nbsp;&nbsp;
         <span class="blue bold">Prénom :</span>
-        <input type="text" class="editable editable-medium" id="prenom" data-required="true" data-label="Prénom">
+        <input type="text" class="editable editable-medium" id="prenom" data-required="true" data-label="Prénom" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p>
         <span class="blue bold">Téléphone :</span>
-        <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone">
+        <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         &nbsp;&nbsp;
         <span class="blue bold">Adresse mail :</span>
         <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
@@ -61,10 +61,10 @@
     </p>
     <p>
         <span class="blue bold">Code postal :</span>
-        <input type="text" class="editable editable-short" id="code_postal">
+        <input type="text" class="editable editable-short" id="code_postal" data-required="true" data-label="Code postal">
         &nbsp;&nbsp;
         <span class="blue bold">Ville :</span>
-        <input type="text" class="editable editable-medium" id="ville">
+        <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
     </p>
 
 </div>
@@ -131,17 +131,27 @@
     <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="date_fait"></p>
 
     <table class="signature-table">
-        <tr>
-            <td>
-                <p class="bold underline">Signature de la famille d'accueil :</p>
-                <div id="sig1"></div>
+            <tr>
+                <td>
+                    <p class="mt-20">
+                        <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve1_fa">
+                            <span class="checkbox"></span>
+                            <span class="bold"> Lu et approuvé</span>
+                        </span>
+                    </p>
+                    <p class="bold underline">Signature de la famille d'accueil :</p>
+                    <div id="sig1"></div>
                 <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
             </td>
             <td>
-                <p class="bold underline">Signature de L'Arche de Mallo :</p>
-                <div id="sig2"></div>
-                <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
-            </td>
+                    <p class="mt-20">
+                        <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve2_fa">
+                            <span class="checkbox"></span>
+                            <span class="bold"> Lu et approuvé</span>
+                        </span>
+                    </p>
+                    <p class="bold underline">Signature de L'Arche de Mallo :</p>
+                    <div id="sig2"></div>
         </tr>
     </table>
 </div>
