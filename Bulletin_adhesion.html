@@ -125,14 +125,14 @@
 <div class="section">
     <p class="bold underline">Je joins mon reglement par :</p>
     <p class="ml-30">
-        <span class="clickable-row" onclick="toggleCheck(this, 'paiement')">
-            <span class="checkbox" data-group="paiement"></span> Virement
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_virement_adh"></span> Virement
         </span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'paiement')">
-            <span class="checkbox" data-group="paiement"></span> Espece
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_espece_adh"></span> Espèce
         </span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'paiement')">
-            <span class="checkbox" data-group="paiement"></span> Cheque N
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_cheque_adh"></span> Chèque N°
         </span>
         <input type="text" class="editable editable-medium" id="numeroPaiement">
     </p>
@@ -162,6 +162,12 @@
 
 <script src="formulaires-arche-mallo.js"></script>
 <script>
+
+	function toggleCheckMulti(element) {
+    var box = element.querySelector('.checkbox');
+    if (box) box.classList.toggle('checked');
+}
+	
     creerSignature("sig1");
     var today = new Date().toISOString().split("T")[0];
     var el = document.getElementById("date");
