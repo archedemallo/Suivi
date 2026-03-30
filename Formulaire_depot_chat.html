@@ -18,19 +18,7 @@
 <div class="content">
 
  <!-- En-tête -->
-<div class="header-info">
-    <div>
-        <div class="logo-box"></div>
-        <div class="header-info mt-20">
-            <p class="bold">Association L'ARCHE DE MALLO</p>
-            <p>
-                8 ter rue d'Eschène<br>
-                90140 AUTRECHÊNE<br>
-                07.71.64.69.89<br>
-                <a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>
-            </p>
-        </div>
-    </div>
+<div id="entete"></div>
 
 
  
@@ -44,28 +32,37 @@
 	</div>	
     <div class="section">
         <p>
-            <span class="bold">Nom :</span>
-            <input type="text" class="editable editable-medium" id="nom" placeholder="Nom du déposant"
-			oninput="majNomComplet()">
-            
-            <span class="bold">Prénom :</span>
-            <input type="text" class="editable editable-medium" id="prenom" placeholder="Prénom"
-			oninput="majNomComplet()">
+            <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+                <span class="checkbox" data-group="civilite"></span>
+                <span class="blue bold">Monsieur</span>
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+                <span class="checkbox" data-group="civilite"></span>
+                <span class="blue bold">Madame</span>
+            </span>
         </p>
         <p>
-            <span class="bold">Adresse :</span>
-            <input type="text" class="editable editable-long" id="adresse" placeholder="Adresse complète">
+            <span class="blue bold">Nom :</span>
+            <input type="text" class="editable editable-medium" id="nom" data-required="true" data-label="Nom" oninput="this.value=this.value.toUpperCase(); majNomComplet()">
+            &nbsp;&nbsp;
+            <span class="blue bold">Prénom :</span>
+            <input type="text" class="editable editable-medium" id="prenom" data-required="true" data-label="Prénom" oninput="this.value=this.value.toUpperCase(); majNomComplet()">
+        </p>
+        <p><span class="blue bold">Adresse :</span>
+            <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse">
         </p>
         <p>
-            <span class="bold">CP :</span>
-            <input type="text" class="editable editable-short" id="codePostal" placeholder="Code postal">
-            
-            <span class="bold">Ville :</span>
-            <input type="text" class="editable editable-medium" id="ville" placeholder="Ville">
+            <span class="blue bold">Code postal :</span>
+            <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
+            &nbsp;&nbsp;
+            <span class="blue bold">Ville :</span>
+            <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
         </p>
-        <p>
-            <span class="bold">Téléphone :</span>
-            <input type="tel" class="editable editable-tel" id="telephone" placeholder="Numéro de téléphone">
+        <p><span class="blue bold">Téléphone :</span>
+            <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </p>
+        <p><span class="blue bold">Email :</span>
+            <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
         </p>
     </div>
 
@@ -111,17 +108,48 @@
 </div><!-- /content -->
 </div><!-- /page-container -->
 
-<script>
-function majNomComplet() {
-    var nom    = document.getElementById('nom')    ? document.getElementById('nom').value    : '';
-    var prenom = document.getElementById('prenom') ? document.getElementById('prenom').value : '';
-    var champ  = document.getElementById('nomComplet');
-    if (champ) champ.value = (prenom + ' ' + nom).trim();
-}
-</script>
-
-
-
 <script src="formulaires-arche-mallo.js"></script>
+<script>
+    creerEntete({ dateId: 'dateFait', dateLabel: 'Date :' });
+
+    var today = new Date().toISOString().split('T')[0];
+    var el = document.getElementById('dateFait');
+    if (el && !el.value) el.value = today;
+    var elDepot = document.getElementById('dateDepot');
+    if (elDepot && !elDepot.value) elDepot.value = today;
+
+    function majNomComplet() {
+        var nom    = document.getElementById('nom')    ? document.getElementById('nom').value    : '';
+        var prenom = document.getElementById('prenom') ? document.getElementById('prenom').value : '';
+        var champ  = document.getElementById('nomComplet');
+        if (champ) champ.value = (prenom + ' ' + nom).trim();
+    }
+
+    validateRequiredFields = function() {
+        var missing = [];
+
+        document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+            var label = el.getAttribute('data-label') || el.id;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (!el.value || el.value.trim() === '') {
+                    missing.push(label);
+                    el.style.borderBottom = '2px solid red';
+                } else {
+                    el.style.borderBottom = '';
+                }
+            }
+        });
+
+        var elEmail = document.getElementById('email');
+        if (elEmail && elEmail.value.trim()) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim())) {
+                missing.push('Email invalide');
+                elEmail.style.borderBottom = '2px solid red';
+            }
+        }
+
+        return missing;
+    };
+</script>
 </body>
 </html>
