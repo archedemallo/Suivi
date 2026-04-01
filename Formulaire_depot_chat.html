@@ -85,21 +85,30 @@
     </div>
 
     <div class="signature-section mt-30">
-        <p>
-            <span class="bold">Autrechêne, le</span>
-            <input type="date" class="editable editable-date" id="dateFait">
-        </p>
+        <p class="bold">Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
         <table class="signature-table">
             <tr>
                 <td>
-                    <p class="bold underline">Signature du dépositaire</p>
-                    <p">(Précédé mention « Lu et approuvé »)</p>
-                    
+                    <p class="mt-20">
+                        <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve1_dep">
+                            <span class="checkbox"></span>
+                            <span class="bold"> Lu et approuvé</span>
+                        </span>
+                    </p>
+                    <p class="bold underline">Signature du dépositaire :</p>
+                    <div id="sig1"></div>
+                    <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </td>
                 <td>
-                    <p class="bold underline">Signature du représentant de L'Arche de Mallo</p>
-                    <p>(Précédé mention « Lu et approuvé »)</p>
-                    
+                    <p class="mt-20">
+                        <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve2_dep">
+                            <span class="checkbox"></span>
+                            <span class="bold"> Lu et approuvé</span>
+                        </span>
+                    </p>
+                    <p class="bold underline">Signature du représentant de L'Arche de Mallo :</p>
+                    <div id="sig2"></div>
+                    <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
                 </td>
             </tr>
         </table>
@@ -111,7 +120,15 @@
 <script src="formulaires-arche-mallo.js"></script>
 <script>
     creerEntete({ dateId: 'dateFait', dateLabel: 'Date :' });
+creerSignature('sig1');
+    creerSignature('sig2');
 
+    // dateDepot reste vide
+    document.addEventListener('DOMContentLoaded', function() {
+        var el = document.getElementById('dateDepot');
+        if (el) el.value = '';
+    });
+	
     var today = new Date().toISOString().split('T')[0];
     var el = document.getElementById('dateFait');
     if (el && !el.value) el.value = today;
@@ -148,6 +165,28 @@
             }
         }
 
+// Lu et approuvé
+        ['luApprouve1_dep', 'luApprouve2_dep'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                var cb = el.querySelector('.checkbox');
+                if (!cb.classList.contains('checked')) {
+                    var labels = { luApprouve1_dep: 'Lu et approuvé (Dépositaire)', luApprouve2_dep: 'Lu et approuvé (Arche de Mallo)' };
+                    missing.push(labels[id]);
+                    cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+                } else { cb.style.outline = ''; }
+            }
+        });
+
+        // Signatures
+        ['sig1', 'sig2'].forEach(function(sigId) {
+            var container = document.getElementById(sigId);
+            if (container && !container._signed) {
+                var labels = { sig1: 'Signature dépositaire', sig2: 'Signature Arche de Mallo' };
+                missing.push(labels[sigId]);
+            }
+        });
+		
         return missing;
     };
 </script>
