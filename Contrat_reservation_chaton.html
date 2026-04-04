@@ -19,14 +19,12 @@
     <div id="entete"></div>
 
 <table class="header-table">
-    <tr>
-        <td class="col-center">
+            <td class="col-center">
             <!-- Titre centré -->
-            <div class="title">Contrat de réservation Chat</div>
+           <div class="title" style="margin-top:5px;">Contrat de réservation Chaton</div>
             <p style="text-align:center;">N° du BOX : <input type="text" class="editable editable-box" id="numeroBox"></p>
         </td>
-    </tr>
-</table>
+    </table>
 
     <!-- Informations du chaton -->
     <div class="section">
@@ -65,13 +63,14 @@
             <span class="blue">Je soussigné(e) M/Mme</span>
             <input type="text" class="editable editable-long" style="width:500px;" id="nomComplet" data-required="true" data-label="Nom et prénom adoptant">,
         </p>
-        <p>
-        né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
-        &nbsp;&nbsp; résidant : <input type="text" class="editable editable-medium" id="ville" data-label="Ville">
+        <p><span class="blue">
+        né(e) le</span>span> <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
+        &nbsp;&nbsp; <span class="blue">résidant : </span><input type="text" class="editable" style="width:50%;" id="adresseAdoptant" data-required="true" data-label="Adresse">
     </p>
     <p>
-        <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse complète">
+        <input type="text" class="editable" style="width:100%;display:block;margin-top:4px;" id="adresse2" data-label="Adresse (suite)">
     </p>
+    <p>
             <span class="blue">Téléphone :</span>
             <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             <span class="blue">E-mail :</span>
