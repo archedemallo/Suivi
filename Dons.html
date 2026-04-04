@@ -30,10 +30,6 @@
         <span class="blue">Don reçu par :</span>
         <input type="text" class="editable editable-long" id="recuPar" data-required="true" data-label="Reçu par" oninput="this.value=this.value.toUpperCase()">
     </p>
-    <p>
-        <span class="blue">Date :</span>
-        <input type="date" class="editable editable-date" id="dateFait" data-required="true" data-label="Date">
-    </p>
 </div>
 
 <br>
@@ -42,13 +38,13 @@
 <div><strong><span class="highlight-red">DÉTAILS DU DON</span></strong></div>
 <div class="section">
 
-    <p class="total-line">
+    <p>
         <span class="blue">Montant du don :</span>
         <input type="number" class="editable editable-num" id="montantDon" data-required="true" data-label="Montant du don (€)">
         <span class="red"> €</span>
     </p>
 
-    <p><strong><span class="blue">Mode de paiement :</span></strong></p>
+    <p><span class="blue">Mode de paiement :</span></p>
     <p>
         <span class="clickable-row" onclick="toggleCheckMulti(this)">
             <span class="checkbox" id="pay_espece"></span> Espèces
