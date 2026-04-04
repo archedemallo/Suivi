@@ -33,14 +33,14 @@
     <!-- Informations du chat -->
 <div class="section">
     <p>
-        <span class="bold">Nom provisoire du chat :</span>
+        <span class="blue">Nom provisoire du chat :</span>
         <input type="text" class="editable editable-long" id="nomChat" data-required="true" data-label="Nom du chat">
     </p>
     <p>
-        <span class="bold">Né(e) le :</span>
+        <span class="blue">Né(e) le :</span>
         <input type="date" class="editable editable-date" id="dateNaissance">
         
-        <span class="bold">Sexe :</span>
+        <span class="blue">Sexe :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sexe_chat')" id="bloc_sexe_chat">
             <span class="checkbox" data-group="sexe_chat"></span> Mâle
         </span>
@@ -49,13 +49,13 @@
         </span>
     </p>
     <p>
-        <span class="bold">N° d'identification (puce électronique) :</span>
+        <span class="blue">N° d'identification (puce électronique) :</span>
         <input type="text" class="editable editable-medium" id="identification" data-required="true" data-label="N° identification">
-        <br><span class="bold">Robe, couleur :</span>
+        <br><span class="blue">Robe, couleur :</span>
         <input type="text" class="editable editable-medium" id="couleur" data-required="true" data-label="Couleur du chat">
     </p>
     <p>
-        <span class="bold">Signes particuliers :</span>
+        <span class="blue">Signes particuliers :</span>
         <input type="text" class="editable editable-long" id="signesParticuliers">
     </p>
 </div>
@@ -63,21 +63,21 @@
 <!-- Identité de l'adoptant -->
 <div class="section">
     <p>
-        <span class="bold">Je soussigné(e) M/Mme</span>
+        <span class="blue">Je soussigné(e) M/Mme</span>
         <input type="text" class="editable editable-long" style="width:500px;" id="nomComplet" data-required="true" data-label="Nom et prénom adoptant">,
     </p>
     <p>
-        né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
-        &nbsp;&nbsp; résidant : <input type="text" class="editable editable-medium" id="ville" data-label="Ville">
+       <span class="blue"> né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
+        &nbsp;&nbsp; <span class="blue">résidant : <input type="text" class="editable editable-medium" id="ville" data-label="Ville">
     </p>
     <p>
         <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse complète">
     </p>
     <p>
-        <span class="bold">Téléphone :</span>
+        <span class="blue">Téléphone :</span>
         <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         
-        <span class="bold">E-mail :</span>
+        <span class="blue">>E-mail :</span>
         <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
     </p>
     <p>
@@ -89,7 +89,7 @@
     <!-- Logement -->
     <div class="section">
         <p>
-    <span class="bold">Type d'habitation :</span>
+    <span class="blue">Type d'habitation :</span>
     <span id="bloc_habitation">
         <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
             <span class="checkbox" data-group="habitation"></span> Maison
@@ -100,7 +100,7 @@
     </span>
 </p>
 <p>
-    <span class="bold">Espace extérieur :</span>
+    <span class="blue">Espace extérieur :</span>
     <span id="bloc_exterieur">
         <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
             <span class="checkbox" data-group="exterieur"></span> OUI
@@ -111,7 +111,7 @@
     </span>
 </p>
 <p>
-    <span class="bold">Enfants :</span>
+    <span class="blue">Enfants :</span>
     <span id="bloc_enfants">
         <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
             <span class="checkbox" data-group="enfants"></span> OUI
