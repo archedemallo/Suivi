@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dons</title>
+<link rel="stylesheet" href="formulaires-arche-mallo.css">
+</head>
+<body data-form-id="Dons">
+
+<div class="buttons">
+    <button class="btn btn-save"  onclick="saveForm()">💾 Sauvegarder</button>
+    <button class="btn btn-print btn-print-disabled" onclick="printForm()" disabled>🖨️ Imprimer</button>
+</div>
+
+<div class="page-container">
+<div class="content">
+
+<!-- En-tête -->
+<div id="entete"></div>
+
+<div class="title">Reçu de Don</div>
+
+<br>
+
+<!-- Reçu par -->
+<div><strong><span class="highlight-red">REÇU PAR L'ASSOCIATION</span></strong></div>
+<div class="section">
+    <p>
+        <span class="blue">Don reçu par :</span>
+        <input type="text" class="editable editable-long" id="recuPar" data-required="true" data-label="Reçu par" oninput="this.value=this.value.toUpperCase()">
+    </p>
+    <p>
+        <span class="blue">Date :</span>
+        <input type="date" class="editable editable-date" id="dateFait" data-required="true" data-label="Date">
+    </p>
+</div>
+
+<br>
+
+<!-- Détails du don -->
+<div><strong><span class="highlight-red">DÉTAILS DU DON</span></strong></div>
+<div class="section">
+
+    <p class="total-line">
+        <span class="blue">Montant du don :</span>
+        <input type="number" class="editable editable-num" id="montantDon" data-required="true" data-label="Montant du don (€)">
+        <span class="red"> €</span>
+    </p>
+
+    <p><strong><span class="blue">Mode de paiement :</span></strong></p>
+    <p>
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_espece"></span> Espèces
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_cb"></span> CB
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_virement"></span> Virement
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <span class="clickable-row" onclick="toggleCheckMulti(this)">
+            <span class="checkbox" id="pay_cheque"></span> Chèque
+        </span>
+        <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroCheque" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
+    </p>
+
+    <br>
+
+    <p>
+        <span class="blue bold">Reçu fiscal :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'recuFiscal'); toggleRecuFiscal()">
+            <span class="checkbox" data-group="recuFiscal"></span> OUI
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'recuFiscal'); toggleRecuFiscal()">
+            <span class="checkbox" data-group="recuFiscal"></span> NON
+        </span>
+    </p>
+    <div id="bloc_recu_fiscal" style="display:none;">
+        <p>
+            <span class="blue">N° du reçu fiscal :</span>
+            <input type="text" class="editable editable-medium" id="numeroRecuFiscal" data-label="N° reçu fiscal">
+        </p>
+        <p class="italic" style="font-size:10pt; color:#555;">
+            Le reçu fiscal ouvre droit à une réduction d'impôt de 66% du montant du don
+            dans la limite de 20% du revenu imposable (article 200 du CGI).
+        </p>
+    </div>
+
+</div>
+
+<br>
+
+<!-- Donateur -->
+<div><strong><span class="highlight-red">DONATEUR</span></strong></div>
+<div class="section">
+    <p>
+        <span class="blue">Type :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'typeDonateur'); toggleSociete()">
+            <span class="checkbox" data-group="typeDonateur"></span> Particulier
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'typeDonateur'); toggleSociete()">
+            <span class="checkbox" data-group="typeDonateur"></span> Société / Association
+        </span>
+    </p>
+
+    <!-- Particulier -->
+    <div id="bloc_particulier">
+        <p>
+            <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+                <span class="checkbox" data-group="civilite"></span>
+                <span class="blue">Monsieur</span>
+            </span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
+                <span class="checkbox" data-group="civilite"></span>
+                <span class="blue">Madame</span>
+            </span>
+        </p>
+        <p>
+            <span class="blue">Nom :</span>
+            <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom" oninput="this.value=this.value.toUpperCase()">
+        </p>
+        <p>
+            <span class="blue">Prénom :</span>
+            <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom" oninput="this.value=this.value.toUpperCase()">
+        </p>
+    </div>
+
+    <!-- Société -->
+    <div id="bloc_societe" style="display:none;">
+        <p>
+            <span class="blue">Raison sociale :</span>
+            <input type="text" class="editable editable-long" id="raisonSociale" data-label="Raison sociale" oninput="this.value=this.value.toUpperCase()">
+        </p>
+        <p>
+            <span class="blue">Représenté par :</span>
+            <input type="text" class="editable editable-long" id="representant" data-label="Représentant">
+        </p>
+    </div>
+
+    <!-- Adresse : obligatoire seulement si reçu fiscal OUI -->
+    <p>
+        <span class="blue">Adresse :</span>
+        <input type="text" class="editable editable-long" id="adresse" data-label="Adresse">
+    </p>
+    <p>
+        <span class="blue">Code postal :</span>
+        <input type="text" class="editable editable-short" id="codePostal" data-label="Code postal">
+        &nbsp;&nbsp;
+        <span class="blue">Ville :</span>
+        <input type="text" class="editable editable-medium" id="ville" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
+    </p>
+    <p>
+        <span class="blue">Email :</span>
+        <input type="email" class="editable editable-email" id="email" data-label="Email">
+    </p>
+    <p>
+        <span class="blue">Téléphone :</span>
+        <input type="tel" class="editable editable-tel" id="telephone" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+    </p>
+</div>
+
+<br>
+
+<!-- Signatures -->
+<div class="section mt-30">
+    <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateSignature"></p>
+
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p>L'Arche de Mallo :</p>
+                <p class="mt-20">
+                    <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve1">
+                        <span class="checkbox"></span>
+                        <span class="bold"> Lu et approuvé</span>
+                    </span>
+                </p>
+                <div class="section mt-20">
+                    <p class="bold underline">Signature de l'Arche de Mallo :</p>
+                    <div id="sig1"></div>
+                    <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+                </div>
+            </td>
+            <td>
+                <p>Le donateur :</p>
+                <p class="mt-20">
+                    <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve2">
+                        <span class="checkbox"></span>
+                        <span class="bold"> Lu et approuvé</span>
+                    </span>
+                </p>
+                <div class="section mt-20">
+                    <p class="bold underline">Signature du donateur :</p>
+                    <div id="sig2"></div>
+                    <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</div><!-- /content -->
+</div><!-- /page-container -->
+
+<script src="formulaires-arche-mallo.js"></script>
+<script>
+creerEntete({ dateId: 'dateEntete', dateLabel: 'Date :' });
+creerSignature('sig1');
+creerSignature('sig2');
+
+var today = new Date().toISOString().split('T')[0];
+['dateEntete', 'dateFait', 'dateSignature'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && !el.value) el.value = today;
+});
+
+// Afficher/masquer bloc société ou particulier
+function toggleSociete() {
+    var checked = document.querySelector('.checkbox[data-group="typeDonateur"].checked');
+    if (!checked) return;
+    var estSociete = checked.parentElement.textContent.trim().indexOf('Soci') >= 0;
+    document.getElementById('bloc_societe').style.display    = estSociete ? '' : 'none';
+    document.getElementById('bloc_particulier').style.display = estSociete ? 'none' : '';
+
+    var nomEl    = document.getElementById('nom');
+    var prenomEl = document.getElementById('prenom');
+    var raisonEl = document.getElementById('raisonSociale');
+
+    if (estSociete) {
+        if (nomEl)    { nomEl.removeAttribute('data-required');    nomEl.style.borderBottom = ''; }
+        if (prenomEl) { prenomEl.removeAttribute('data-required'); prenomEl.style.borderBottom = ''; }
+        if (raisonEl) { raisonEl.setAttribute('data-required', 'true'); raisonEl.setAttribute('data-label', 'Raison sociale'); }
+    } else {
+        if (nomEl)    { nomEl.setAttribute('data-required', 'true');    nomEl.setAttribute('data-label', 'Nom'); }
+        if (prenomEl) { prenomEl.setAttribute('data-required', 'true'); prenomEl.setAttribute('data-label', 'Prénom'); }
+        if (raisonEl) { raisonEl.removeAttribute('data-required'); raisonEl.style.borderBottom = ''; }
+    }
+}
+
+// Afficher/masquer reçu fiscal + rendre adresse obligatoire si OUI
+function toggleRecuFiscal() {
+    var checked = document.querySelector('.checkbox[data-group="recuFiscal"].checked');
+    if (!checked) return;
+    var estOui = checked.parentElement.textContent.trim().indexOf('OUI') >= 0;
+
+    document.getElementById('bloc_recu_fiscal').style.display = estOui ? '' : 'none';
+
+    var champsOblig = {
+        adresse:          'Adresse',
+        codePostal:       'Code postal',
+        ville:            'Ville',
+        email:            'Email',
+        numeroRecuFiscal: 'N° reçu fiscal'
+    };
+    Object.keys(champsOblig).forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (estOui) {
+            el.setAttribute('data-required', 'true');
+            el.setAttribute('data-label', champsOblig[id]);
+        } else {
+            el.removeAttribute('data-required');
+            el.style.borderBottom = '';
+        }
+    });
+}
+
+function toggleCheckMulti(element) {
+    var box = element.querySelector('.checkbox');
+    if (box) box.classList.toggle('checked');
+}
+
+// Validation spécifique
+validateRequiredFields = function() {
+    var missing = [];
+
+    // Champs data-required
+    document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+        var label = el.getAttribute('data-label') || el.id;
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            if (!el.value || el.value.trim() === '') {
+                missing.push(label);
+                el.style.borderBottom = '2px solid red';
+            } else {
+                el.style.borderBottom = '';
+            }
+        }
+    });
+
+    // Type donateur obligatoire
+    var typeDonateur = document.querySelector('.checkbox[data-group="typeDonateur"].checked');
+    if (!typeDonateur) {
+        missing.push('Type de donateur (Particulier ou Société)');
+        document.querySelectorAll('.checkbox[data-group="typeDonateur"]').forEach(function(cb) {
+            cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+        });
+    } else {
+        document.querySelectorAll('.checkbox[data-group="typeDonateur"]').forEach(function(cb) {
+            cb.style.outline = '';
+        });
+    }
+
+    // Reçu fiscal obligatoire
+    var recuFiscal = document.querySelector('.checkbox[data-group="recuFiscal"].checked');
+    if (!recuFiscal) {
+        missing.push('Reçu fiscal (OUI ou NON)');
+        document.querySelectorAll('.checkbox[data-group="recuFiscal"]').forEach(function(cb) {
+            cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+        });
+    } else {
+        document.querySelectorAll('.checkbox[data-group="recuFiscal"]').forEach(function(cb) {
+            cb.style.outline = '';
+        });
+    }
+
+    // Mode de paiement obligatoire
+    var payIds = ['pay_espece', 'pay_cb', 'pay_virement', 'pay_cheque'];
+    var paiementCoche = payIds.some(function(id) {
+        var el = document.getElementById(id);
+        return el && el.classList.contains('checked');
+    });
+    if (!paiementCoche) {
+        missing.push('Mode de paiement (au moins un à cocher)');
+        payIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) { el.style.outline = '2px solid red'; el.style.outlineOffset = '1px'; }
+        });
+    } else {
+        payIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.outline = '';
+        });
+    }
+
+    // N° chèque si chèque coché
+    var payCheque = document.getElementById('pay_cheque');
+    if (payCheque && payCheque.classList.contains('checked')) {
+        var numCheque = document.getElementById('numeroCheque');
+        if (!numCheque || !numCheque.value.trim()) {
+            missing.push('Numéro de chèque');
+            if (numCheque) numCheque.style.borderBottom = '2px solid red';
+        }
+    }
+
+    // Email format si renseigné
+    var elEmail = document.getElementById('email');
+    if (elEmail && elEmail.value.trim()) {
+        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
+        if (!valid) {
+            missing.push('Email invalide');
+            elEmail.style.borderBottom = '2px solid red';
+        }
+    }
+
+    // Lu et approuvé
+    ['luApprouve1', 'luApprouve2'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            var cb = el.querySelector('.checkbox');
+            if (!cb.classList.contains('checked')) {
+                var labels = { luApprouve1: 'Lu et approuvé (Arche de Mallo)', luApprouve2: 'Lu et approuvé (Donateur)' };
+                missing.push(labels[id]);
+                cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+            } else {
+                cb.style.outline = '';
+            }
+        }
+    });
+
+    // Signatures
+    ['sig1', 'sig2'].forEach(function(sigId) {
+        var container = document.getElementById(sigId);
+        if (container && !container._signed) {
+            var labels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature du donateur' };
+            missing.push(labels[sigId]);
+        }
+    });
+
+    return missing;
+};
+</script>
+
+</body>
+</html>
