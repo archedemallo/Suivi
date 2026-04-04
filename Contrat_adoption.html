@@ -311,18 +311,25 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     <p class="total-line">Total de la participation : </span><input type="number" class="editable editable-num" id="totalParticipation" data-required="true" data-label="Total participation (€)"> <span class="red"> €</span></p>
 
     <!-- Paiement : multi-sélection -->
-    <p><strong><span class="blue">Paiement effectué par :</span></strong></p>
-    <p>
-        <span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_virement"></span></span> Virement
-<span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_cb"></span></span> CB
-<span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_espece"></span></span> Espèce
-<span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_cheque"></span></span> Chèque
-        <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
-    </p>
+<p><strong><span class="blue">Paiement effectué par :</span></strong></p>
+<p>
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="pay_virement"></span> Virement
+    </span>
+    &nbsp;&nbsp;&nbsp;
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="pay_cb"></span> CB
+    </span>
+    &nbsp;&nbsp;&nbsp;
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="pay_espece"></span> Espèce
+    </span>
+    &nbsp;&nbsp;&nbsp;
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="pay_cheque"></span> Chèque
+    </span>
+    <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
+</p>
     <p>
         <span class="clickable-row" onclick="toggleCheck(this,'paiement_plusieurs')">
     <span class="checkbox" data-group="paiement_plusieurs" id="pay_2cheques"></span></span>
