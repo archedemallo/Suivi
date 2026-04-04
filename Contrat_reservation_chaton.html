@@ -30,16 +30,16 @@
 
     <!-- Informations du chaton -->
     <div class="section">
-        <p><span class="bold">Nom de la Maman :</span>
+        <p><span class="blue">Nom de la Maman :</span>
             <input type="text" class="editable editable-medium" id="nomMaman">
         </p>
-        <p><span class="bold">Nom provisoire du chaton :</span>
+        <p><span class="blue">Nom provisoire du chaton :</span>
             <input type="text" class="editable editable-long" id="nomChat" data-required="true" data-label="Nom du chaton">
         </p>
         <p>
-            <span class="bold">Né(e) le :</span>
+            <span class="blue">Né(e) le :</span>
             <input type="date" class="editable editable-date" id="dateNaissance">
-            <span class="bold">Sexe :</span>
+            <span class="blue">Sexe :</span>
             <span class="clickable-row" onclick="toggleCheck(this, 'sexe_chat')">
                 <span class="checkbox" data-group="sexe_chat"></span> Mâle
             </span>
@@ -48,13 +48,13 @@
             </span>
         </p>
         <p>
-            <span class="bold">N° d'identification (puce électronique) :</span>
+            <span class="blue">N° d'identification (puce électronique) :</span>
             <input type="text" class="editable editable-medium" id="identification">
             <br>
-            <span class="bold">Robe, couleur :</span>
+           <span class="blue">Robe, couleur :</span>
             <input type="text" class="editable editable-medium" id="couleur" data-required="true" data-label="Couleur du chaton">
         </p>
-        <p><span class="bold">Signes particuliers :</span>
+        <p><span class="blue">Signes particuliers :</span>
             <input type="text" class="editable editable-long" id="signesParticuliers">
         </p>
     </div>
@@ -62,7 +62,7 @@
     <!-- Identité adoptant -->
     <div class="section">
         <p>
-            <span class="bold">Je soussigné(e) M/Mme</span>
+            <span class="blue">Je soussigné(e) M/Mme</span>
             <input type="text" class="editable editable-long" style="width:500px;" id="nomComplet" data-required="true" data-label="Nom et prénom adoptant">,
         </p>
         <p>
@@ -72,9 +72,9 @@
     <p>
         <input type="text" class="editable" style="width:100%;" id="adresse" data-required="true" data-label="Adresse complète">
     </p>
-            <span class="bold">Téléphone :</span>
+            <span class="blue">Téléphone :</span>
             <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-            <span class="bold">E-mail :</span>
+            <span class="blue">E-mail :</span>
             <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
         </p>
         <p>
@@ -86,7 +86,7 @@
     <!-- Logement -->
     <div class="section">
         <p>
-            <span class="bold">Type d'habitation :</span>
+            <span class="blue">Type d'habitation :</span>
             <span id="bloc_habitation">
                 <span class="clickable-row" onclick="toggleCheck(this, 'habitation')">
                     <span class="checkbox" data-group="habitation"></span> Maison
@@ -96,11 +96,11 @@
                 </span>
             </span>
         </p>
-        <p><span class="bold">Nombre de m² :</span>
+        <p><span class="blue">Nombre de m² :</span>
             <input type="number" class="editable editable-num" id="superficie"> m²
         </p>
         <p>
-            <span class="bold">Espace extérieur :</span>
+            <span class="blue">Espace extérieur :</span>
             <span id="bloc_exterieur">
                 <span class="clickable-row" onclick="toggleCheck(this, 'exterieur')">
                     <span class="checkbox" data-group="exterieur"></span> OUI
@@ -111,7 +111,7 @@
             </span>
         </p>
         <p>
-            <span class="bold">Autres animaux :</span>
+            <span class="blue">Autres animaux :</span>
             <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
                 <span class="checkbox" data-group="animaux"></span> Chat
             </span>
@@ -123,7 +123,7 @@
             </span>
         </p>
         <p>
-            <span class="bold">Enfants :</span>
+            <span class="blue">Enfants :</span>
             <span id="bloc_enfants">
                 <span class="clickable-row" onclick="toggleCheck(this, 'enfants')">
                     <span class="checkbox" data-group="enfants"></span> OUI
