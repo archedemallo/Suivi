@@ -30,33 +30,33 @@
         <p>
             <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
                 <span class="checkbox" data-group="civilite"></span>
-                <span class="blue bold">Monsieur</span>
+                <span class="blue">Monsieur</span>
             </span>
             <span class="clickable-row" onclick="toggleCheck(this, 'civilite')">
                 <span class="checkbox" data-group="civilite"></span>
-                <span class="blue bold">Madame</span>
+                <span class="blue">Madame</span>
             </span>
         </p>
-        <p><span class="blue bold">Nom :</span>
+        <p><span class="blue">Nom :</span>
             <input type="text" class="editable editable-medium" id="nom" data-required="true" data-label="Nom" oninput="this.value=this.value.toUpperCase(); majNomAttestation()">
             &nbsp;&nbsp;
-            <span class="blue bold">Prénom :</span>
+            <span class="blue">Prénom :</span>
             <input type="text" class="editable editable-medium" id="prenom" data-required="true" data-label="Prénom" oninput="this.value=this.value.toUpperCase(); majNomAttestation()">
         </p>
-        <p><span class="blue bold">Adresse :</span>
+        <p><span class="blue">Adresse :</span>
             <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse">
         </p>
         <p>
-            <span class="blue bold">Code postal :</span>
+            <span class="blue">Code postal :</span>
             <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
             &nbsp;&nbsp;
-            <span class="blue bold">Ville :</span>
+            <span class="blue">Ville :</span>
             <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
         </p>
-        <p><span class="blue bold">Téléphone :</span>
+        <p><span class="blue">Téléphone :</span>
             <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         </p>
-        <p><span class="blue bold">Email :</span>
+        <p><span class="blue">Email :</span>
             <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
         </p>
     </div>
@@ -64,14 +64,14 @@
     <!-- Animal -->
     <div class="section">
         <p class="bold underline">Animal :</p>
-        <p><span class="bold">Nom :</span>
+        <p><span class="blue">Nom :</span>
             <input type="text" class="editable editable-long" id="nomAnimal" placeholder="Nom de l'animal">
         </p>
-        <p><span class="bold">Puce ou tatouage :</span>
+        <p><span class="blue">Puce ou tatouage :</span>
             <input type="text" class="editable editable-medium" id="identification" placeholder="Numéro d'identification">
         </p>
         <p>
-            <span class="bold">Sexe :</span>
+            <span class="blue">Sexe :</span>
             <span class="clickable-row" onclick="toggleCheck(this, 'sexe')">
                 <span class="checkbox" data-group="sexe"></span> Mâle
             </span>
@@ -79,10 +79,10 @@
                 <span class="checkbox" data-group="sexe"></span> Femelle
             </span>
         </p>
-        <p><span class="bold">Date de naissance / âge approximatif :</span>
+        <p><span class="blue">Date de naissance / âge approximatif :</span>
             <input type="text" class="editable editable-medium" id="dateNaissance" placeholder="Date de naissance ou âge approximatif">
         </p>
-        <p class="bold">Cause de l'abandon :</p>
+        <p class="blue">Cause de l'abandon :</p>
         <input type="text" class="editable editable-long" id="causeAbandon1" data-required="true" data-label="Cause de l'abandon" style="width:100%;display:block;margin-bottom:6px;">
         <input type="text" class="editable editable-long" id="causeAbandon2" style="width:100%;display:block;">
     </div>
@@ -90,16 +90,16 @@
     <!-- Comportement -->
     <div class="section">
         <p class="bold underline">Comportement :</p>
-       <p><span class="bold">Qualités :</span></p>
+       <p><span class="blue">Qualités :</span></p>
         <input type="text" class="editable editable-long" id="qualites1" style="width:100%;display:block;margin-bottom:6px;">
         <input type="text" class="editable editable-long" id="qualites2" style="width:100%;display:block;">
 
-        <p><span class="bold">Défauts :</span></p>
+        <p><span class="blue">Défauts :</span></p>
         <input type="text" class="editable editable-long" id="defauts1" style="width:100%;display:block;margin-bottom:6px;">
         <input type="text" class="editable editable-long" id="defauts2" style="width:100%;display:block;">
 
         <p>
-            <span class="bold">Lieu de vie :</span>
+            <span class="blue">Lieu de vie :</span>
             <span id="bloc_lieuvie">
                 <span class="clickable-row" onclick="toggleCheck(this, 'lieuvie')">
                     <span class="checkbox" data-group="lieuvie"></span> Intérieur
@@ -122,7 +122,7 @@
             </span>
         </p>
         <p>
-            <span class="bold">Autres animaux :</span>
+            <span class="blue">Autres animaux :</span>
             <span class="clickable-row" onclick="toggleCheck(this, 'autresAnimaux')">
                 <span class="checkbox" data-group="autresAnimaux"></span> Oui
             </span>
@@ -136,7 +136,7 @@
     <div class="section">
         <p class="bold underline">Soins vétérinaires :</p>
         <p>
-            <span class="bold">Identification :</span>
+            <span class="blue">Identification :</span>
             <span class="clickable-row" onclick="toggleCheck(this, 'identificationVeto')">
                 <span class="checkbox" data-group="identificationVeto"></span> Oui
             </span>
@@ -145,7 +145,7 @@
             </span>
         </p>
         <p>
-            <span class="bold">Castré/stérilisé :</span>
+            <span class="blue">Castré/stérilisé :</span>
             <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')">
                 <span class="checkbox" data-group="sterilise"></span> Oui
             </span>
@@ -153,10 +153,10 @@
                 <span class="checkbox" data-group="sterilise"></span> Non
             </span>
         </p>
-        <p><span class="bold">Vaccins :</span>
+        <p><span class="blue">Vaccins :</span>
             <input type="text" class="editable" id="vaccins" style="width:100%;display:block;margin-top:4px;">
         </p>
-                <p class="bold">Problème de santé :</p>
+                <p class="blue">Problème de santé :</p>
         <input type="text" class="editable editable-long" id="problemeSante1" style="width:100%;display:block;margin-bottom:6px;">
         <input type="text" class="editable editable-long" id="problemeSante2" style="width:100%;display:block;">
     </div>
