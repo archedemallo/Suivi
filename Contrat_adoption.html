@@ -195,7 +195,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
 
 
 	
-<div class="page-break"></div>
+
 <!-- Engagement stérilisation -->
 <div><strong><span class="highlight-red">ENGAGEMENT À LA STÉRILISATION</strong></span></div>
 
@@ -344,7 +344,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     </span></p>
 </div>
 <br>
-<div class="page-break"></div>
+
 
 
 	
@@ -444,7 +444,7 @@ celui de son adoptant ou la renonciation de celui-ci.</p>
     <p>L'adoptant prend note que le changement de propriétaire sera effectué par l'association au moment de la
     preuve de stérilisation et dans un délai de 1 mois, une fois que toutes les clauses sont réunies.</p>
 </div>
-<div class="page-break"></div>
+
 
 	
 <!-- Rappel important -->
@@ -575,12 +575,15 @@ function aperçuPhoto(input, previewId) {
 
     // Envoi des photos à Apps Script
     async function envoyerPhotos(nomAdoptant, nomChat, dateStr) {
-        var photos = [
-            { id: 'photoCNI_recto',  type: 'CNI_Recto'   },
-            { id: 'photoCNI_verso',  type: 'CNI_Verso'    },
-            { id: 'photoDomicile_1', type: 'Domicile_1'   },
-            { id: 'photoDomicile_2', type: 'Domicile_2'   },
-        ];
+    if (envoyerPhotos._enCours) return;   // ← garde anti-doublon
+    envoyerPhotos._enCours = true;
+    
+    var photos = [
+        { id: 'photoCNI_recto',  type: 'CNI_Recto'  },
+        { id: 'photoCNI_verso',  type: 'CNI_Verso'   },
+        { id: 'photoDomicile_1', type: 'Domicile_1'  },
+        { id: 'photoDomicile_2', type: 'Domicile_2'  },
+    ];
         var nom  = (nomAdoptant || 'Inconnu').replace(/\s+/g, '_');
         var chat = (nomChat     || 'Chat'   ).replace(/\s+/g, '_');
         var date = (dateStr     || today    );
@@ -608,6 +611,7 @@ function aperçuPhoto(input, previewId) {
                 });
             });
         }
+		envoyerPhotos._enCours = false;   // ← libérer à la fin
     }
 
 	// signature obligatoire
@@ -652,17 +656,19 @@ function toggleCheckMulti(element) {
 
 	
 // Surcharge saveForm pour envoyer les photos après la sauvegarde principale
-    var _saveFormOriginal = saveForm;
-    saveForm = async function() {
-        await _saveFormOriginal();
-        var prenom      = (document.getElementById('prenom')      || {}).value || '';
-        var nom         = (document.getElementById('nom')         || {}).value || '';
-        var nomAdoptant = (prenom + ' ' + nom).trim();
-        var nomChat     = (document.getElementById('nomUsuel')    || {}).value || '';
-        var dateRaw     = (document.getElementById('dateAdoption')|| {}).value || today;
-        var dateFr      = dateRaw ? dateRaw.split('-').reverse().join('-') : today;
-        await envoyerPhotos(nomAdoptant, nomChat, dateFr);
-    };
+var _saveFormOriginal = saveForm;
+saveForm = async function() {
+    await _saveFormOriginal();
+    // N'envoyer les photos QUE si la sauvegarde a réussi (formSaved = true)
+    if (!formSaved) return;
+    var prenom      = (document.getElementById('prenom')      || {}).value || '';
+    var nom         = (document.getElementById('nom')         || {}).value || '';
+    var nomAdoptant = (prenom + ' ' + nom).trim();
+    var nomChat     = (document.getElementById('nomUsuel')    || {}).value || '';
+    var dateRaw     = (document.getElementById('dateAdoption')|| {}).value || today;
+    var dateFr      = dateRaw ? dateRaw.split('-').reverse().join('-') : today;
+    await envoyerPhotos(nomAdoptant, nomChat, dateFr);
+};
 </script>
 
 </body>
