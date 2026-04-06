@@ -53,12 +53,7 @@
 
 <!-- En-tête -->
 <div id="entete"></div>
-         <td style="vertical-align:middle; text-align:center;">
-            <div class="title">Bulletin d'adhesion</div>
-        </td>
-        <td style="width:200px;"></td>
-    </tr>
-</table>
+<div class="title">Bulletin d'adhésion</div>
 
 <!-- Intro -->
 <div class="intro-text">
@@ -156,22 +151,143 @@
 	</div>
 
 </div>
+<div class="section mt-30">
+    <p class="bold">Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
+    <table class="signature-table">
+        <tr>
+            <td>
+                <p>L'Arche de Mallo :</p>
+                <p class="mt-20">
+                    <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve1">
+                        <span class="checkbox"></span>
+                        <span class="bold"> Lu et approuvé</span>
+                    </span>
+                </p>
+                <p class="bold underline mt-20">Signature de l'Arche de Mallo :</p>
+                <div id="sig2"></div>
+                <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+            </td>
+            <td>
+                <p>L'adhérent(e) :</p>
+                <p class="mt-20">
+                    <span class="clickable-row" onclick="toggleCheck(this)" id="luApprouve2">
+                        <span class="checkbox"></span>
+                        <span class="bold"> Lu et approuvé</span>
+                    </span>
+                </p>
+                <p class="bold underline mt-20">Signature de l'adhérent(e) :</p>
+                <div id="sig1"></div>
+                <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
+            </td>
+        </tr>
+    </table>
+</div>
 
+	
 </div><!-- /content -->
 </div><!-- /page-container -->
 
 <script src="formulaires-arche-mallo.js"></script>
 <script>
+creerEntete({ dateId: 'dateAdhesion', dateLabel: 'Date :' });
+creerSignature('sig1');
+creerSignature('sig2');
 
-	function toggleCheckMulti(element) {
+var today = new Date().toISOString().split('T')[0];
+['dateAdhesion', 'dateFait'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && !el.value) el.value = today;
+});
+
+function toggleCheckMulti(element) {
     var box = element.querySelector('.checkbox');
     if (box) box.classList.toggle('checked');
 }
-	
-    creerSignature("sig1");
-    var today = new Date().toISOString().split("T")[0];
-    var el = document.getElementById("date");
-    if (el && !el.value) el.value = today;
+
+validateRequiredFields = function() {
+    var missing = [];
+
+    // Champs data-required
+    document.querySelectorAll('[data-required="true"]').forEach(function(el) {
+        var label = el.getAttribute('data-label') || el.id;
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            if (!el.value || el.value.trim() === '') {
+                missing.push(label);
+                el.style.borderBottom = '2px solid red';
+            } else {
+                el.style.borderBottom = '';
+            }
+        }
+    });
+
+    // Type adhésion obligatoire
+    var typeChecked = document.querySelector('.checkbox[data-group="type"].checked');
+    if (!typeChecked) {
+        missing.push('Type d\'adhésion (au moins une case à cocher)');
+        document.querySelectorAll('.checkbox[data-group="type"]').forEach(function(cb) {
+            cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+        });
+    } else {
+        document.querySelectorAll('.checkbox[data-group="type"]').forEach(function(cb) {
+            cb.style.outline = '';
+        });
+    }
+
+    // Mode de règlement obligatoire
+    var payIds = ['pay_virement_adh', 'pay_espece_adh', 'pay_cheque_adh'];
+    var paiementCoche = payIds.some(function(id) {
+        var el = document.getElementById(id);
+        return el && el.classList.contains('checked');
+    });
+    if (!paiementCoche) {
+        missing.push('Mode de règlement (au moins un à cocher)');
+        payIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) { el.style.outline = '2px solid red'; el.style.outlineOffset = '1px'; }
+        });
+    } else {
+        payIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.outline = '';
+        });
+    }
+
+    // Lu et approuvé
+    ['luApprouve1', 'luApprouve2'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            var cb = el.querySelector('.checkbox');
+            if (!cb.classList.contains('checked')) {
+                var labels = { luApprouve1: 'Lu et approuvé (Arche de Mallo)', luApprouve2: 'Lu et approuvé (Adhérent)' };
+                missing.push(labels[id]);
+                cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+            } else {
+                cb.style.outline = '';
+            }
+        }
+    });
+
+    // Email format
+    var elEmail = document.getElementById('email');
+    if (elEmail && elEmail.value.trim()) {
+        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
+        if (!valid) {
+            missing.push('Email invalide');
+            elEmail.style.borderBottom = '2px solid red';
+        }
+    }
+
+    // Signatures
+    ['sig1', 'sig2'].forEach(function(sigId) {
+        var container = document.getElementById(sigId);
+        if (container && !container._signed) {
+            var labels = { sig1: 'Signature de l\'adhérent', sig2: 'Signature de l\'Arche de Mallo' };
+            missing.push(labels[sigId]);
+        }
+    });
+
+    return missing;
+};
 </script>
 
 </body>
