@@ -679,6 +679,12 @@ p {
     /* Masquer boutons photo et aperçus */
     .no-print { display: none !important; }
     label[style*="background:#0563c1"] { display: none !important; }
+
+body[data-form-id="Dons"] {
+    font-size: 10pt !important;
+}
+
+
 }
 
 /* --- RESPONSIVE --- */
