@@ -18,25 +18,25 @@ function creerEntete(options) {
 
     el.innerHTML =
         '<div class="header-adoption">' +
-            '<div style="display:flex;align-items:center;gap:20px;flex:1;">' +
-                '<div class="logo-box"></div>' +
-                '<div class="header-info" style="font-size:11pt;">' +
-                    '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
-                    '<p>' +
-                        '8 ter rue d\'Eschène<br>' +
-                        '90140 AUTRECHÊNE<br>' +
-                        '07.71.64.69.89<br>' +
-                        '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
-                    '</p>' +
-                '</div>' +
-            '</div>' +
-            '<div class="header-adoption-right">' +
-    dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '"><br>' +
-    '<span class="blue bold">Saisi par :</span> ' + 
-		<input type="text" class="editable editable-medium bold" id="saisiPar" data-required="true" data-label="Saisi par" oninput="this.value=this.value.toUpperCase()">' +
-'</div>'
+    '<div style="display:flex;align-items:center;gap:20px;flex:1;">' +
+        '<div class="logo-box"></div>' +
+        '<div class="header-info" style="font-size:11pt;">' +
+            '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
+            '<p>' +
+                '8 ter rue d\'Eschène<br>' +
+                '90140 AUTRECHÊNE<br>' +
+                '07.71.64.69.89<br>' +
+                '<a href="mailto:archedemallo@gmail.com" class="blue">archedemallo@gmail.com</a>' +
+            '</p>' +
         '</div>' +
-        (titre ? '<div class="title">' + titre + '</div>' : '');
+    '</div>' +
+    '<div class="header-adoption-right">' +
+        dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '"><br>' +
+        '<span class="blue bold">Saisi par :</span> ' + 
+        '<input type="text" class="editable editable-medium bold" id="saisiPar" data-required="true" data-label="Saisi par" oninput="this.value=this.value.toUpperCase()">' +
+    '</div>' +
+'</div>' +
+(titre ? '<div class="title">' + titre + '</div>' : '');
 
     // Pré-remplir la date à aujourd'hui
     var dateEl = document.getElementById(dateId);
