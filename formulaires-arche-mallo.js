@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby49UsEchMV6NwQ8JsvDllXbpn3W1U0FogmWfNJLGT1NpwF6udhqazaDQKogtJ-qqwngg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzE9o6YH8H44oDZhUnv0MubnMVHzwwRtlI9CTv1VNH0GbBn78nY3h_8npNXR0oHe_nETQ/exec';
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
@@ -31,8 +31,9 @@ function creerEntete(options) {
                 '</div>' +
             '</div>' +
             '<div class="header-adoption-right">' +
-                dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '">' +
-            '</div>' +
+    dateLabel + ' <input type="date" class="editable editable-date" id="' + dateId + '"><br>' +
+    'Saisi par : <input type="text" class="editable editable-medium" id="saisiPar" data-required="true" data-label="Saisi par" oninput="this.value=this.value.toUpperCase()">' +
+'</div>'
         '</div>' +
         (titre ? '<div class="title">' + titre + '</div>' : '');
 
