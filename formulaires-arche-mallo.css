@@ -150,7 +150,7 @@ p {
 .red       { color: #c00000; }
 .blue      { color: #0563c1; }
 
-/* j'ai ajouté ce code */
+
 .title-red {
     color: #c00000;
     font-size: 14pt;
@@ -158,7 +158,7 @@ p {
     text-decoration: underline;
     text-transform: uppercase;
 }
-/* j'ai ajouté ce code */
+
 .highlight-red {
     color: #c00000;
     text-decoration: underline;
@@ -682,9 +682,24 @@ p {
 
 body[data-form-id="Dons"] {
     font-size: 10pt !important;
+    line-height: 1.4 !important;
 }
 
+body[data-form-id="Adhesion"] {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+}
 
+body[data-form-id="Dons"] p,
+body[data-form-id="Dons"] .total-line,
+body[data-form-id="Dons"] .section,
+body[data-form-id="Dons"] .signature-table,
+body[data-form-id="Adhesion"] p,
+body[data-form-id="Adhesion"] .total-line,
+body[data-form-id="Adhesion"] .section {
+    font-size: 10pt !important;
+}
+   
 }
 
 /* --- RESPONSIVE --- */
