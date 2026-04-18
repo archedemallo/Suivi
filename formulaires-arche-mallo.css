@@ -607,21 +607,9 @@ input[type="date"] {
         font-size: 10pt;
         line-height: 1.5;
     }
-
-    .buttons {
-        display: none !important;
-    }
-
-    .page-container {
-        padding: 0;
-    }
-
-    .content {
-        margin: 0;
-        padding: 0mm;
-        min-height: unset;
-    }
-
+    .buttons { display: none !important; }
+    .page-container { padding: 0; }
+    .content { margin: 0; padding: 0mm; min-height: unset; }
     .editable {
         border: none !important;
         border-bottom: 1px solid #333 !important;
@@ -629,20 +617,11 @@ input[type="date"] {
         display: inline !important;
         padding: 0 2px !important;
     }
-
-    /* Champs sur la même ligne que leur label */
-p { 
-    margin: 3px 0; 
-    white-space: normal;    /* ← normal au lieu de nowrap */
-    overflow: visible;
-    word-wrap: break-word;
-}
+    p { margin: 3px 0; white-space: normal; overflow: visible; word-wrap: break-word; }
     ul, ol { margin: 3px 0 3px 15px; }
     li  { margin: 2px 0; }
     br  { line-height: 0.8; }
     h2  { font-size: 12pt; margin: 5px 0; }
-
-    /* Logo : forcer l'affichage à l'impression */
     .logo-box {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -654,74 +633,53 @@ p {
         background-repeat: no-repeat !important;
         background-position: center !important;
     }
-
-    /* Vermifugé et Anti-puces : réduire la taille pour tenir sur une ligne */
     #dateVermifuge, #produitVermifuge,
-    #dateAntiPuces, #produitAntiPuces {
-        font-size: 9pt !important;
-    }
-    .editable-medium {
-        width: 150px !important;
-    }
-
-    /* Forcer les champs longs à rester inline */
+    #dateAntiPuces, #produitAntiPuces { font-size: 9pt !important; }
+    .editable-medium { width: 150px !important; }
     #puce, #couleur, #nom, #prenom, #adresse, #email, #nomAttestation,
     #nomUsuel, #nomAdoption {
         display: inline !important;
         width: auto !important;
         min-width: 200px !important;
     }
-
-    .page-break {
-        page-break-before: always;
-    }
-    
-    /* Masquer boutons photo et aperçus */
+    .page-break { page-break-before: always; }
     .no-print { display: none !important; }
     label[style*="background:#0563c1"] { display: none !important; }
+    .signature-pad-wrap + button { display: none !important; }
+    .header-adoption {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+    }
+    .header-adoption-right { text-align: right; white-space: nowrap; }
 
-body[data-form-id="Dons"] {
-    font-size: 10pt !important;
-    line-height: 1.4 !important;
-}
-
-body[data-form-id="Adhesion"] {
-    font-size: 10pt !important;
-    line-height: 1.4 !important;
-}
-body[data-form-id="Famille_Accueil_Provisoire"] .section-title,
-body[data-form-id="Famille_Accueil_Provisoire"] p,
-body[data-form-id="Famille_Accueil_Provisoire"] li {
-body[data-form-id="Dons"],
-body[data-form-id="Adhesion"],
-body[data-form-id="Depot_Chat"],
-body[data-form-id="Abandon"] {
-    font-size: 10pt !important;
-    line-height: 1.4 !important;
-
-body[data-form-id="Dons"] p,
-body[data-form-id="Dons"] .total-line,
-body[data-form-id="Adhesion"] p,
-body[data-form-id="Adhesion"] .total-line,
-body[data-form-id="Depot_Chat"] p,
-body[data-form-id="Depot_Chat"] .section-title,
-body[data-form-id="Abandon"] p,
-body[data-form-id="Abandon"] .section-title {
-    font-size: 10pt !important;
-}
-   
-
-body[data-form-id="Dons"] .section,
-body[data-form-id="Dons"] .signature-table,
-body[data-form-id="Adhesion"] p,
-body[data-form-id="Adhesion"] .total-line,
-body[data-form-id="Adhesion"] .section {
-    font-size: 10pt !important;
-}
-
-
-
-   
+    /* --- Tailles spécifiques par formulaire --- */
+    body[data-form-id="Dons"],
+    body[data-form-id="Adhesion"],
+    body[data-form-id="Depot_Chat"],
+    body[data-form-id="Abandon"] {
+        font-size: 10pt !important;
+        line-height: 1.4 !important;
+    }
+    body[data-form-id="Dons"] p,
+    body[data-form-id="Dons"] .total-line,
+    body[data-form-id="Dons"] .section,
+    body[data-form-id="Dons"] .signature-table,
+    body[data-form-id="Adhesion"] p,
+    body[data-form-id="Adhesion"] .total-line,
+    body[data-form-id="Adhesion"] .section,
+    body[data-form-id="Depot_Chat"] p,
+    body[data-form-id="Depot_Chat"] .section-title,
+    body[data-form-id="Abandon"] p,
+    body[data-form-id="Abandon"] .section-title {
+        font-size: 10pt !important;
+    }
+    body[data-form-id="Famille_Accueil_Provisoire"] .section-title,
+    body[data-form-id="Famille_Accueil_Provisoire"] p,
+    body[data-form-id="Famille_Accueil_Provisoire"] li {
+        font-size: 10pt !important;
+    }
 }
 
 /* --- RESPONSIVE --- */
