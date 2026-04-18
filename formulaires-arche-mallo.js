@@ -139,7 +139,7 @@ function buildFilename(data) {
         String(date.getMonth() + 1).padStart(2, '0'),
         date.getFullYear()
     ].join('-');
-    var nom   = (data.nomAdoptant || data.nomComplet || data.nomProprietaire || data.nom || '').replace(/[^a-zA-Z0-9]/g, '_');
+    var nom   = (data.nomAdoptant || data.nomComplet || data.nomProprietaire || data.nom || data.raisonSociale || '').replace(/[^a-zA-Z0-9]/g, '_');
     var chat  = (data.nomChat || data.nomAnimal || data.chat || data.nom_animal || '').replace(/[^a-zA-Z0-9]/g, '_');
     var titre = document.title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
     var parts = [titre];
