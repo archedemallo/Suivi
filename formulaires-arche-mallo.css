@@ -689,9 +689,28 @@ body[data-form-id="Adhesion"] {
     font-size: 10pt !important;
     line-height: 1.4 !important;
 }
+body[data-form-id="Famille_Accueil_Provisoire"] .section-title,
+body[data-form-id="Famille_Accueil_Provisoire"] p,
+body[data-form-id="Famille_Accueil_Provisoire"] li {
+body[data-form-id="Dons"],
+body[data-form-id="Adhesion"],
+body[data-form-id="Depot_Chat"],
+body[data-form-id="Abandon"] {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
 
 body[data-form-id="Dons"] p,
 body[data-form-id="Dons"] .total-line,
+body[data-form-id="Adhesion"] p,
+body[data-form-id="Adhesion"] .total-line,
+body[data-form-id="Depot_Chat"] p,
+body[data-form-id="Depot_Chat"] .section-title,
+body[data-form-id="Abandon"] p,
+body[data-form-id="Abandon"] .section-title {
+    font-size: 10pt !important;
+}
+   
+
 body[data-form-id="Dons"] .section,
 body[data-form-id="Dons"] .signature-table,
 body[data-form-id="Adhesion"] p,
@@ -699,6 +718,9 @@ body[data-form-id="Adhesion"] .total-line,
 body[data-form-id="Adhesion"] .section {
     font-size: 10pt !important;
 }
+
+
+
    
 }
 
