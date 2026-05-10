@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bord — L'Arche de Mallo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Calibri', Arial, sans-serif;
+    font-size: 14px;
+    background: #f5f5f5;
+    color: #222;
+  }
+
+  header {
+    background: #3d2b1f;
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header h1 { font-size: 18px; font-weight: bold; }
+  header p  { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+
+  .main { max-width: 1200px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  /* --- FILTRES --- */
+  .filtres {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .filtres label { font-size: 12px; color: #666; display: block; margin-bottom: 4px; }
+  .filtres input[type="date"],
+  .filtres select {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    background: white;
+    color: #222;
+  }
+  .btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: inherit;
+  }
+  .btn-search  { background: #c96b2a; color: white; }
+  .btn-excel   { background: #217346; color: white; }
+  .btn-pdf     { background: #c00000; color: white; }
+  .btn-print   { background: #444;    color: white; }
+  .btn:hover   { opacity: 0.85; }
+
+  .export-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* --- CARTES RÉSUMÉ --- */
+  .cartes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .cartes-row2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+    margin-top: -8px;
+  }
+  .carte {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 14px 16px;
+  }
+  .carte-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .carte-val   { font-size: 26px; font-weight: bold; color: #3d2b1f; }
+  .carte-sub   { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+  /* --- TABLEAUX --- */
+  .bloc {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .bloc-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fafafa;
+  }
+  .bloc-titre { font-size: 14px; font-weight: bold; color: #3d2b1f; }
+  .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  .badge-blue   { background: #dbeafe; color: #1e40af; }
+  .badge-green  { background: #dcfce7; color: #166534; }
+  .badge-orange { background: #ffedd5; color: #9a3412; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+  .badge-gray   { background: #f1f5f9; color: #475569; }
+
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr { background: #f8f8f8; }
+  th {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: bold;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+  td {
+    padding: 7px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) { background: #fafafa; }
+  tr:hover { background: #fff8f0; }
+
+  .empty { padding: 20px; text-align: center; color: #aaa; font-style: italic; }
+
+  /* --- CHARGEMENT --- */
+  #loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 16px;
+    color: #888;
+  }
+  #erreur {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* --- IMPRESSION --- */
+  @media print {
+    body { background: white; font-size: 11pt; }
+    header { background: #3d2b1f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .filtres .btn, .export-btns { display: none !important; }
+    .bloc { page-break-inside: avoid; border: 1px solid #ccc; }
+    .carte { border: 1px solid #ccc; }
+  }
+
+  @media (max-width: 700px) {
+    .cartes { grid-template-columns: repeat(2, 1fr); }
+    .cartes-row2 { grid-template-columns: repeat(2, 1fr); }
+    .filtres { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>L'Arche de Mallo — Tableau de bord</h1>
+    <p>Consultation des formulaires enregistrés</p>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Filtres -->
+  <div class="filtres">
+    <div>
+      <label>Date début</label>
+      <input type="date" id="dateDebut">
+    </div>
+    <div>
+      <label>Date fin</label>
+      <input type="date" id="dateFin">
+    </div>
+    <div>
+      <label>Formulaire</label>
+      <select id="selectOnglet">
+        <option value="tous">Tous</option>
+        <option value="Adoption">Adoption</option>
+        <option value="Contrat_reservation_chat">Réservation Chat</option>
+        <option value="Reservation_Chaton">Réservation Chaton</option>
+        <option value="Adhesion">Adhésion</option>
+        <option value="Dons">Dons</option>
+        <option value="Depot_Chat">Dépôt Chat</option>
+        <option value="Famille_Accueil_Provisoire">Famille Accueil Provisoire</option>
+        <option value="Famille_Accueil_Chat_Libre">Famille Accueil Chat Libre</option>
+        <option value="Famille_Accueil_Adoption">Famille Accueil Adoption</option>
+        <option value="Certificat_Engagement">Certificat Engagement</option>
+        <option value="Abandon">Abandon</option>
+      </select>
+    </div>
+    <button class="btn btn-search" onclick="rechercher()">🔍 Rechercher</button>
+    <div class="export-btns">
+      <button class="btn btn-excel"  onclick="exporterExcel()">📊 Excel</button>
+      <button class="btn btn-pdf"    onclick="exporterPDF()">📄 PDF</button>
+      <button class="btn btn-print"  onclick="window.print()">🖨️ Imprimer</button>
+    </div>
+  </div>
+
+  <div id="erreur"></div>
+  <div id="loading" style="display:none;">Chargement en cours...</div>
+
+  <!-- Cartes résumé ligne 1 -->
+  <div class="cartes" id="cartes1">
+    <div class="carte">
+      <div class="carte-label">Total formulaires</div>
+      <div class="carte-val" id="c_total">—</div>
+      <div class="carte-sub">sur la période</div>
+    </div>
+    <div class="carte">
+      <div class="carte-label">Adoptions</div>
+      <div class="carte-val" id="c_adoption">—</div>
+    </div>
+    <div class="carte">
+      <div class="carte-label">Réservations</div>
+      <div class="carte-val" id="c_resa">—</div>
+    </div>
+    <div class="carte">
+      <div class="carte-label">Adhésions</div>
+      <div class="carte-val" id="c_adhesion">—</div>
+    </div>
+  </div>
+
+  <!-- Cartes résumé ligne 2 -->
+  <div class="cartes-row2" id="cartes2">
+    <div class="carte">
+      <div class="carte-label">Dons</div>
+      <div class="carte-val" id="c_dons">—</div>
+    </div>
+    <div class="carte">
+      <div class="carte-label">Dépôts chat</div>
+      <div class="carte-val" id="c_depot">—</div>
+    </div>
+    <div class="carte">
+      <div class="carte-label">Familles d'accueil</div>
+      <div class="carte-val" id="c_fa">—</div>
+    </div>
+  </div>
+
+  <!-- Résultats -->
+  <div id="resultats"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// URL de l'Apps Script — même URL que votre script principal
+var APPS_SCRIPT_URL = '<?= scriptUrl ?>';
+
+// Données globales pour export
+var donneesGlobales = {};
+
+// Init dates
+(function() {
+  var now   = new Date();
+  var debut = new Date(now.getFullYear(), 0, 1);
+  document.getElementById('dateDebut').value = debut.toISOString().split('T')[0];
+  document.getElementById('dateFin').value   = now.toISOString().split('T')[0];
+})();
+
+function afficherErreur(msg) {
+  var el = document.getElementById('erreur');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function cacherErreur() {
+  document.getElementById('erreur').style.display = 'none';
+}
+
+function rechercher() {
+  cacherErreur();
+  var dateDebut  = document.getElementById('dateDebut').value;
+  var dateFin    = document.getElementById('dateFin').value;
+  var onglet     = document.getElementById('selectOnglet').value;
+
+  if (!dateDebut || !dateFin) {
+    afficherErreur('Veuillez renseigner les deux dates.');
+    return;
+  }
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('resultats').innerHTML = '';
+
+  var url = APPS_SCRIPT_URL + '?action=dashboard&dateDebut=' + dateDebut + '&dateFin=' + dateFin + '&onglet=' + onglet;
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('loading').style.display = 'none';
+      if (data.erreur) { afficherErreur(data.erreur); return; }
+      donneesGlobales = data;
+      afficherResultats(data);
+    })
+    .catch(function(e) {
+      document.getElementById('loading').style.display = 'none';
+      afficherErreur('Erreur de connexion : ' + e.message);
+    });
+}
+
+// --- COLONNES PAR ONGLET ---
+var CONFIG = {
+  'Adoption': {
+    titre:  'Adoption',
+    badge:  'badge-blue',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','nomUsuel','totalParticipation','check_paiement'],
+    labels: ['Date','Heure','Saisi par','Nom','Prénom','Nom chat','Total €','Paiement'],
+    montant:'totalParticipation'
+  },
+  'Contrat_reservation_chat': {
+    titre:  'Réservation Chat',
+    badge:  'badge-blue',
+    cols:   ['Date','Heure','saisiPar','nomComplet','nomChat','numeroPaiement','check_paiement'],
+    labels: ['Date','Heure','Saisi par','Nom adoptant','Nom chat','N° chèque','Paiement'],
+    montant: null
+  },
+  'Reservation_Chaton': {
+    titre:  'Réservation Chaton',
+    badge:  'badge-blue',
+    cols:   ['Date','Heure','saisiPar','nomComplet','nomChat','numeroPaiement','check_paiement'],
+    labels: ['Date','Heure','Saisi par','Nom adoptant','Nom chaton','N° chèque','Paiement'],
+    montant: null
+  },
+  'Adhesion': {
+    titre:  'Adhésion',
+    badge:  'badge-orange',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','check_type','check_paiement'],
+    labels: ['Date','Heure','Saisi par','Nom','Prénom','Type adhésion','Paiement'],
+    montant: null
+  },
+  'Dons': {
+    titre:  'Dons',
+    badge:  'badge-green',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','raisonSociale','montantDon','check_paiement','recuFiscal'],
+    labels: ['Date','Heure','Saisi par','Nom','Prénom','Société','Montant €','Paiement','Reçu fiscal'],
+    montant:'montantDon'
+  },
+  'Depot_Chat': {
+    titre:  'Dépôt Chat',
+    badge:  'badge-gray',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','nomAnimal'],
+    labels: ['Date','Heure','Saisi par','Nom déposant','Prénom','Nom animal'],
+    montant: null
+  },
+  'Famille_Accueil_Provisoire': {
+    titre:  'Famille Accueil Provisoire',
+    badge:  'badge-purple',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','nom_animal'],
+    labels: ['Date','Heure','Saisi par','Nom famille','Prénom','Nom animal'],
+    montant: null
+  },
+  'Famille_Accueil_Chat_Libre': {
+    titre:  'Famille Accueil Chat Libre',
+    badge:  'badge-purple',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','nom_animal'],
+    labels: ['Date','Heure','Saisi par','Nom famille','Prénom','Nom animal'],
+    montant: null
+  },
+  'Famille_Accueil_Adoption': {
+    titre:  'Famille Accueil Adoption',
+    badge:  'badge-purple',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','nom_animal'],
+    labels: ['Date','Heure','Saisi par','Nom famille','Prénom','Nom animal'],
+    montant: null
+  },
+  'Certificat_Engagement': {
+    titre:  'Certificat Engagement',
+    badge:  'badge-gray',
+    cols:   ['Date','Heure','saisiPar','nomAdoptant','adresseAdoptant','email'],
+    labels: ['Date','Heure','Saisi par','Nom adoptant','Adresse','Email'],
+    montant: null
+  },
+  'Abandon': {
+    titre:  'Abandon',
+    badge:  'badge-gray',
+    cols:   ['Date','Heure','saisiPar','nom','prenom','nom_animal'],
+    labels: ['Date','Heure','Saisi par','Nom','Prénom','Animal'],
+    montant: null
+  }
+};
+
+function afficherResultats(data) {
+  // Cartes
+  var totalAll = 0;
+  var cAdoption = 0, cResa = 0, cAdhesion = 0, cDons = 0, cDepot = 0, cFA = 0;
+
+  Object.keys(data).forEach(function(onglet) {
+    var nb = data[onglet].rows.length;
+    totalAll += nb;
+    if (onglet === 'Adoption') cAdoption = nb;
+    if (onglet === 'Contrat_reservation_chat' || onglet === 'Reservation_Chaton') cResa += nb;
+    if (onglet === 'Adhesion') cAdhesion = nb;
+    if (onglet === 'Dons') cDons = nb;
+    if (onglet === 'Depot_Chat') cDepot = nb;
+    if (onglet.indexOf('Famille') >= 0) cFA += nb;
+  });
+
+  document.getElementById('c_total').textContent   = totalAll;
+  document.getElementById('c_adoption').textContent = cAdoption;
+  document.getElementById('c_resa').textContent     = cResa;
+  document.getElementById('c_adhesion').textContent = cAdhesion;
+  document.getElementById('c_dons').textContent     = cDons;
+  document.getElementById('c_depot').textContent    = cDepot;
+  document.getElementById('c_fa').textContent       = cFA;
+
+  // Tableaux
+  var html = '';
+  var ordre = ['Adoption','Contrat_reservation_chat','Reservation_Chaton','Adhesion','Dons','Depot_Chat',
+               'Famille_Accueil_Provisoire','Famille_Accueil_Chat_Libre','Famille_Accueil_Adoption',
+               'Certificat_Engagement','Abandon'];
+
+  ordre.forEach(function(onglet) {
+    if (!data[onglet]) return;
+    var cfg  = CONFIG[onglet] || null;
+    var rows = data[onglet].rows;
+    var hdrs = data[onglet].headers;
+    var nb   = rows.length;
+
+    var titreOnglet = cfg ? cfg.titre : onglet;
+    var badge       = cfg ? cfg.badge : 'badge-gray';
+
+    // Calcul montant total si applicable
+    var totalMontant = '';
+    if (cfg && cfg.montant) {
+      var idxM = hdrs.indexOf(cfg.montant);
+      if (idxM >= 0) {
+        var sum = 0;
+        rows.forEach(function(r) {
+          var v = parseFloat((r[idxM] || '').toString().replace(',', '.'));
+          if (!isNaN(v)) sum += v;
+        });
+        if (sum > 0) totalMontant = sum.toLocaleString('fr-FR') + ' €';
+      }
+    }
+
+    html += '<div class="bloc">';
+    html += '<div class="bloc-header">';
+    html += '<span class="bloc-titre">' + titreOnglet + ' — ' + nb + ' résultat' + (nb > 1 ? 's' : '') + '</span>';
+    if (totalMontant) html += '<span class="badge ' + badge + '">Total : ' + totalMontant + '</span>';
+    else html += '<span class="badge ' + badge + '">' + nb + ' ligne' + (nb > 1 ? 's' : '') + '</span>';
+    html += '</div>';
+
+    if (nb === 0) {
+      html += '<div class="empty">Aucune donnée sur cette période</div>';
+    } else {
+      // Colonnes à afficher
+      var cols, labels, idxCols;
+      if (cfg) {
+        cols    = cfg.cols;
+        labels  = cfg.labels;
+        idxCols = cols.map(function(c) { return hdrs.indexOf(c); });
+      } else {
+        // Onglet inconnu : toutes les colonnes
+        cols    = hdrs;
+        labels  = hdrs;
+        idxCols = hdrs.map(function(_, i) { return i; });
+      }
+
+      html += '<div class="table-wrap"><table>';
+      html += '<thead><tr>';
+      labels.forEach(function(l) { html += '<th>' + l + '</th>'; });
+      html += '</tr></thead><tbody>';
+
+      rows.forEach(function(row) {
+        html += '<tr>';
+        idxCols.forEach(function(idx) {
+          var val = idx >= 0 ? (row[idx] || '') : '';
+          html += '<td>' + val + '</td>';
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+    }
+    html += '</div>';
+  });
+
+  document.getElementById('resultats').innerHTML = html;
+}
+
+// --- EXPORT EXCEL ---
+function exporterExcel() {
+  if (!Object.keys(donneesGlobales).length) {
+    alert('Lancez d\'abord une recherche.');
+    return;
+  }
+  var wb = XLSX.utils.book_new();
+  var ordre = ['Adoption','Contrat_reservation_chat','Reservation_Chaton','Adhesion','Dons','Depot_Chat',
+               'Famille_Accueil_Provisoire','Famille_Accueil_Chat_Libre','Famille_Accueil_Adoption',
+               'Certificat_Engagement','Abandon'];
+  ordre.forEach(function(onglet) {
+    if (!donneesGlobales[onglet] || !donneesGlobales[onglet].rows.length) return;
+    var hdrs = donneesGlobales[onglet].headers;
+    var rows = donneesGlobales[onglet].rows;
+    var wsData = [hdrs].concat(rows);
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
+    var nomFeuille = (CONFIG[onglet] ? CONFIG[onglet].titre : onglet).substring(0, 31);
+    XLSX.utils.book_append_sheet(wb, ws, nomFeuille);
+  });
+  var date = new Date().toISOString().split('T')[0];
+  XLSX.writeFile(wb, 'ArchemDeMallo_' + date + '.xlsx');
+}
+
+// --- EXPORT PDF ---
+function exporterPDF() {
+  if (!Object.keys(donneesGlobales).length) {
+    alert('Lancez d\'abord une recherche.');
+    return;
+  }
+  window.print();
+}
+</script>
+</body>
+</html>
