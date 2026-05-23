@@ -34,7 +34,7 @@
 
 <div class="content-section">
     Ce certificat a pour but de sensibiliser le futur acquéreur aux besoins du chat, aux obligations concernant son
-    identification ainsi qu'aux coûts et à la logistique à engager tout au long de sa vie. L'adoption d'un chat ne doit
+    identification ainsi qu'aux coûts et à la logistique à engager tout au long de sa vie. La cession d'un chat ne doit
     en aucun cas être prise à la légère par l'acquéreur. Ce dernier doit être pleinement conscient de ce que cela
     implique afin d'assurer à l'animal des conditions de vie optimales et d'éviter l'abandon par manque de temps,
     d'argent ou de connaissance.
@@ -99,9 +99,9 @@
 
 <div class="content-section">
     <p><span class="bold">L'identification est obligatoire</span> et sera effectuée par l'association. L'Arche de Mallo est tenue de fournir à
-    l'adoptant le document attestant l'identification de l'animal à l'I-CAD le jour de l'adoption. L'animal est identifié
+    la fmaille le document attestant l'identification de l'animal à l'I-CAD le jour de la cession L'animal est identifié
     au nom de l'association « L'Arche de Mallo » jusqu'à la preuve de sa stérilisation. Ainsi, le changement de
-    propriétaire I-CAD pourra se faire au nom et adresse de l'adoptant par l'association. N'oubliez pas de signaler au
+    propriétaire I-CAD pourra se faire au nom et adresse de la fmaille par l'association. N'oubliez pas de signaler au
     fichier national votre <span class="bold">changement d'adresse </span>si vous déménagez.</p>
     <p class="italic">Toutes les informations sont à retrouver sur le site de l'I-CAD dans l'onglet "Identifier son animal".</p>
 </div>
@@ -129,7 +129,7 @@
     d'importantes dépenses. Les frais vétérinaires peuvent augmenter significativement lorsque le chat avance en âge.
     Les soins ou les opérations peuvent se compter en centaines d'euros.</p>
 
-    <p>L'achat d'un matériel dédié se fait avant même l'adoption : gamelles, bac à litière, cage de transport, brosse,
+    <p>L'achat d'un matériel dédié se fait avant même la cession : gamelles, bac à litière, cage de transport, brosse,
     jouets, paniers, griffoirs, coupe griffes, plateformes en hauteur (arbre à chat)… Durant la première année de vie
     avec un animal, un budget supplémentaire de <span class="bold">100 à 300 € </span> est à prévoir pour équiper son environnement.</p>
 
@@ -143,20 +143,20 @@
     <p><span class="red">
         Les différents montants énumérés sont indicatifs et peuvent grandement varier. L'acquisition et l'entretien
         d'un chat durant toute sa vie représente donc un budget significatif. Vous devez garder à l'esprit que
-        l'adoption d'un animal ne se fait en aucun cas de manière impulsive.<br><br>
-        Adopter un chat est un engagement de long terme.</span>
+        la cession d'un animal ne se fait en aucun cas de manière impulsive.<br><br>
+        Accueillir un chat est un engagement de long terme.</span>
     </p>
 </div>
 
 <p> <span class="bold">Certificat délivré au moins 7 jours avant la cession.</span></p>
 
 
-<!-- Signature adoptant -->
+<!-- Signature de la famille -->
 <div class="signature-section mt-30">
-    <p class="bold underline"><strong><span class="red">L'adoptant :</span></strong></p>
+    <p class="bold underline"><strong><span class="red">La famille :</span></strong></p>
     <p>
         <span class="blue">Je soussigné(e)<span/>
-        <input type="text" class="editable editable-long" style="width:80%;" id="nomAdoptant" data-required="true" data-label="Nom de l'adoptant" oninput="this.value=this.value.toUpperCase()">
+        <input type="text" class="editable editable-long" style="width:80%;" id="nomAdoptant" data-required="true" data-label="Nom de la famille" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p>
         <span class="blue">résidant à</span>
@@ -173,7 +173,7 @@
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAdoptant"></p>
 
     <div class="mention-manuscrite mt-20"><span class="bold">
-        Signature de l'adoptant précédée de la mention manuscrite :<br>
+        Signature de la famille précédée de la mention manuscrite :<br>
         « Je m'engage à respecter les besoins et l'intégrité de l'animal cédé tout au long de sa vie »</span>
     </div>
 
@@ -189,7 +189,7 @@
     <table class="signature-table mt-30">
         <tr>
             <td>
-                <p class="bold underline">Signature de l'adoptant :</p>
+                <p class="bold underline">Signature de la famille :</p>
                 <div id="sig1"></div>
                 <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
             </td>
@@ -255,7 +255,7 @@ validateRequiredFields = function() {
     ['sig1', 'sig2'].forEach(function(sigId) {
         var container = document.getElementById(sigId);
         if (container && !container._signed) {
-            var labels = { sig1: 'Signature de l\'adoptant', sig2: 'Signature de l\'Arche de Mallo' };
+            var labels = { sig1: 'Signature de la famille', sig2: 'Signature de l\'Arche de Mallo' };
             missing.push(labels[sigId]);
         }
     });
