@@ -187,6 +187,22 @@ creerSignature('sig1');
                 missing.push(labels[sigId]);
             }
         });
+
+// Au moins un chat ou un chaton obligatoire
+var nbChats   = parseInt(document.getElementById('nombreChats')   ? document.getElementById('nombreChats').value   : '0') || 0;
+var nbChatons = parseInt(document.getElementById('nombreChatons') ? document.getElementById('nombreChatons').value : '0') || 0;
+if (nbChats === 0 && nbChatons === 0) {
+    missing.push('Nombre de chats et/ou chatons (au moins 1)');
+    var elChats   = document.getElementById('nombreChats');
+    var elChatons = document.getElementById('nombreChatons');
+    if (elChats)   elChats.style.borderBottom   = '2px solid red';
+    if (elChatons) elChatons.style.borderBottom = '2px solid red';
+} else {
+    var elChats   = document.getElementById('nombreChats');
+    var elChatons = document.getElementById('nombreChatons');
+    if (elChats)   elChats.style.borderBottom   = '';
+    if (elChatons) elChatons.style.borderBottom = '';
+}
 		
         return missing;
     };
