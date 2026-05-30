@@ -67,21 +67,23 @@
     </div>
 
     <div class="section mt-30">
-        <p>
-            Je soussigné(e)
-            <input type="text" class="editable editable-long" id="nomComplet" placeholder="Nom et prénom">
-            avoir déposé ce jour
-           </p>
-        <p>
-            <input type="number" class="editable editable-num" id="nombreChats" min="1" value="1">
-            chat(s) / chaton(s) errant(s) de la commune de
-            <input type="text" class="editable editable-medium" id="commune" placeholder="Nom de la commune">
-        </p>
-        <p class="mt-20 red">
-            Par la présente, je déclare confier et céder définitivement le ou les animaux à l'association
-            l'Arche de Mallo dès signature du présent contrat.
-        </p>
-    </div>
+    <p>
+        Je soussigné(e)
+        <input type="text" class="editable editable-long" id="nomComplet" style="width:60%;">
+        avoir déposé ce jour
+    </p>
+    <p>
+        <input type="number" class="editable editable-num" id="nombreChats" min="0" value="0" data-label="Nombre de chats">
+        chat(s) &nbsp; et/ou &nbsp;
+        <input type="number" class="editable editable-num" id="nombreChatons" min="0" value="0" data-label="Nombre de chatons">
+        chaton(s) errant(s) de la commune de
+        <input type="text" class="editable editable-long" id="commune" placeholder="Nom de la commune">
+    </p>
+    <p class="mt-20 red">
+        Par la présente, je déclare confier et céder définitivement le ou les animaux à l'association
+        l'Arche de Mallo dès signature du présent contrat.
+    </p>
+</div>
 
     <div class="signature-section mt-30">
         <p class="bold">Autrechêne, le <input type="date" class="editable editable-date" id="dateFait"></p>
