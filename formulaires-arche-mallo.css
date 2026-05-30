@@ -680,6 +680,17 @@ input[type="date"] {
     body[data-form-id="Famille_Accueil_Provisoire"] li {
         font-size: 10pt !important;
     }
+body[data-form-id="Depot_Chat"] #nomComplet {
+    min-width: 400px !important;
+    width: 60% !important;
+}
+body[data-form-id="Depot_Chat"] #ville {
+    min-width: 300px !important;
+}
+body[data-form-id="Depot_Chat"] #email {
+    min-width: 350px !important;
+}
+   
 }
 
 /* --- RESPONSIVE --- */
