@@ -18,7 +18,7 @@ function creerEntete(options) {
 
     el.innerHTML =
         '<div class="header-adoption">' +
-    '<div style="display:flex;align-items:center;gap:20px;flex:1;">' +
+    '<div style="display:flex;align-items:center;gap:18px;flex:1;">' +
         '<div class="logo-box"></div>' +
         '<div class="header-info" style="font-size:11pt;">' +
             '<p class="bold">Association L\'ARCHE DE MALLO</p>' +
@@ -291,7 +291,7 @@ function validateRequiredFields() {
     ['luApprouve1', 'luApprouve2'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.querySelector('.checkbox').classList.contains('checked')) {
-            var labels = { luApprouve1: 'Lu et approuvé (Arche de Mallo)', luApprouve2: 'Lu et approuvé (Adoptant)' };
+            var labels = { luApprouve1: 'Lu et approuvé ( Mallo)', luApprouve2: 'Lu et approuvé (Adoptant)' };
             missing.push(labels[id]);
         }
     });
