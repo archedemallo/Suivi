@@ -110,17 +110,20 @@
             </span>
         </p>
         <p>
-            <span class="blue">Autres animaux :</span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
-                <span class="checkbox" data-group="animaux"></span> Chat
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
-                <span class="checkbox" data-group="animaux"></span> Chien
-            </span>
-            <span class="clickable-row" onclick="toggleCheck(this, 'animaux')">
-                <span class="checkbox" data-group="animaux"></span> Lapin
-            </span>
-        </p>
+    <span class="blue">Autres animaux :</span>
+
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="animal_chat"></span> Chat
+    </span>
+
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="animal_chien"></span> Chien
+    </span>
+
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="animal_lapin"></span> Lapin
+    </span>
+</p>
         <p>
             <span class="blue">Enfants :</span>
             <span id="bloc_enfants">
