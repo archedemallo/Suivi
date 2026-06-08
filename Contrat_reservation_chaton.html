@@ -154,7 +154,7 @@
                 <span class="checkbox" id="pay_virement"></span> Virement
             </span>
             <span class="clickable-row" onclick="toggleCheckMulti(this)">
-                <span class="checkbox" id="pay_cheque_resa"></span> Chèque.
+                <span class="checkbox" id="pay_cheque"></span> Chèque.
                 <span class="blue">N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
             </span>
         </p>
@@ -287,7 +287,7 @@
             }
         });
 
-        var payIds = ['pay_cb', 'pay_espece', 'pay_virement', 'pay_cheque_resa'];
+        var payIds = ['pay_cb', 'pay_espece', 'pay_virement', 'pay_cheque'];
         var paiementCoche = payIds.some(function(id) {
             var el = document.getElementById(id);
             return el && el.classList.contains('checked');
@@ -305,7 +305,7 @@
             });
         }
 
-        var payCheque = document.getElementById('pay_cheque_resa');
+        var payCheque = document.getElementById('pay_cheque');
         if (payCheque && payCheque.classList.contains('checked')) {
             var numCheque = document.getElementById('numeroPaiement');
             if (!numCheque || !numCheque.value.trim()) {
