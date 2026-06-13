@@ -152,12 +152,6 @@
 creerSignature('sig1');
     creerSignature('sig2');
 
-    // dateDepot reste vide
-    document.addEventListener('DOMContentLoaded', function() {
-        var el = document.getElementById('dateDepot');
-        if (el) el.value = '';
-    });
-	
     var today = new Date().toISOString().split('T')[0];
     var el = document.getElementById('dateFait');
     if (el && !el.value) el.value = today;
