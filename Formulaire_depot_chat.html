@@ -70,15 +70,43 @@
     <p>
         Je soussigné(e)
         <input type="text" class="editable editable-long" id="nomComplet" style="width:60%;">
-        avoir déposé ce jour
+        atteste avoir déposé ce jour
+        <input type="date" class="editable editable-date" id="dateDepot"> :
     </p>
-    <p>
-        <input type="number" class="editable editable-num" id="nombreChats" min="0" value="0" data-label="Nombre de chats">
-        chat(s) &nbsp; et/ou &nbsp;
-        <input type="number" class="editable editable-num" id="nombreChatons" min="0" value="0" data-label="Nombre de chatons">
-        chaton(s) errant(s) de la commune de
-        <input type="text" class="editable editable-long" id="commune" placeholder="Nom de la commune">
-    </p>
+
+    <table style="border-collapse:collapse; margin-top:10px; margin-left:10px;">
+        <tr>
+            <td style="padding:4px 8px 4px 0; white-space:nowrap;">
+                &#8226; &nbsp;
+                <input type="number" class="editable editable-num" id="nombreChats" min="0" value="0" data-label="Nombre de chats">
+                &nbsp; chat(s)
+            </td>
+            <td style="padding:4px 8px; color:#666;">et/ou</td>
+            <td style="padding:4px 0; white-space:nowrap;">
+                <input type="number" class="editable editable-num" id="nombreChatons" min="0" value="0" data-label="Nombre de chatons">
+                &nbsp; chaton(s) errant(s),
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="padding:4px 0; white-space:nowrap;">
+                &#8226; &nbsp;
+                <input type="number" class="editable editable-num" id="nombreAutres" min="0" value="0" data-label="Nombre d'autres animaux" oninput="togglePreciserAutre()">
+                &nbsp; autre(s) animal(aux) errant(s)
+                &nbsp;
+                <span style="white-space:nowrap;">
+                    (préciser :
+                    <input type="text" class="editable editable-long" id="preciserAutre" data-label="Préciser autre animal" placeholder="ex : lapin, oiseau…" style="width:220px;">)
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="padding:8px 0 4px 0; white-space:nowrap;">
+                provenant de la commune de
+                <input type="text" class="editable editable-long" id="commune" placeholder="Nom de la commune" data-required="true" data-label="Commune">
+            </td>
+        </tr>
+    </table>
+
     <p class="mt-20 red">
         Par la présente, je déclare confier et céder définitivement le ou les animaux à l'association
         l'Arche de Mallo dès signature du présent contrat.
@@ -143,6 +171,27 @@ creerSignature('sig1');
         if (champ) champ.value = (prenom + ' ' + nom).trim();
     }
 
+    // Grise/active le champ "préciser" selon la valeur de nombreAutres
+    function togglePreciserAutre() {
+        var nb = parseInt(document.getElementById('nombreAutres').value) || 0;
+        var elPreciser = document.getElementById('preciserAutre');
+        if (!elPreciser) return;
+        if (nb > 0) {
+            elPreciser.removeAttribute('disabled');
+            elPreciser.style.opacity = '1';
+            elPreciser.focus();
+        } else {
+            elPreciser.value = '';
+            elPreciser.setAttribute('disabled', 'disabled');
+            elPreciser.style.opacity = '0.4';
+            elPreciser.style.borderBottom = '';
+        }
+    }
+    // État initial au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        togglePreciserAutre();
+    });
+
     validateRequiredFields = function() {
         var missing = [];
 
@@ -188,20 +237,35 @@ creerSignature('sig1');
             }
         });
 
-// Au moins un chat ou un chaton obligatoire
+// Au moins un animal obligatoire (chat, chaton ou autre)
 var nbChats   = parseInt(document.getElementById('nombreChats')   ? document.getElementById('nombreChats').value   : '0') || 0;
 var nbChatons = parseInt(document.getElementById('nombreChatons') ? document.getElementById('nombreChatons').value : '0') || 0;
-if (nbChats === 0 && nbChatons === 0) {
-    missing.push('Nombre de chats et/ou chatons (au moins 1)');
-    var elChats   = document.getElementById('nombreChats');
-    var elChatons = document.getElementById('nombreChatons');
+var nbAutres  = parseInt(document.getElementById('nombreAutres')  ? document.getElementById('nombreAutres').value  : '0') || 0;
+
+var elChats   = document.getElementById('nombreChats');
+var elChatons = document.getElementById('nombreChatons');
+var elAutres  = document.getElementById('nombreAutres');
+
+if (nbChats === 0 && nbChatons === 0 && nbAutres === 0) {
+    missing.push('Au moins un animal doit être renseigné (chat, chaton ou autre)');
     if (elChats)   elChats.style.borderBottom   = '2px solid red';
     if (elChatons) elChatons.style.borderBottom = '2px solid red';
+    if (elAutres)  elAutres.style.borderBottom  = '2px solid red';
 } else {
-    var elChats   = document.getElementById('nombreChats');
-    var elChatons = document.getElementById('nombreChatons');
     if (elChats)   elChats.style.borderBottom   = '';
     if (elChatons) elChatons.style.borderBottom = '';
+    if (elAutres)  elAutres.style.borderBottom  = '';
+}
+
+// Si "Autre" > 0, le champ "préciser" devient obligatoire
+if (nbAutres > 0) {
+    var elPreciser = document.getElementById('preciserAutre');
+    if (elPreciser && (!elPreciser.value || elPreciser.value.trim() === '')) {
+        missing.push('Préciser le type d\'animal (champ "préciser")');
+        elPreciser.style.borderBottom = '2px solid red';
+    } else if (elPreciser) {
+        elPreciser.style.borderBottom = '';
+    }
 }
 		
         return missing;
