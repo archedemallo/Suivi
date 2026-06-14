@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recherche par chat — L'Arche de Mallo</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Calibri',Arial,sans-serif; font-size:14px; background:#f5f5f5; color:#222; }
+
+  header {
+    background:#3d2b1f; color:white;
+    padding:14px 24px; display:flex; align-items:center; gap:16px;
+  }
+  header h1 { font-size:18px; font-weight:bold; }
+  header p  { font-size:12px; opacity:0.7; margin-top:2px; }
+  .header-back {
+    margin-left:auto; text-decoration:none; color:#e8a87c;
+    font-size:13px; font-weight:bold;
+  }
+  .header-back:hover { text-decoration:underline; }
+
+  .main { max-width:900px; margin:0 auto; padding:20px 16px 60px; }
+
+  /* CARTE RECHERCHE */
+  .search-card {
+    background:white; border-radius:10px; border:1px solid #ddd;
+    padding:18px 22px; margin-bottom:20px;
+  }
+  .search-title {
+    font-size:16px; font-weight:bold; color:#3d2b1f;
+    margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  }
+  .search-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+  .search-row label { font-size:12px; color:#666; display:block; margin-bottom:4px; }
+  .select-chat, .input-libre {
+    padding:8px 11px;
+    border:1px solid #ccc; border-radius:6px;
+    font-family:inherit; font-size:14px; color:#222;
+    background:white;
+  }
+  .select-chat { min-width:220px; flex:1; cursor:pointer; }
+  .input-libre { flex:1; min-width:180px; }
+  .select-chat:focus, .input-libre:focus { outline:none; border-color:#c96b2a; }
+  .btn {
+    padding:8px 20px; border:none; border-radius:6px;
+    font-family:inherit; font-size:13px; font-weight:bold; cursor:pointer;
+  }
+  .btn-search { background:#c96b2a; color:white; }
+  .btn-search:hover { opacity:0.88; }
+  .search-hint { font-size:11px; color:#999; margin-top:10px; }
+  .sep { font-size:12px; color:#999; padding-bottom:2px; white-space:nowrap; }
+
+  /* ERREUR / LOADING */
+  #erreur {
+    background:#fee2e2; color:#991b1b;
+    padding:12px 16px; border-radius:8px; margin-bottom:16px; display:none;
+  }
+  #loading {
+    text-align:center; padding:30px; font-size:14px; color:#888; display:none;
+  }
+  .spinner {
+    display:inline-block; width:20px; height:20px;
+    border:3px solid #eee; border-top-color:#c96b2a;
+    border-radius:50%; animation:spin 0.8s linear infinite;
+    margin-right:8px; vertical-align:middle;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* FICHE CHAT */
+  .fiche {
+    background:white; border-radius:10px; border:1px solid #ddd;
+    margin-bottom:18px; overflow:hidden;
+  }
+  .fiche-header {
+    background:#3d2b1f; color:white;
+    padding:14px 20px; display:flex; align-items:center; gap:14px;
+  }
+  .fiche-avatar {
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.12);
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; flex-shrink:0;
+  }
+  .fiche-nom { font-size:18px; font-weight:bold; }
+  .fiche-sub { font-size:11px; opacity:0.65; margin-top:2px; }
+  .statut-badge {
+    margin-left:auto; padding:6px 16px;
+    border-radius:20px; font-size:12px; font-weight:bold; white-space:nowrap;
+  }
+  .s-adopte  { background:#dcfce7; color:#166534; }
+  .s-reserve { background:#dbeafe; color:#1e40af; }
+  .s-accueil { background:#ede9fe; color:#5b21b6; }
+  .s-depose  { background:#ffedd5; color:#9a3412; }
+  .s-abandon { background:#fee2e2; color:#991b1b; }
+  .s-inconnu { background:#f1f5f9; color:#475569; }
+
+  /* TIMELINE */
+  .fiche-body { padding:18px 22px; }
+  .tl-label {
+    font-size:11px; font-weight:bold; text-transform:uppercase;
+    letter-spacing:0.6px; color:#888; margin-bottom:12px;
+  }
+  .timeline { position:relative; padding-left:22px; }
+  .timeline::before {
+    content:''; position:absolute; left:6px; top:8px; bottom:8px;
+    width:2px; background:#eee; border-radius:2px;
+  }
+  .tl-item {
+    position:relative; margin-bottom:12px;
+    padding:11px 14px; background:#fafafa;
+    border:1px solid #eee; border-radius:8px;
+  }
+  .tl-item::before {
+    content:''; position:absolute; left:-19px; top:50%;
+    transform:translateY(-50%);
+    width:11px; height:11px; border-radius:50%;
+    border:2px solid white;
+    box-shadow:0 0 0 2px #ddd;
+  }
+  .tl-adopte::before  { background:#166534; box-shadow:0 0 0 2px #bbf7d0; }
+  .tl-reserve::before { background:#1e40af; box-shadow:0 0 0 2px #bfdbfe; }
+  .tl-accueil::before { background:#5b21b6; box-shadow:0 0 0 2px #ddd6fe; }
+  .tl-depose::before  { background:#c96b2a; box-shadow:0 0 0 2px #fed7aa; }
+  .tl-abandon::before { background:#991b1b; box-shadow:0 0 0 2px #fecaca; }
+
+  .tl-type {
+    font-size:11px; font-weight:bold; text-transform:uppercase;
+    letter-spacing:0.5px; margin-bottom:4px;
+  }
+  .tl-adopte  .tl-type { color:#166534; }
+  .tl-reserve .tl-type { color:#1e40af; }
+  .tl-accueil .tl-type { color:#5b21b6; }
+  .tl-depose  .tl-type { color:#c96b2a; }
+  .tl-abandon .tl-type { color:#991b1b; }
+
+  .tl-date   { font-size:11px; color:#888; margin-bottom:4px; }
+  .tl-detail { font-size:13px; color:#333; line-height:1.6; }
+  .tl-detail .lbl { color:#999; font-size:11px; }
+
+  /* AUCUN RÉSULTAT */
+  .no-result {
+    background:white; border-radius:10px; border:1px solid #ddd;
+    padding:40px; text-align:center; color:#aaa;
+  }
+  .no-result .icon { font-size:38px; margin-bottom:10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🔍 Recherche par chat</h1>
+    <p>Retrouvez le statut d'un animal en quelques secondes</p>
+  </div>
+  <a class="header-back" href="Index.html">← Retour à l'accueil</a>
+</header>
+
+<div class="main">
+
+  <!-- RECHERCHE -->
+  <div class="search-card">
+    <div class="search-title">🐱 Rechercher un chat / animal</div>
+    <div class="search-row">
+      <div style="flex:1;min-width:200px;">
+        <label for="selectChat">Sélectionner dans la liste</label>
+        <select class="select-chat" id="selectChat" onchange="onSelectChange()">
+          <option value="">— Chargement en cours… —</option>
+        </select>
+      </div>
+      <div class="sep">ou</div>
+      <div style="flex:1;min-width:170px;">
+        <label for="inputLibre">Recherche libre (nom, famille…)</label>
+        <input class="input-libre" type="text" id="inputLibre"
+          placeholder="Ex : Milo, Dupont…"
+          oninput="onInputChange()"
+          onkeydown="if(event.key==='Enter') lancer()">
+      </div>
+      <div>
+        <label style="visibility:hidden;">.</label>
+        <button class="btn btn-search" onclick="lancer()">🔍 Rechercher</button>
+      </div>
+    </div>
+    <div class="search-hint">Données chargées depuis le Google Sheet Suivi. <span id="hint-count"></span></div>
+  </div>
+
+  <div id="erreur"></div>
+  <div id="loading"><span class="spinner"></span>Chargement des données…</div>
+  <div id="resultats"></div>
+
+</div>
+
+<script src="formulaires-arche-mallo.js"></script>
+<script>
+// ============================================================
+// CONFIG — noms de colonnes exacts (issus du dashboard)
+// ============================================================
+var CONFIG_ONGLETS = {
+  Adoption: {
+    label:   'Adoption',
+    type:    'adopte',
+    colChat: 'nomUsuel',
+    colNom:  'nom',
+    colPrenom: 'prenom',
+    colDate: 'Date',
+    colMontant: 'totalParticipation',
+    colPaiement: 'check_paiement',
+    colSaisi: 'saisiPar',
+  },
+  Contrat_reservation_chat: {
+    label:   'Réservation chat',
+    type:    'reserve',
+    colChat: 'nomChat',
+    colNom:  'nomComplet',
+    colPrenom: null,
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: 'check_paiement',
+    colSaisi: 'saisiPar',
+  },
+  Reservation_Chaton: {
+    label:   'Réservation chaton',
+    type:    'reserve',
+    colChat: 'nomChat',
+    colNom:  'nomComplet',
+    colPrenom: null,
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: 'check_paiement',
+    colSaisi: 'saisiPar',
+  },
+  Famille_Accueil_Provisoire: {
+    label:   'Famille d\'accueil provisoire',
+    type:    'accueil',
+    colChat: 'nom_animal',
+    colNom:  'nom',
+    colPrenom: 'prenom',
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: null,
+    colSaisi: 'saisiPar',
+  },
+  Famille_Accueil_Chat_Libre: {
+    label:   'Famille d\'accueil chat libre',
+    type:    'accueil',
+    colChat: 'nom_animal',
+    colNom:  'nom',
+    colPrenom: 'prenom',
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: null,
+    colSaisi: 'saisiPar',
+  },
+  Famille_Accueil_Adoption: {
+    label:   'Famille d\'accueil adoption',
+    type:    'accueil',
+    colChat: 'nom_animal',
+    colNom:  'nom',
+    colPrenom: 'prenom',
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: null,
+    colSaisi: 'saisiPar',
+  },
+  Depot_Chat: {
+    label:   'Dépôt',
+    type:    'depose',
+    colChat: 'nomAnimal',
+    colNom:  'nom',
+    colPrenom: 'prenom',
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: null,
+    colSaisi: 'saisiPar',
+  },
+  Abandon: {
+    label:   'Abandon',
+    type:    'abandon',
+    colChat: 'nom_animal',
+    colNom:  'nom',
+    colPrenom: 'prenom',
+    colDate: 'Date',
+    colMontant: null,
+    colPaiement: null,
+    colSaisi: 'saisiPar',
+  },
+};
+
+var STATUT_LABELS = {
+  adopte:  '✅ Adopté',
+  reserve: '📅 Réservé',
+  accueil: '🏡 En famille d\'accueil',
+  depose:  '📦 Déposé',
+  abandon: '💔 Abandonné',
+  inconnu: '❓ Inconnu',
+};
+
+// Priorité du statut le plus significatif
+var STATUT_PRIO = ['adopte','reserve','accueil','accueil','accueil','depose','abandon'];
+
+// ============================================================
+// ÉTAT
+// ============================================================
+var toutesLignes   = [];  // tableau de {type,label,nomChat,nomPers,prenom,date,montant,paiement,saisiPar}
+var nomsChats      = [];
+var chargementFait = false;
+
+// ============================================================
+// CHARGEMENT AU DÉMARRAGE (toutes les données, large plage)
+// ============================================================
+window.addEventListener('DOMContentLoaded', function() {
+  chargerTout();
+});
+
+function chargerTout() {
+  document.getElementById('loading').style.display = 'block';
+  var url = APPS_SCRIPT_URL
+    + '?action=dashboard&dateDebut=2000-01-01&dateFin=2099-12-31&onglet=tous';
+
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('loading').style.display = 'none';
+      if (data.erreur) { afficherErreur('Erreur serveur : ' + data.erreur); return; }
+      traiterDonnees(data);
+      chargementFait = true;
+    })
+    .catch(function(e) {
+      document.getElementById('loading').style.display = 'none';
+      afficherErreur('Impossible de charger les données : ' + e.message
+        + '. Vérifiez que le dashboard fonctionne.');
+    });
+}
+
+function traiterDonnees(data) {
+  toutesLignes = [];
+  var nomsSet  = {};
+
+  Object.keys(CONFIG_ONGLETS).forEach(function(onglet) {
+    var cfg  = CONFIG_ONGLETS[onglet];
+    var bloc = data[onglet];
+    if (!bloc || !bloc.rows || !bloc.headers) return;
+
+    var hdrs = bloc.headers;
+    var rows = bloc.rows;
+
+    function col(nom) { return nom ? hdrs.indexOf(nom) : -1; }
+    var iChat    = col(cfg.colChat);
+    var iNom     = col(cfg.colNom);
+    var iPrenom  = col(cfg.colPrenom);
+    var iDate    = col(cfg.colDate);
+    var iMontant = col(cfg.colMontant);
+    var iPaie    = col(cfg.colPaiement);
+    var iSaisi   = col(cfg.colSaisi);
+
+    rows.forEach(function(row) {
+      var nomChat = (iChat >= 0 ? row[iChat] : '') || '';
+      nomChat = nomChat.trim();
+      if (!nomChat) return;
+
+      toutesLignes.push({
+        onglet:   onglet,
+        type:     cfg.type,
+        label:    cfg.label,
+        nomChat:  nomChat,
+        nomPers:  (iNom    >= 0 ? row[iNom]    : '') || '',
+        prenom:   (iPrenom >= 0 ? row[iPrenom] : '') || '',
+        date:     (iDate   >= 0 ? row[iDate]   : '') || '',
+        montant:  (iMontant>= 0 ? row[iMontant]: '') || '',
+        paiement: (iPaie   >= 0 ? row[iPaie]   : '') || '',
+        saisiPar: (iSaisi  >= 0 ? row[iSaisi]  : '') || '',
+      });
+
+      var key = nomChat.toUpperCase();
+      if (!nomsSet[key]) nomsSet[key] = nomChat;
+    });
+  });
+
+  // Liste déroulante triée
+  nomsChats = Object.values(nomsSet).sort(function(a,b) {
+    return a.localeCompare(b, 'fr', {sensitivity:'base'});
+  });
+
+  var sel = document.getElementById('selectChat');
+  sel.innerHTML = '<option value="">— Sélectionner un chat —</option>';
+  nomsChats.forEach(function(nom) {
+    var o = document.createElement('option');
+    o.value = nom; o.textContent = nom;
+    sel.appendChild(o);
+  });
+
+  var total = toutesLignes.length;
+  document.getElementById('hint-count').textContent =
+    total + ' événement' + (total > 1 ? 's' : '') + ' chargé' + (total > 1 ? 's' : '')
+    + ' — ' + nomsChats.length + ' animal' + (nomsChats.length > 1 ? 'aux' : '') + ' référencé' + (nomsChats.length > 1 ? 's' : '') + '.';
+}
+
+// ============================================================
+// INTERACTION
+// ============================================================
+function onSelectChange() {
+  var val = document.getElementById('selectChat').value;
+  if (val) {
+    document.getElementById('inputLibre').value = '';
+    cacherErreur();
+    afficherResultats(rechercherParNomExact(val));
+  }
+}
+
+function onInputChange() {
+  document.getElementById('selectChat').value = '';
+}
+
+function lancer() {
+  var sel   = document.getElementById('selectChat').value.trim();
+  var libre = document.getElementById('inputLibre').value.trim();
+  cacherErreur();
+
+  if (!chargementFait) {
+    afficherErreur('Les données se chargent, patientez un instant…'); return;
+  }
+  if (!sel && !libre) {
+    afficherErreur('Saisissez un nom ou sélectionnez un chat dans la liste.'); return;
+  }
+
+  var lignes = sel ? rechercherParNomExact(sel) : rechercherLibre(libre);
+  afficherResultats(lignes);
+}
+
+function rechercherParNomExact(nom) {
+  var key = nom.toUpperCase();
+  return toutesLignes.filter(function(l) {
+    return l.nomChat.toUpperCase() === key;
+  });
+}
+
+function rechercherLibre(q) {
+  var ql = q.toLowerCase();
+  return toutesLignes.filter(function(l) {
+    return l.nomChat.toLowerCase().includes(ql)
+        || l.nomPers.toLowerCase().includes(ql)
+        || l.prenom.toLowerCase().includes(ql);
+  });
+}
+
+// ============================================================
+// AFFICHAGE
+// ============================================================
+function afficherResultats(lignes) {
+  if (!lignes.length) {
+    document.getElementById('resultats').innerHTML =
+      '<div class="no-result">'
+      + '<div class="icon">🐱</div>'
+      + '<p>Aucun résultat trouvé.<br>'
+      + '<small style="font-size:12px;">Vérifiez l\'orthographe ou essayez un autre terme.</small></p>'
+      + '</div>';
+    return;
+  }
+
+  // Regrouper par nom de chat (clé = nom en majuscules)
+  var parChat = {};
+  lignes.forEach(function(l) {
+    var k = l.nomChat.toUpperCase();
+    if (!parChat[k]) parChat[k] = { nom: l.nomChat, lignes: [] };
+    parChat[k].lignes.push(l);
+  });
+
+  var html = '';
+
+  Object.values(parChat).forEach(function(chat) {
+    var ls = chat.lignes;
+
+    // Trier par date décroissante (plus récent en haut)
+    ls.sort(function(a,b) {
+      return (b.date||'').localeCompare(a.date||'');
+    });
+
+    // Statut principal = événement le plus récent
+    var statutPrincipal = ls.length ? ls[0].type : 'inconnu';
+
+    // En-tête fiche
+    html += '<div class="fiche">';
+    html += '<div class="fiche-header">';
+    html += '<div class="fiche-avatar">🐱</div>';
+    html += '<div>'
+          + '<div class="fiche-nom">' + escH(chat.nom) + '</div>'
+          + '<div class="fiche-sub">' + ls.length + ' événement' + (ls.length > 1 ? 's' : '') + '</div>'
+          + '</div>';
+    html += '<span class="statut-badge s-' + statutPrincipal + '">'
+          + STATUT_LABELS[statutPrincipal] + '</span>';
+    html += '</div>'; // /fiche-header
+
+    // Corps
+    html += '<div class="fiche-body">';
+    html += '<div class="tl-label">Historique</div>';
+    html += '<div class="timeline">';
+
+    ls.forEach(function(l) {
+      var personne = [l.prenom, l.nomPers].filter(Boolean).join(' ');
+      html += '<div class="tl-item tl-' + l.type + '">';
+      html += '<div class="tl-type">' + escH(l.label) + '</div>';
+
+      var dateLigne = '';
+      if (l.date) dateLigne += '📅 ' + escH(l.date);
+      if (l.saisiPar) dateLigne += (dateLigne ? ' &nbsp;·&nbsp; ' : '') + 'Saisi par : ' + escH(l.saisiPar);
+      if (dateLigne) html += '<div class="tl-date">' + dateLigne + '</div>';
+
+      html += '<div class="tl-detail">';
+      if (personne) html += '<span class="lbl">Famille / Personne :</span> ' + escH(personne) + '<br>';
+      if (l.montant) html += '<span class="lbl">Montant :</span> ' + escH(l.montant) + ' €<br>';
+      if (l.paiement) html += '<span class="lbl">Paiement :</span> ' + escH(l.paiement) + '<br>';
+      html += '</div>';
+
+      html += '</div>'; // /tl-item
+    });
+
+    html += '</div>'; // /timeline
+    html += '</div>'; // /fiche-body
+    html += '</div>'; // /fiche
+  });
+
+  document.getElementById('resultats').innerHTML = html;
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function afficherErreur(msg) {
+  var el = document.getElementById('erreur');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function cacherErreur() {
+  document.getElementById('erreur').style.display = 'none';
+}
+function escH(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
