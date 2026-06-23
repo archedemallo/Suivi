@@ -126,6 +126,25 @@ function collectFormData() {
         data['check_paiement'] = modesPaiement.join(', ');
     }
 
+	// Calcul montant
+var montant = 0;
+
+if (document.getElementById('type_adherent')?.classList.contains('checked')) {
+    montant += 20;
+}
+
+if (document.getElementById('type_bienfaiteur')?.classList.contains('checked')) {
+    montant += Number(document.getElementById('donBienfaiteur')?.value || 0);
+}
+
+if (document.getElementById('type_sympathisant')?.classList.contains('checked')) {
+    montant += Number(document.getElementById('donSympatisant')?.value || 0);
+}
+
+data.montantAdhesion = montant;
+
+
+	
     return data;
 }
 
