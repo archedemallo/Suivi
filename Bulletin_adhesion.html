@@ -89,7 +89,11 @@
     </p>
     <p><span class="blue">Portable :</span> <input type="tel" class="editable editable-tel" id="portable" data-required="true" data-label="Téléphone portable"></p>
     <p><span class="blue">Email :</span> <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email"></p>
-	<p><span class="blue">Date de naissance :</span> <input type="date" class="editable editable-date" id="dateNaissanceMembre"></p>
+	<p><span class="blue">Date de naissance :</span>
+<input type="date"
+       class="editable editable-date"
+       id="dateNaissanceMembreAdh"
+       data-label="Date de naissance"></p>
 </div>
 
 <!-- Type d'adhesion -->
@@ -222,17 +226,39 @@ validateRequiredFields = function() {
     });
 
     // Type adhésion obligatoire
-    var typeChecked = document.querySelector('.checkbox[data-group="type"].checked');
-    if (!typeChecked) {
-        missing.push('Type d\'adhésion (au moins une case à cocher)');
-        document.querySelectorAll('.checkbox[data-group="type"]').forEach(function(cb) {
-            cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
-        });
-    } else {
-        document.querySelectorAll('.checkbox[data-group="type"]').forEach(function(cb) {
-            cb.style.outline = '';
-        });
+    var typeIds = [
+    'type_adherent',
+    'type_bienfaiteur',
+    'type_sympathisant'
+];
+
+var typeChecked = false;
+
+typeIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && el.classList.contains('checked')) {
+        typeChecked = true;
     }
+});
+
+if (!typeChecked) {
+    missing.push('Type d\'adhésion (au moins une case à cocher)');
+
+    typeIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.style.outline = '2px solid red';
+            el.style.outlineOffset = '1px';
+        }
+    });
+} else {
+    typeIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.style.outline = '';
+        }
+    });
+}
 
     // Mode de règlement obligatoire
     var payIds = ['pay_virement', 'pay_espece', 'pay_cheque'];
