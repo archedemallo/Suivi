@@ -130,7 +130,7 @@ function collectFormData() {
 var montant = 0;
 
 if (document.getElementById('type_adherent')?.classList.contains('checked')) {
-    montant += 20;
+    montant += Number(document.getElementById('cotisationAdherent')?.value || 20);
 }
 
 if (document.getElementById('type_bienfaiteur')?.classList.contains('checked')) {
