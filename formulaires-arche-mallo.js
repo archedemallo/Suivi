@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwl2IiZDc6gsuRy7TaPE5UVQp22kJe_Z91YHsnlrThrWQSlJzC3MqXBwGkxsEWeY_gOHQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi6VoI-aVRqRn6ggz5hNL2N5oSTIBvtkn7fNnOTd9jTlIB5XztmL_EkuWSun8OBxwyqg/exec';
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
@@ -130,7 +130,9 @@ function collectFormData() {
 var montant = 0;
 
 if (document.getElementById('type_adherent')?.classList.contains('checked')) {
-    montant += Number(document.getElementById('cotisationAdherent')?.value || 20);
+    var valAdherent = Number(document.getElementById('cotisationAdherent')?.value || 20);
+    montant += valAdherent;
+    data.cotisationAdherent = valAdherent;
 }
 
 if (document.getElementById('type_bienfaiteur')?.classList.contains('checked')) {
