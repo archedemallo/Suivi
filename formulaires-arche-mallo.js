@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyi6VoI-aVRqRn6ggz5hNL2N5oSTIBvtkn7fNnOTd9jTlIB5XztmL_EkuWSun8OBxwyqg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzrE8Airs5j5e9X9wOtq6641GEa7VJ8iYubBOSBBjab9_74W6KfQP5iFGD67YmnfRVspg/exec';
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
@@ -72,6 +72,23 @@ function toggleCheck(element, groupName) {
     }
     box.classList.toggle('checked');
 }
+
+// Toggle case à cocher multi-sélection (sans exclusion de groupe)
+function toggleCheckMulti(element) {
+    // Support direct click on div.motif-ligne or span.clickable-row
+    var box = element.querySelector ? element.querySelector('.checkbox') : element;
+    if (box) box.classList.toggle('checked');
+}
+
+// Paiement dynamique : coche le mode ET affiche/masque le détail montant
+function togglePaiement(element, mode) {
+    var box    = element.querySelector('.checkbox');
+    var detail = document.getElementById('detail_' + mode);
+    if (!box) return;
+    box.classList.toggle('checked');
+    if (detail) detail.style.display = box.classList.contains('checked') ? 'inline' : 'none';
+}
+
 // ============================================================
 // COLLECTE DES DONNEES
 // ============================================================
@@ -107,23 +124,47 @@ function collectFormData() {
     // Collecter les modes de paiement (multi-sélection par id)
     var modesPaiement = [];
     var payIds = {
-        'pay_virement': 'Virement',
-        'pay_cb':       'CB',
-        'pay_espece':   'Espèce',
-        'pay_cheque':   'Chèque'
+        'pay_virement':          'Virement',
+        'pay_cb':                'CB',
+        'pay_espece':            'Espèce',
+        'pay_cheque':            'Chèque',
+        'pay_plusieurs_cheques': 'Plusieurs chèques'
     };
     Object.keys(payIds).forEach(function(id) {
         var el = document.getElementById(id);
         if (el && el.classList.contains('checked')) {
             modesPaiement.push(payIds[id]);
+            // Collecter le montant associé si présent
+            var modeKey = id.replace('pay_', '');
+            var montantEl = document.getElementById('montant_' + modeKey);
+            if (montantEl && montantEl.value) {
+                data['montant_' + modeKey] = montantEl.value;
+            }
         }
     });
+    // Plusieurs chèques : collecter N° et montants par chèque
+    var payPlusieurs = document.getElementById('pay_plusieurs_cheques');
+    if (payPlusieurs && payPlusieurs.classList.contains('checked')) {
+        ['1','2','3','4'].forEach(function(n) {
+            var numEl = document.getElementById('cheque' + n);
+            var mtEl  = document.getElementById('montant_cheque' + n);
+            if (numEl && numEl.value) data['cheque' + n] = numEl.value;
+            if (mtEl  && mtEl.value)  data['montant_cheque' + n] = mtEl.value;
+        });
+    }
+    // Rétrocompatibilité ancien champ pay_2cheques
     var pay2 = document.getElementById('pay_2cheques');
     if (pay2 && pay2.classList.contains('checked')) {
         modesPaiement.push('Paiement en plusieurs fois');
     }
     if (modesPaiement.length > 0) {
         data['check_paiement'] = modesPaiement.join(', ');
+    }
+    // Autres animaux : collecter la case "Autre" + texte libre
+    var animalAutre = document.getElementById('animal_autre');
+    if (animalAutre && animalAutre.classList.contains('checked')) {
+        var animalAutreTexte = document.getElementById('animal_autre_texte');
+        data['animal_autre'] = animalAutreTexte ? animalAutreTexte.value : 'Autre';
     }
 
 	// Calcul montant
@@ -174,6 +215,23 @@ function buildFilename(data) {
 // CONSTRUIRE HTML AVEC DONNEES
 // ============================================================
 function buildHtmlWithData() {
+    // Injecter la photo avant de sérialiser le DOM
+    // (important : la photo doit être dans le DOM avant outerHTML)
+    var previewAnimal = document.getElementById('preview_Animal');
+    var photoSrcSaved = '';
+    if (previewAnimal) {
+        var previewImg = previewAnimal.querySelector('img');
+        if (previewImg && previewImg.src && previewImg.src.startsWith('data:')) {
+            photoSrcSaved = previewImg.src;
+        } else if (previewAnimal._photoBase64) {
+            photoSrcSaved = previewAnimal._photoBase64;
+        }
+        // Si on a la photo, s'assurer que l'img est bien dans le div AVANT outerHTML
+        if (photoSrcSaved && (!previewImg || !previewImg.src.startsWith('data:'))) {
+            previewAnimal.innerHTML = '<img src="' + photoSrcSaved + '" style="max-width:220px;max-height:160px;display:block;border:1px solid #ccc;border-radius:4px;">';
+        }
+    }
+
     var html = document.documentElement.outerHTML;
 
     document.querySelectorAll('input.editable').forEach(function(input) {
@@ -218,6 +276,9 @@ function buildHtmlWithData() {
 '#puce,#nom,#prenom,#adresse,#email,#nomAttestation{min-width:300px!important;width:auto!important;}' +
         'label[style*="background:#0563c1"]{display:none!important}' +
 '.preview-wrap p.small{display:none!important}' +
+        '.no-print{display:none!important}' +
+        '#preview_Animal{display:block!important;}' +
+        '#preview_Animal img{display:block!important;max-width:220px!important;max-height:160px!important;border:1px solid #ccc!important;}' +
         '</style>');
 
     // Injecter les images de signature dans les placeholders
@@ -252,7 +313,31 @@ function buildHtmlWithData() {
             + affichage + '</span>';
     }
 );
-    
+    // ── Injecter la photo de l'animal dans le HTML ──────────
+    // La <img> est déjà dans le DOM (mise par aperçuPhoto via FileReader.onload)
+    // On récupère son src base64 et on l'injecte explicitement dans le html sérialisé.
+    var previewAnimal = document.getElementById('preview_Animal');
+    if (previewAnimal) {
+        var previewImg = previewAnimal.querySelector('img');
+        var photoSrc = '';
+        // Essai 1 : img déjà dans le DOM avec src base64
+        if (previewImg && previewImg.src && previewImg.src.startsWith('data:')) {
+            photoSrc = previewImg.src;
+        }
+        // Essai 2 : src stocké sur le div via _photoBase64
+        if (!photoSrc && previewAnimal._photoBase64) {
+            photoSrc = previewAnimal._photoBase64;
+        }
+
+        if (photoSrc) {
+            var photoHtml = '<div id="preview_Animal" style="margin-top:8px;margin-bottom:8px;page-break-inside:avoid;">' +
+                '<img src="' + photoSrc + '" style="max-width:220px;max-height:160px;display:block;border:1px solid #ccc;border-radius:4px;">' +
+                '</div>';
+            // Remplacer TOUTES les occurrences du div preview_Animal dans le html
+            html = html.replace(/<div id="preview_Animal"[^>]*>[\s\S]*?<\/div>/g, photoHtml);
+        }
+    }
+
     return html;
 }
 
@@ -308,12 +393,26 @@ function validateRequiredFields() {
         }
     });
 
-    // Cases "Lu et approuvé"
-    ['luApprouve1', 'luApprouve2'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el && !el.querySelector('.checkbox').classList.contains('checked')) {
-            var labels = { luApprouve1: 'Lu et approuvé ( Mallo)', luApprouve2: 'Lu et approuvé (Adoptant)' };
-            missing.push(labels[id]);
+    // Cases "Lu et approuvé" — cherche luApprouve1 et luApprouve2 par préfixe (tous suffixes : _fa, _dep, _resa, _ab, etc.)
+    ['luApprouve1', 'luApprouve2'].forEach(function(prefix) {
+        // Cherche d'abord l'ID exact, sinon cherche un ID qui commence par ce préfixe
+        var el = document.getElementById(prefix);
+        if (!el) {
+            el = document.querySelector('[id^="' + prefix + '"]');
+        }
+        if (el) {
+            var box = el.querySelector('.checkbox');
+            if (box && !box.classList.contains('checked')) {
+                var labels = {
+                    luApprouve1: 'Lu et approuvé (L\'Arche de Mallo)',
+                    luApprouve2: 'Lu et approuvé (Signataire)'
+                };
+                missing.push(labels[prefix]);
+                box.style.outline = '2px solid red';
+                box.style.outlineOffset = '1px';
+            } else if (box) {
+                box.style.outline = '';
+            }
         }
     });
 
@@ -344,49 +443,31 @@ function validateRequiredFields() {
     }
 	
     // Paiement : au moins un mode obligatoire
-    var paiementCoche = document.querySelector('#pay_virement.checked, #pay_cb.checked, #pay_espece.checked, #pay_cheque.checked');
-    var pay2cheques   = document.getElementById('pay_2cheques');
-    if (!paiementCoche && !(pay2cheques && pay2cheques.classList.contains('checked'))) {
+    var allPayIds = ['pay_virement','pay_cb','pay_espece','pay_cheque','pay_plusieurs_cheques','pay_2cheques'];
+    var paiementCoche = allPayIds.some(function(id) {
+        var el = document.getElementById(id);
+        return el && el.classList.contains('checked');
+    });
+    if (!paiementCoche) {
         missing.push('Mode de règlement (au moins un à cocher)');
+        allPayIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) { el.style.outline = '2px solid red'; el.style.outlineOffset = '1px'; }
+        });
+    } else {
+        allPayIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.outline = '';
+        });
     }
 
     // N° chèque obligatoire si Chèque coché
     var payCheque = document.getElementById('pay_cheque');
     if (payCheque && payCheque.classList.contains('checked')) {
-        var numPaiement = document.getElementById('numeroPaiement');
+        var numPaiement = document.getElementById('numeroPaiement') || document.getElementById('numeroCheque');
         if (!numPaiement || !numPaiement.value.trim()) {
             missing.push('Numéro de chèque');
-            if (numPaiement) numPaiement.style.borderBottom = '2px solid red';  // ← rouge
-        }
-    }
-
-    // Paiement en plusieurs fois : soit 2 chèques remplis, soit au moins 3 des 4 chèques remplis
-    if (pay2cheques && pay2cheques.classList.contains('checked')) {
-        var val1 = (document.getElementById('cheque1') || {}).value || '';
-        var val2 = (document.getElementById('cheque2') || {}).value || '';
-        var vals4 = ['cheque3','cheque4','cheque5','cheque6'].map(function(id) {
-            return ((document.getElementById(id) || {}).value || '').trim();
-        });
-        var nb4remplis = vals4.filter(function(v) { return v !== ''; }).length;
-
-        var ok2 = val1.trim() && val2.trim();          // les 2 chèques remplis
-        var ok4 = nb4remplis >= 3;                     // au moins 3 des 4 chèques remplis
-
-        if (!ok2 && !ok4) {
-            missing.push('Paiement en plusieurs fois : remplir les 2 chèques OU au moins 3 des 4 chèques');
-            // Mettre en rouge les champs vides selon le contexte
-            if (!ok2) {
-                ['cheque1','cheque2'].forEach(function(id) {
-                    var el = document.getElementById(id);
-                    if (el && !el.value.trim()) el.style.borderBottom = '2px solid red';
-                });
-            }
-            if (!ok4) {
-                ['cheque3','cheque4','cheque5','cheque6'].forEach(function(id, i) {
-                    var el = document.getElementById(id);
-                    if (el && !vals4[i]) el.style.borderBottom = '2px solid red';
-                });
-            }
+            if (numPaiement) numPaiement.style.borderBottom = '2px solid red';
         }
     }
 
@@ -434,6 +515,18 @@ function validateRequiredFields() {
             el.style.borderBottom = '2px solid red';
         }
     });
+
+    // Photo de l'animal — obligatoire si le champ existe dans le formulaire
+    var photoAnimalInput = document.getElementById('photoAnimal');
+    if (photoAnimalInput) {
+        var lblAnimal = photoAnimalInput.parentElement;
+        if (!photoAnimalInput.files || !photoAnimalInput.files[0]) {
+            missing.push("Photo de l'animal (obligatoire)");
+            if (lblAnimal) lblAnimal.style.outline = '2px solid red';
+        } else {
+            if (lblAnimal) lblAnimal.style.outline = '';
+        }
+    }
 
     return missing;
 }
@@ -499,6 +592,12 @@ async function saveForm() {
             btnPrint.className   = 'btn btn-print';
             btnPrint.disabled    = false;
         }
+
+        // Hook post-save : permet à chaque formulaire d'envoyer ses photos
+        if (typeof postSavePhotos === 'function') {
+            await postSavePhotos(data, filename);
+        }
+
         afficherMessage('✅ Mail généré<br>Vous pouvez maintenant imprimer si besoin.');
     } else {
         alert('Erreur lors de la sauvegarde. Verifiez votre connexion.');
@@ -761,5 +860,150 @@ function majObligatoire(group, champIds, valeursOui) {
             el.removeAttribute('data-required');
             el.style.borderBottom = '';
         }
+    });
+}
+
+// ============================================================
+// PHOTO — aperçu + redimensionnement (partagé)
+// ============================================================
+function aperçuPhoto(input, previewId) {
+    var preview = document.getElementById(previewId);
+    if (!preview) return;
+    if (!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var src = e.target.result;
+        preview.innerHTML = '<img src="' + src + '" style="max-width:200px;max-height:150px;margin-top:4px;border:1px solid #ccc;border-radius:4px;" alt="Photo animal">' +
+            '<br><span class="no-print" style="font-size:10px;color:green;">✔ ' + file.name + '</span>';
+        // Stocker sur le div ET sur l'img pour retrouver dans buildHtmlWithData
+        preview._photoBase64 = src;
+        var img = preview.querySelector('img');
+        if (img) img._photoBase64 = src;
+    };
+    reader.readAsDataURL(file);
+}
+
+function redimensionnerImage(file, callback) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var max = 1200;
+            var w = img.width, h = img.height;
+            if (w > max || h > max) {
+                if (w > h) { h = Math.round(h * max / w); w = max; }
+                else       { w = Math.round(w * max / h); h = max; }
+            }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            callback(canvas.toDataURL('image/jpeg', 0.7).split(',')[1]);
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+/**
+ * Envoie la photo "photoAnimal" à Apps Script.
+ * @param {string} onglet   - nom de l'onglet Google Sheets (ex: 'Famille_Accueil_Provisoire')
+ * @param {string} nomPers  - nom de la personne (adoptant, famille, etc.)
+ * @param {string} nomAnimal - nom du chat/animal
+ * @param {string} dateStr  - date au format YYYY-MM-DD
+ */
+// ============================================================
+// PRÉ-REMPLISSAGE DEPUIS URL (?prefill=...)
+// ============================================================
+
+/**
+ * À appeler dans le DOMContentLoaded de chaque formulaire.
+ * Lit le paramètre ?prefill= dans l'URL et remplit tous les champs
+ * dont l'id correspond à une clé du JSON.
+ *
+ * Exemple d'appel dans un formulaire :
+ *   document.addEventListener('DOMContentLoaded', function() {
+ *       creerEntete({ ... });
+ *       appliquerPrefill();   // <-- ajouter cette ligne
+ *   });
+ */
+function appliquerPrefill() {
+    try {
+        var params = new URLSearchParams(window.location.search);
+        var raw    = params.get('prefill');
+        if (!raw) return;
+
+        var data = JSON.parse(decodeURIComponent(raw));
+        if (!data || typeof data !== 'object') return;
+
+        // Bannière d'info discrète
+        var banner = document.createElement('div');
+        banner.style.cssText = [
+            'position:fixed', 'top:0', 'left:0', 'right:0', 'z-index:9999',
+            'background:#2a7a4b', 'color:#fff', 'text-align:center',
+            'font-family:DM Sans,Arial,sans-serif', 'font-size:13pt',
+            'padding:9px 16px', 'box-shadow:0 2px 8px rgba(0,0,0,0.15)',
+            'display:flex', 'align-items:center', 'justify-content:center', 'gap:12px'
+        ].join(';');
+        banner.innerHTML = '✅ Formulaire pré-rempli depuis les données existantes'
+            + ' <button onclick="this.parentElement.remove()" style="'
+            + 'background:rgba(255,255,255,0.25);border:none;border-radius:6px;'
+            + 'color:#fff;font-size:12pt;padding:2px 10px;cursor:pointer;margin-left:8px;">✕</button>';
+        document.body.appendChild(banner);
+        setTimeout(function() { if (banner.parentElement) banner.remove(); }, 5000);
+
+        // Remplir les champs input et textarea
+        var remplis = 0;
+        Object.keys(data).forEach(function(cle) {
+            if (cle === '_source') return;
+            var val = data[cle];
+            if (!val || String(val).trim() === '') return;
+
+            var el = document.getElementById(cle);
+            if (!el) return;
+
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                // Convertir date JJ/MM/AAAA → AAAA-MM-JJ pour les input[type=date]
+                if (el.type === 'date') {
+                    var parts = String(val).split('/');
+                    if (parts.length === 3) {
+                        val = parts[2] + '-' + parts[1] + '-' + parts[0];
+                    }
+                }
+                el.value = val;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                remplis++;
+            }
+        });
+
+        console.log('[Prefill] ' + remplis + ' champ(s) pré-rempli(s) depuis ' + (data._source || '?'));
+
+    } catch(e) {
+        console.warn('[Prefill] Erreur lors du pré-remplissage :', e.message);
+    }
+}
+
+async function envoyerPhotoAnimal(onglet, nomPers, nomAnimal, dateStr) {
+    var input = document.getElementById('photoAnimal');
+    if (!input || !input.files || !input.files[0]) return;
+    var nom    = (nomPers   || 'Inconnu').replace(/\s+/g, '_');
+    var animal = (nomAnimal || 'Animal' ).replace(/\s+/g, '_');
+    var date   = dateStr || new Date().toISOString().split('T')[0];
+    var filename = nom + '_' + animal + '_Photo_' + date;
+    await new Promise(function(resolve) {
+        redimensionnerImage(input.files[0], function(base64) {
+            fetch(window.APPS_SCRIPT_URL || APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action:      'photo',
+                    onglet:      onglet,
+                    filename:    filename,
+                    imageBase64: base64,
+                    mimeType:    'image/jpeg'
+                })
+            }).then(resolve).catch(resolve);
+        });
     });
 }

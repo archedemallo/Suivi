@@ -368,14 +368,27 @@
 <!-- GRILLE DES FORMULAIRES -->
 <div class="grid-container">
 
-    <!-- ADOPTION -->
-    <div class="section-label">🏠 CESSION</div>
+    <!-- 0. ACCÈS RAPIDE -->
+    <div class="section-label">✨ Accès rapide</div>
+    <div class="grid">
+        <a class="card" href="formulaires_preremplis.html" style="border-color:var(--orange);background:linear-gradient(135deg,#fff8f0,#fff3e6);">
+            <div class="card-icon" style="background:var(--warm);">🔍</div>
+            <div class="card-text">
+                <div class="card-title">Formulaires pré-remplis</div>
+                <div class="card-desc">Rechercher un chat ou une personne et ouvrir un formulaire pré-rempli automatiquement</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+    </div>
+
+    <!-- 1. CESSION -->
+    <div class="section-label">🏠 Cession</div>
     <div class="grid">
         <a class="card" href="Contrat_adoption.html">
             <div class="card-icon">📋</div>
             <div class="card-text">
                 <div class="card-title">Contrat de cession à charge</div>
-                <div class="card-desc">Contrat complet de cession à charge avec engagement stérilisation et frais</div>
+                <div class="card-desc">Contrat complet avec engagement stérilisation et frais</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
@@ -387,10 +400,17 @@
             </div>
             <div class="card-arrow">›</div>
         </a>
-        
+        <a class="card" href="Formulaire_decharge_vaccin.html">
+            <div class="card-icon">💉</div>
+            <div class="card-text">
+                <div class="card-title">Décharge — Adoption avant 2ème vaccin</div>
+                <div class="card-desc">Engagement de l'adoptant à faire le rappel vaccinal</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
     </div>
 
-    <!-- RÉSERVATION -->
+    <!-- 2. RÉSERVATION -->
     <div class="section-label">📅 Réservation</div>
     <div class="grid">
         <a class="card" href="Contrat_reservation_chat.html">
@@ -409,45 +429,45 @@
             </div>
             <div class="card-arrow">›</div>
         </a>
+        <a class="card" href="Contrat_reservation_autre_animal.html">
+            <div class="card-icon">🐇</div>
+            <div class="card-text">
+                <div class="card-title">Contrat de réservation — Autre animal</div>
+                <div class="card-desc">Réservation pour lapin, chien ou autre animal</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
     </div>
 
-    <!-- FAMILLE D'ACCUEIL -->
-    <div class="section-label">🏡 Famille d'accueil</div>
+    <!-- 3. DÉPÔT & ABANDON -->
+    <div class="section-label">📌 Adhésion & Dons</div>
     <div class="grid">
-        <a class="card" href="Formulaire_famille_accueil_provisoire.html">
-            <div class="card-icon">⏳</div>
+        <a class="card" href="Bulletin_adhesion.html">
+            <div class="card-icon">🎫</div>
             <div class="card-text">
-                <div class="card-title">Famille d'accueil provisoire</div>
-                <div class="card-desc">Contrat d'accueil temporaire en attente d'adoption</div>
+                <div class="card-title">Bulletin d'adhésion</div>
+                <div class="card-desc">Adhérer à l'association L'Arche de Mallo</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
-        <a class="card" href="Formulaire_famille_accueil_definitive_chat_libre.html">
-            <div class="card-icon">🌿</div>
+        <a class="card" href="Dons.html">
+            <div class="card-icon">💝</div>
             <div class="card-text">
-                <div class="card-title">Famille d'accueil — chat libre</div>
-                <div class="card-desc">Accueil définitif pour chat vivant en extérieur</div>
-            </div>
-            <div class="card-arrow">›</div>
-        </a>
-		<a class="card" href="Contrat_famille_accueil_adoption_definitive.html">
-            <div class="card-icon">🤝</div>
-            <div class="card-text">
-                <div class="card-title">Famille d'accueil — adoption définitive</div>
-                <div class="card-desc">Contrat de mise en famille d'accueil avant adoption</div>
+                <div class="card-title">Dons à l'Arche de Mallo</div>
+                <div class="card-desc">Reçu de don avec possibilité de reçu fiscal</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
     </div>
 
-    <!-- DÉPÔT & ABANDON -->
+    <!-- 7. IMPRESSION -->
     <div class="section-label">📥 Dépôt & Abandon</div>
     <div class="grid">
         <a class="card" href="Formulaire_depot_chat.html">
-            <div class="card-icon">📦</div>
+            <div class="card-icon">🏠</div>
             <div class="card-text">
                 <div class="card-title">Formulaire de dépôt chat / chaton</div>
-                <div class="card-desc">Dépôt de chats errants trouvés sur la commune</div>
+                <div class="card-desc">Dépôt temporaire de chat ou chaton à l'association</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
@@ -455,47 +475,82 @@
             <div class="card-icon">💔</div>
             <div class="card-text">
                 <div class="card-title">Formulaire d'abandon</div>
-                <div class="card-desc">Cession définitive d'un animal à l'association</div>
+                <div class="card-desc">Formulaire de remise d'un animal à l'association</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
     </div>
 
-    <!-- ADHÉSION & DONS -->
-    <div class="section-label">📌 Adhésion & Dons - Soutenir l'association</div>
+    <!-- 4. FAMILLE D'ACCUEIL -->
+    <div class="section-label">🏡 Famille d'accueil</div>
     <div class="grid">
-        <a class="card" href="Bulletin_adhesion.html">
-            <div class="card-icon">🎗️</div>
+        <a class="card" href="Formulaire_famille_accueil_provisoire.html">
+            <div class="card-icon">🤝</div>
             <div class="card-text">
-                <div class="card-title">Bulletin d'adhésion</div>
-                <div class="card-desc">Adhésion annuelle à l'association L'Arche de Mallo</div>
+                <div class="card-title">Famille d'accueil provisoire</div>
+                <div class="card-desc">Contrat d'accueil temporaire d'un animal</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
-		<a class="card" href="Dons.html">
-            <div class="card-icon">💝️</div>
+        <a class="card" href="Formulaire_famille_accueil_definitive_chat_libre.html">
+            <div class="card-icon">🌿</div>
             <div class="card-text">
-                <div class="card-title">Dons à l'Arche de Mallo</div>
-                <div class="card-desc">Faire un Don à l'association L'Arche de Mallo</div>
+                <div class="card-title">Famille d'accueil — chat libre</div>
+                <div class="card-desc">Accueil définitif d'un chat en liberté</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Contrat_famille_accueil_adoption_definitive.html">
+            <div class="card-icon">❤️</div>
+            <div class="card-text">
+                <div class="card-title">Famille d'accueil — adoption définitive</div>
+                <div class="card-desc">Contrat d'adoption définitive par la famille d'accueil</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
     </div>
 
+    <!-- 5. FORMULAIRES DIVERS -->
+    <div class="section-label">📝 Formulaires divers</div>
+    <div class="grid">
+        <a class="card" href="Formulaire_CBS_absent.html">
+            <div class="card-icon">🩺</div>
+            <div class="card-text">
+                <div class="card-title">Attestation CBS Absent</div>
+                <div class="card-desc">Attestation d'absence de certificat de bonne santé</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Formulaire_pret_materiel.html">
+            <div class="card-icon">🪤</div>
+            <div class="card-text">
+                <div class="card-title">Contrat de prêt de matériel</div>
+                <div class="card-desc">Prêt de cage trappe ou transport pour trappage</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Formulaire_retour_materiel.html">
+            <div class="card-icon">↩️</div>
+            <div class="card-text">
+                <div class="card-title">Retour de matériel</div>
+                <div class="card-desc">Constat de retour et restitution de la caution</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+    </div>
 
-	
-	<!-- IMPRESSION -->
-	<div class="section-label">🖨️ Impression</div>
-	<div class="grid">
-		<a class="card" href="Fiche_Conseils.pdf">
-			<div class="card-icon">📄</div>
-			<div class="card-text">
-				<div class="card-title">Fiche Conseils</div>
-				<div class="card-desc">Cliquez pour ouvrir et imprimer</div>
-			</div>
-			<div class="card-arrow">›</div>
-		</a>
-	        <a class="card" href="Tableau_des_adoptions.pdf">
+    <!-- 6. ADHÉSION & DONS -->
+    <div class="section-label">🖨️ Impression</div>
+    <div class="grid">
+        <a class="card" href="Fiche_Conseils.pdf">
+            <div class="card-icon">📄</div>
+            <div class="card-text">
+                <div class="card-title">Fiche Conseils</div>
+                <div class="card-desc">Cliquez pour ouvrir et imprimer</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Tableau_des_adoptions.pdf">
             <div class="card-icon">📄</div>
             <div class="card-text">
                 <div class="card-title">Tableau des adoptions</div>
@@ -503,31 +558,53 @@
             </div>
             <div class="card-arrow">›</div>
         </a>
-		<a class="card" href="Tableau_des_vermifuges_et_Anti-puces.pdf">
+        <a class="card" href="Tableau_des_vermifuges_et_Anti-puces.pdf">
             <div class="card-icon">📄</div>
             <div class="card-text">
-                <div class="card-title">Tableau des vermifuges et Anti-puces</div>
+                <div class="card-title">Tableau vermifuges et Anti-puces</div>
+                <div class="card-desc">Cliquez pour ouvrir et imprimer</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Tableau_chats_libres.pdf">
+            <div class="card-icon">📋</div>
+            <div class="card-text">
+                <div class="card-title">Tableau des chats libres</div>
+                <div class="card-desc">Cliquez pour ouvrir et imprimer</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Tableau_des_dons.pdf">
+            <div class="card-icon">📋</div>
+            <div class="card-text">
+                <div class="card-title">Tableau des dons</div>
+                <div class="card-desc">Cliquez pour ouvrir et imprimer</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Contrat_pret_de_materiel.pdf">
+            <div class="card-icon">🪤</div>
+            <div class="card-text">
+                <div class="card-title">Contrat prêt de matériel (PDF)</div>
                 <div class="card-desc">Cliquez pour ouvrir et imprimer</div>
             </div>
             <div class="card-arrow">›</div>
         </a>
     </div>
 
-
-<!-- Tableau de bord -->
-	<div class="section-label">📊 Tableau de bord</div>
-	<div class="grid">
-	<a class="card" href="https://script.google.com/macros/s/AKfycbwl2IiZDc6gsuRy7TaPE5UVQp22kJe_Z91YHsnlrThrWQSlJzC3MqXBwGkxsEWeY_gOHQ/exec">
-    <div class="card-icon">📊</div>
-    <div class="card-text">
-        <div class="card-title">Tableau de bord</div>
-        <div class="card-desc">Consultation des formulaires par période</div>
+    <!-- 8. TABLEAU DE BORD -->
+    <div class="section-label">📊 Tableau de bord</div>
+    <div class="grid">
+        <a class="card" href="https://script.google.com/macros/s/AKfycbwmmCwwCdbkbxQ0ZyC1lyX_ivtQIYU5_DtR11edovFNRSaXzc4JDsTWNlp_58cn-tQExA/exec">
+            <div class="card-icon">📊</div>
+            <div class="card-text">
+                <div class="card-title">Tableau de bord</div>
+                <div class="card-desc">Consultation des formulaires par période</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
     </div>
-    <div class="card-arrow">›</div>
-</a>
- </div>
 
-	
 <footer>
     Association L'Arche de Mallo — 8 ter rue d'Eschène, 90140 Autrechêne — 07 71 64 69 89
 </footer>

@@ -35,24 +35,56 @@
     </p>
 
     <p><span class="blue">Mode de paiement :</span></p>
-    <p>
-        <span class="clickable-row" onclick="toggleCheckMulti(this)">
-            <span class="checkbox" id="pay_espece"></span> Espèces
-        </span>
-        &nbsp;&nbsp;&nbsp;
-        <span class="clickable-row" onclick="toggleCheckMulti(this)">
-            <span class="checkbox" id="pay_cb"></span> CB
-        </span>
-        &nbsp;&nbsp;&nbsp;
-        <span class="clickable-row" onclick="toggleCheckMulti(this)">
-            <span class="checkbox" id="pay_virement"></span> Virement
-        </span>
-        &nbsp;&nbsp;&nbsp;
-        <span class="clickable-row" onclick="toggleCheckMulti(this)">
-            <span class="checkbox" id="pay_cheque"></span> Chèque
-        </span>
-        <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroCheque" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
-    </p>
+    <div id="paiement-section">
+        <div class="paiement-ligne">
+            <span class="clickable-row" onclick="togglePaiement(this, 'espece')">
+                <span class="checkbox" id="pay_espece"></span> Espèces
+            </span>
+            <span id="detail_espece" style="display:none;">
+                &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_espece" min="0" step="0.01"> €
+            </span>
+        </div>
+        <div class="paiement-ligne">
+            <span class="clickable-row" onclick="togglePaiement(this, 'cb')">
+                <span class="checkbox" id="pay_cb"></span> CB
+            </span>
+            <span id="detail_cb" style="display:none;">
+                &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_cb" min="0" step="0.01"> €
+            </span>
+        </div>
+        <div class="paiement-ligne">
+            <span class="clickable-row" onclick="togglePaiement(this, 'virement')">
+                <span class="checkbox" id="pay_virement"></span> Virement
+            </span>
+            <span id="detail_virement" style="display:none;">
+                &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_virement" min="0" step="0.01"> €
+            </span>
+        </div>
+        <div class="paiement-ligne">
+            <span class="clickable-row" onclick="togglePaiement(this, 'cheque')">
+                <span class="checkbox" id="pay_cheque"></span> Chèque
+            </span>
+            <span id="detail_cheque" style="display:none;">
+                &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_cheque" min="0" step="0.01"> €
+                &nbsp; N° <input type="text" class="editable editable-medium" id="numeroCheque" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </span>
+        </div>
+        <div class="paiement-ligne">
+            <span class="clickable-row" onclick="togglePaiement(this, 'plusieurs_cheques')">
+                <span class="checkbox" id="pay_plusieurs_cheques"></span> Plusieurs chèques
+            </span>
+            <span id="detail_plusieurs_cheques" style="display:none;">
+                <br>&nbsp;&nbsp;
+                N°1 <input type="text" class="editable editable-short" id="cheque1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque1" min="0" step="0.01"> €
+                <br>&nbsp;&nbsp;
+                N°2 <input type="text" class="editable editable-short" id="cheque2" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque2" min="0" step="0.01"> €
+                <br>&nbsp;&nbsp;
+                N°3 <input type="text" class="editable editable-short" id="cheque3" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque3" min="0" step="0.01"> €
+                <br>&nbsp;&nbsp;
+                N°4 <input type="text" class="editable editable-short" id="cheque4" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque4" min="0" step="0.01"> €
+            </span>
+        </div>
+    </div>
 
     <br>
 
@@ -134,7 +166,7 @@
     </p>
     <p>
         <span class="blue">Code postal :</span>
-        <input type="text" class="editable editable-short" id="codePostal" data-label="Code postal">
+        <input type="text" class="editable editable-short" id="codePostal" data-label="Code postal" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         &nbsp;&nbsp;
         <span class="blue">Ville :</span>
         <input type="text" class="editable editable-medium" id="ville" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
@@ -196,6 +228,7 @@
 creerEntete({ dateId: 'dateEntete', dateLabel: 'Date :' });
 creerSignature('sig1');
 creerSignature('sig2');
+appliquerPrefill();
 
 var today = new Date().toISOString().split('T')[0];
 ['dateEntete', 'dateFait', 'dateSignature'].forEach(function(id) {
@@ -303,7 +336,7 @@ validateRequiredFields = function() {
     }
 
     // Mode de paiement obligatoire
-    var payIds = ['pay_espece', 'pay_cb', 'pay_virement', 'pay_cheque'];
+    var payIds = ['pay_espece', 'pay_cb', 'pay_virement', 'pay_cheque', 'pay_plusieurs_cheques'];
     var paiementCoche = payIds.some(function(id) {
         var el = document.getElementById(id);
         return el && el.classList.contains('checked');

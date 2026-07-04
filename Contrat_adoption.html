@@ -47,12 +47,15 @@ sous le n°W901006456, représentée par <em>Mallory ORTEGA</em> déclare confie
     <p>    <span class="blue">Né(e) le : </span><input type="date" class="editable editable-date" id="dateNaissance">
         </p>
 </div>
-    <p><span class="blue">N° de puce ou tatouage : </span><input type="text" class="editable editable-long" id="puce"></p>
+    <p><span class="blue">N° de puce ou tatouage : </span><input type="text" class="editable editable-long" id="puce" data-required="true" data-label="N° de puce ou tatouage" oninput="var p=document.getElementById('numeroPasseport'); if(p && !p._modifiedByUser) p.value=this.value;"></p>
     <p><span class="blue">Couleur : </span><input type="text" class="editable editable-long" id="couleur" data-required="true" data-label="Couleur"></p>
     <p>
         <span class="blue">Stérilisé :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')"><span class="checkbox" data-group="sterilise"></span> OUI</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'sterilise')"><span class="checkbox" data-group="sterilise"></span> NON</span>
+        &nbsp;&nbsp;
+        <span class="blue">Date stérilisation prévue :</span>
+        <input type="date" class="editable editable-date" id="dateSterilisationPrevue" data-label="Date stérilisation prévue">
     </p>
     <p>
        <span class="blue"> Vermifugé :</span>
@@ -90,14 +93,14 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     </p>
     <p><span class="blue">
         Vaccin Coryza-Typhus :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin'); majObligatoire('vaccin', ['dateVaccin','dateRappel'], ['Primo','Secundo'])"><span class="checkbox" data-group="vaccin"></span> NON</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin'); majObligatoire('vaccin', ['dateVaccin','dateRappel'], ['Primo','Secundo'])"><span class="checkbox" data-group="vaccin"></span> Primo</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'vaccin'); majObligatoire('vaccin', ['dateVaccin','dateRappel'], ['Primo','Secundo'])"><span class="checkbox" data-group="vaccin"></span> Secundo</span>
+        <span class="clickable-row" onclick="var n=document.getElementById('vaccin_non'); if(n){n.classList.toggle('checked'); if(n.classList.contains('checked')){['vaccin_primo','vaccin_secundo'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('checked');});}}"><span class="checkbox" data-group="vaccin_non" id="vaccin_non"></span> NON</span>
+        <span class="clickable-row" onclick="toggleCheckMultiVaccin(this, 'vaccin_primo')"><span class="checkbox" id="vaccin_primo"></span> Primo</span>
+        <span class="clickable-row" onclick="toggleCheckMultiVaccin(this, 'vaccin_secundo')"><span class="checkbox" id="vaccin_secundo"></span> Secundo</span>
     </p>
     <p><span class="blue">
-        Date de vaccin : </span><input type="date" class="editable editable-date" id="dateVaccin">
+        Date vaccin Primo : </span><input type="date" class="editable editable-date" id="dateVaccin">
         <span class="blue">
-        Date de rappel : </span><input type="date" class="editable editable-date" id="dateRappel">
+        Date vaccin Secundo / Rappel : </span><input type="date" class="editable editable-date" id="dateRappel">
     </p>
 </div>
 <br>
@@ -122,7 +125,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     <p><span class="blue">Prénom :</span> <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom" oninput="majNomAttestation(); this.value=this.value.toUpperCase()"></p>
     <p><span class="blue">Adresse :</span> <input type="text" class="editable editable-long" id="adresse" data-required="true" data-label="Adresse"></p>
     <p>
-        <span class="blue">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal">
+        <span class="blue">Code postal :</span> <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
         &nbsp;&nbsp;
         <span class="blue">Ville :</span> <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
     </p>
@@ -131,6 +134,20 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
 </div>
 	
  <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
+
+<!-- Photo de l'animal -->
+<div class="section">
+    <p class="bold blue no-print">📷 Photo de l'animal <span class="red">*</span> (obligatoire)</p>
+    <div class="no-print" style="margin:8px 0;">
+        <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+            📷 Prendre en photo
+            <input type="file" accept="image/*" capture="environment" id="photoAnimal" style="display:none;"
+                onchange="aperçuPhoto(this, 'preview_Animal')">
+        </label>
+    </div>
+    <!-- Aperçu visible dans le PDF — HORS no-print intentionnellement -->
+    <div id="preview_Animal" style="margin-top:6px;"></div>
+</div>
 
 <div class="section">
     <p class="bold blue">Pièce d'identité :
@@ -188,6 +205,50 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
                     onchange="aperçuPhoto(this, 'preview_Domicile_2')">
             </label>
             <div id="preview_Domicile_2" style="margin-top:6px;"></div>
+        </div>
+    </div>
+
+    <p class="bold blue mt-20">Certificat de Bonne Santé (CBS) :
+        <span class="clickable-row" onclick="toggleCheck(this, 'cbs_statut')">
+            <span class="checkbox" data-group="cbs_statut"></span> Fourni
+        </span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'cbs_statut')">
+            <span class="checkbox" data-group="cbs_statut"></span> À fournir
+        </span>
+    </p>
+    <div class="no-print" style="display:flex; gap:20px; flex-wrap:wrap; margin:8px 0;">
+        <div>
+            <p class="small">Page 1</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoCBS_1" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_CBS_1')">
+            </label>
+            <div id="preview_CBS_1" style="margin-top:6px;"></div>
+        </div>
+    </div>
+
+    <p class="bold blue mt-20">📒 Carnet de santé — pages vaccins :
+        <span style="font-size:0.9em; font-weight:normal; color:#555;"></span>
+    </p>
+    <div class="no-print" style="display:flex; gap:20px; flex-wrap:wrap; margin:8px 0;">
+        <div>
+            <p class="small">Page vaccin 1</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoCarnetSante_1" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_CarnetSante_1')">
+            </label>
+            <div id="preview_CarnetSante_1" style="margin-top:6px;"></div>
+        </div>
+        <div>
+            <p class="small">Page vaccin 2</p>
+            <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+                📷 Prendre en photo
+                <input type="file" accept="image/*" capture="environment" id="photoCarnetSante_2" style="display:none;"
+                    onchange="aperçuPhoto(this, 'preview_CarnetSante_2')">
+            </label>
+            <div id="preview_CarnetSante_2" style="margin-top:6px;"></div>
         </div>
     </div>
 </div>
@@ -312,43 +373,56 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
 
     <!-- Paiement : multi-sélection -->
 <p><strong><span class="blue">Paiement effectué par :</span></strong></p>
-<p>
-    <span class="clickable-row" onclick="toggleCheckMulti(this)">
-        <span class="checkbox" id="pay_virement"></span> Virement
-    </span>
-    &nbsp;&nbsp;&nbsp;
-    <span class="clickable-row" onclick="toggleCheckMulti(this)">
-        <span class="checkbox" id="pay_cb"></span> CB
-    </span>
-    &nbsp;&nbsp;&nbsp;
-    <span class="clickable-row" onclick="toggleCheckMulti(this)">
-        <span class="checkbox" id="pay_espece"></span> Espèce
-    </span>
-    &nbsp;&nbsp;&nbsp;
-    <span class="clickable-row" onclick="toggleCheckMulti(this)">
-        <span class="checkbox" id="pay_cheque"></span> Chèque
-    </span>
-    <span class="blue"> N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
-</p>
-    <p>
-        <span class="clickable-row" onclick="toggleCheck(this,'paiement_plusieurs')">
-    <span class="checkbox" data-group="paiement_plusieurs" id="pay_2cheques"></span></span>
-
-        Paiement en plusieurs fois :
-        <span class="blue">
-            <p>2 chèques  :  
-        N° <input type="text" class="editable editable-medium" id="cheque1" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        ET <input type="text" class="editable editable-medium" id="cheque2" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        </p>
-    </span></p>
-    <p 
-       <span class="blue">
-        <p>4 chèques  : 
-        1: <input type="text" class="editable editable-short" id="cheque3" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        2: <input type="text" class="editable editable-short" id="cheque4" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        3: <input type="text" class="editable editable-short" id="cheque5" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        4: <input type="text" class="editable editable-short" id="cheque6" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-    </span></p>
+<div id="paiement-section">
+    <div class="paiement-ligne">
+        <span class="clickable-row" onclick="togglePaiement(this, 'virement')">
+            <span class="checkbox" id="pay_virement"></span> Virement
+        </span>
+        <span id="detail_virement" style="display:none;">
+            &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_virement" min="0" step="0.01"> €
+        </span>
+    </div>
+    <div class="paiement-ligne">
+        <span class="clickable-row" onclick="togglePaiement(this, 'cb')">
+            <span class="checkbox" id="pay_cb"></span> CB
+        </span>
+        <span id="detail_cb" style="display:none;">
+            &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_cb" min="0" step="0.01"> €
+        </span>
+    </div>
+    <div class="paiement-ligne">
+        <span class="clickable-row" onclick="togglePaiement(this, 'espece')">
+            <span class="checkbox" id="pay_espece"></span> Espèce
+        </span>
+        <span id="detail_espece" style="display:none;">
+            &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_espece" min="0" step="0.01"> €
+        </span>
+    </div>
+    <div class="paiement-ligne">
+        <span class="clickable-row" onclick="togglePaiement(this, 'cheque')">
+            <span class="checkbox" id="pay_cheque"></span> Chèque
+        </span>
+        <span id="detail_cheque" style="display:none;">
+            &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_cheque" min="0" step="0.01"> €
+            &nbsp; <span class="blue">N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
+        </span>
+    </div>
+    <div class="paiement-ligne">
+        <span class="clickable-row" onclick="togglePaiement(this, 'plusieurs_cheques')">
+            <span class="checkbox" id="pay_plusieurs_cheques"></span> Plusieurs chèques
+        </span>
+        <span id="detail_plusieurs_cheques" style="display:none;">
+                <br>&nbsp;&nbsp;
+                N°1 <input type="text" class="editable editable-short" id="cheque1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque1" min="0" step="0.01"> €
+                <br>&nbsp;&nbsp;
+                N°2 <input type="text" class="editable editable-short" id="cheque2" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque2" min="0" step="0.01"> €
+                <br>&nbsp;&nbsp;
+                N°3 <input type="text" class="editable editable-short" id="cheque3" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque3" min="0" step="0.01"> €
+                <br>&nbsp;&nbsp;
+                N°4 <input type="text" class="editable editable-short" id="cheque4" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque4" min="0" step="0.01"> €
+            </span>
+        </div>
+</div>
 </div>
 <br>
 
@@ -410,7 +484,7 @@ selon les actes vétérinaires effectués.</p></div>
 <div class="article"><p><strong><span class="underline">Article 13</span></strong> : Reconnais que l'association a fourni les documents
 suivants ce jour :</p>
 <ul>
-    <li><span class="blue">Carnet de santé et/ou passeport n° </span><input type="text" class="editable editable-medium" id="numeroPasseport"></li>
+    <li><span class="blue">Carnet de santé et/ou passeport n° </span><input type="text" class="editable editable-medium" id="numeroPasseport" oninput="this._modifiedByUser=true;"></li>
     <li><span class="blue">Certificat vétérinaire avant cession daté du </span><input type="date" class="editable editable-date" id="dateCertificatVeto"></li>
     <li>Copie du certificat ICAD</li>
     <li>Copie du contrat de cession</li>
@@ -540,6 +614,7 @@ creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date de cession à charge :' }
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
+    appliquerPrefill();
 
 // remplie le nom de la partie je soussigné avec le nom de la famille
 function majNomAttestation() {
@@ -550,12 +625,20 @@ function majNomAttestation() {
 }
 	
     // Aperçu miniature après prise de photo
-// APRÈS — fonction corrigée
 function aperçuPhoto(input, previewId) {
     var preview = document.getElementById(previewId);
+    if (!preview) return;
     if (!input.files || !input.files[0]) return;
-    var nomFichier = input.files[0].name;
-    preview.innerHTML = '<span style="font-size:11px;color:green;">✔ ' + nomFichier + '</span>';
+    var file = input.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var src = e.target.result;
+        preview.innerHTML = '<img src="' + src + '" style="max-width:200px;max-height:150px;margin-top:4px;border:1px solid #ccc;border-radius:4px;display:block;" alt="Photo">' +
+            '<span class="no-print" style="font-size:10px;color:green;">✔ ' + file.name + '</span>';
+        // Stocker la base64 sur le div pour buildHtmlWithData
+        preview._photoBase64 = src;
+    };
+    reader.readAsDataURL(file);
 }
 
     // Redimensionner une image avant envoi (max 1200px, qualité 0.7)
@@ -586,10 +669,14 @@ function aperçuPhoto(input, previewId) {
     envoyerPhotos._enCours = true;
     
     var photos = [
-        { id: 'photoCNI_recto',  type: 'CNI_Recto'  },
-        { id: 'photoCNI_verso',  type: 'CNI_Verso'   },
-        { id: 'photoDomicile_1', type: 'Domicile_1'  },
-        { id: 'photoDomicile_2', type: 'Domicile_2'  },
+        { id: 'photoAnimal',        type: 'Photo_Animal'     },
+        { id: 'photoCNI_recto',     type: 'CNI_Recto'        },
+        { id: 'photoCNI_verso',     type: 'CNI_Verso'        },
+        { id: 'photoDomicile_1',    type: 'Domicile_1'       },
+        { id: 'photoDomicile_2',    type: 'Domicile_2'       },
+        { id: 'photoCBS_1',         type: 'CBS_1'            },
+        { id: 'photoCarnetSante_1', type: 'CarnetSante_1'    },
+        { id: 'photoCarnetSante_2', type: 'CarnetSante_2'    },
     ];
         var nom  = (nomAdoptant || 'Inconnu').replace(/\s+/g, '_');
         var chat = (nomChat     || 'Chat'   ).replace(/\s+/g, '_');
@@ -659,6 +746,28 @@ function aperçuPhoto(input, previewId) {
 function toggleCheckMulti(element) {
     var box = element.querySelector('.checkbox');
     if (box) box.classList.toggle('checked');
+}
+
+// Vaccins multi-sélection (Primo et/ou Secundo cochables simultanément)
+// Si on coche NON, on décoche Primo et Secundo ; si on coche Primo ou Secundo, on décoche NON
+function toggleCheckMultiVaccin(element, id) {
+    var box = document.getElementById(id);
+    if (!box) return;
+    box.classList.toggle('checked');
+    // Si Primo ou Secundo coché, décocher NON
+    if (box.classList.contains('checked')) {
+        var non = document.getElementById('vaccin_non');
+        if (non) non.classList.remove('checked');
+    }
+}
+
+// Paiement dynamique : toggle case + affiche/masque le détail montant
+function togglePaiement(element, mode) {
+    var box    = element.querySelector('.checkbox');
+    var detail = document.getElementById('detail_' + mode);
+    if (!box) return;
+    box.classList.toggle('checked');
+    if (detail) detail.style.display = box.classList.contains('checked') ? 'inline' : 'none';
 }
 
 	

@@ -20,13 +20,8 @@
 
     <div id="entete"></div>
 
-<table class="header-table">
-            <td class="col-center">
-            <!-- Titre centré -->
-           <div class="title" style="margin-top:5px;">Contrat de réservation Chat</div>
-            <p style="text-align:center;">N° du BOX : <input type="text" class="editable" style="width:150px;" id="numeroBox"></p>
-        </td>
-    </table>
+<div class="title" style="text-align:center; margin-top:5px;">Contrat de réservation Chat</div>
+<p style="text-align:center;">N° du BOX : <input type="text" class="editable" style="width:150px;" id="numeroBox"></p>
 
     <!-- Informations du chat -->
 <div class="section">
@@ -60,23 +55,33 @@
 
 <!-- Identité de l'adoptant -->
 <div class="section">
+    <p><span class="blue">Je soussigné(e) M/Mme</span></p>
     <p>
-        <span class="blue">Je soussigné(e) M/Mme</span>
-        <input type="text" class="editable editable-long" style="width:500px;" id="nomComplet" data-required="true" data-label="Nom et prénom adoptant" oninput="this.value=this.value.toUpperCase()">,
+        <span class="blue">Nom :</span>
+        <input type="text" class="editable editable-long" id="nom" data-required="true" data-label="Nom" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p>
-       <span class="blue"> né(e) le <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance adoptant">
-        &nbsp;&nbsp; <span class="blue">résidant : </span>
-        <input type="text" class="editable" style="width:50%;" id="adresseAdoptant" data-required="true" data-label="Adresse">
+        <span class="blue">Prénom :</span>
+        <input type="text" class="editable editable-long" id="prenom" data-required="true" data-label="Prénom" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p>
-        <input type="text" class="editable" style="width:100%;display:block;margin-top:4px;" id="adresse2" data-label="Adresse (suite)">
+        <span class="blue">né(e) le</span>
+        <input type="date" class="editable editable-date" id="dateNaissancePersonne" data-required="true" data-label="Date de naissance">
+    </p>
+    <p><span class="blue">Adresse :</span>
+        <input type="text" class="editable editable-long" id="adresseAdoptant" data-required="true" data-label="Adresse">
     </p>
     <p>
-        <span class="blue">Téléphone :</span>
+        <span class="blue">Code postal :</span>
+        <input type="text" class="editable editable-short" id="codePostal" data-required="true" data-label="Code postal" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        &nbsp;&nbsp;
+        <span class="blue">Ville :</span>
+        <input type="text" class="editable editable-medium" id="ville" data-required="true" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
+    </p>
+    <p><span class="blue">Téléphone :</span>
         <input type="tel" class="editable editable-tel" id="telephone" data-required="true" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-        
-        <span class="blue">E-mail :</span>
+    </p>
+    <p><span class="blue">E-mail :</span>
         <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
     </p>
     <p>
@@ -111,17 +116,18 @@
         </p>
         <p>
     <span class="blue">Autres animaux :</span>
-
     <span class="clickable-row" onclick="toggleCheckMulti(this)">
         <span class="checkbox" id="animal_chat"></span> Chat
     </span>
-
     <span class="clickable-row" onclick="toggleCheckMulti(this)">
         <span class="checkbox" id="animal_chien"></span> Chien
     </span>
-
     <span class="clickable-row" onclick="toggleCheckMulti(this)">
         <span class="checkbox" id="animal_lapin"></span> Lapin
+    </span>
+    <span class="clickable-row" onclick="toggleCheckMulti(this)">
+        <span class="checkbox" id="animal_autre"></span> Autre :
+        <input type="text" class="editable editable-medium" id="animal_autre_texte">
     </span>
 </p>
         <p>
@@ -144,23 +150,58 @@
             au sein des locaux de l'Arche de Mallo.
         </p>
 
-        <!-- Paiement acompte : MULTI-SÉLECTION (pas de data-group → plusieurs cases cochables) -->
+        <!-- Paiement acompte : MULTI-SÉLECTION dynamique avec montant -->
         <p class="bold underline">Afin de garantir ma réservation, je verse ce jour un acompte de 50€ par :</p>
-        <p>
-            <span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_cb"></span> CB
-</span>
-<span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_espece"></span> Espèce
-</span>
-<span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_virement"></span> Virement
-</span>
-<span class="clickable-row" onclick="toggleCheckMulti(this)">
-    <span class="checkbox" id="pay_cheque"></span> Chèque.
-    <span class="blue">N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></span>
-</span>
-        </p>
+        <div id="paiement-section">
+            <div class="paiement-ligne">
+                <span class="clickable-row" onclick="togglePaiement(this, 'cb')">
+                    <span class="checkbox" id="pay_cb"></span> CB
+                </span>
+                <span id="detail_cb" style="display:none;">
+                    &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_cb" min="0" step="0.01"> €
+                </span>
+            </div>
+            <div class="paiement-ligne">
+                <span class="clickable-row" onclick="togglePaiement(this, 'espece')">
+                    <span class="checkbox" id="pay_espece"></span> Espèce
+                </span>
+                <span id="detail_espece" style="display:none;">
+                    &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_espece" min="0" step="0.01"> €
+                </span>
+            </div>
+            <div class="paiement-ligne">
+                <span class="clickable-row" onclick="togglePaiement(this, 'virement')">
+                    <span class="checkbox" id="pay_virement"></span> Virement
+                </span>
+                <span id="detail_virement" style="display:none;">
+                    &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_virement" min="0" step="0.01"> €
+                </span>
+            </div>
+            <div class="paiement-ligne">
+                <span class="clickable-row" onclick="togglePaiement(this, 'cheque')">
+                    <span class="checkbox" id="pay_cheque"></span> Chèque
+                </span>
+                <span id="detail_cheque" style="display:none;">
+                    &nbsp; Montant : <input type="number" class="editable editable-num" id="montant_cheque" min="0" step="0.01"> €
+                    &nbsp; N° <input type="text" class="editable editable-medium" id="numeroPaiement" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                </span>
+            </div>
+            <div class="paiement-ligne">
+                <span class="clickable-row" onclick="togglePaiement(this, 'plusieurs_cheques')">
+                    <span class="checkbox" id="pay_plusieurs_cheques"></span> Plusieurs chèques
+                </span>
+                <span id="detail_plusieurs_cheques" style="display:none;">
+                    <br>&nbsp;&nbsp;
+                    N°1 <input type="text" class="editable editable-short" id="cheque1" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque1" min="0" step="0.01"> €
+                    <br>&nbsp;&nbsp;
+                    N°2 <input type="text" class="editable editable-short" id="cheque2" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque2" min="0" step="0.01"> €
+                    <br>&nbsp;&nbsp;
+                    N°3 <input type="text" class="editable editable-short" id="cheque3" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque3" min="0" step="0.01"> €
+                    <br>&nbsp;&nbsp;
+                    N°4 <input type="text" class="editable editable-short" id="cheque4" oninput="this.value=this.value.replace(/[^0-9]/g,'')"> montant : <input type="number" class="editable editable-num" id="montant_cheque4" min="0" step="0.01"> €
+                </span>
+            </div>
+        </div>
 
         <p class="red">
             Si le chat choisi décède avant l'adoption finale, la somme versée à titre d'acompte me sera
@@ -182,7 +223,22 @@
         </ul>
     </div>
 
-    <!-- Signatures -->
+    
+<!-- Photo de l'animal -->
+<div class="section">
+    <p class="bold blue no-print">📷 Photo de l'animal <span class="red">*</span> (obligatoire)</p>
+    <div class="no-print" style="margin:8px 0;">
+        <label style="display:inline-block; padding:8px 14px; background:#0563c1; color:white; border-radius:5px; cursor:pointer; font-size:13px;">
+            📷 Prendre en photo
+            <input type="file" accept="image/*" capture="environment" id="photoAnimal" style="display:none;"
+                onchange="aperçuPhoto(this, 'preview_Animal')">
+        </label>
+    </div>
+    <!-- Aperçu visible dans le PDF — HORS no-print intentionnellement -->
+    <div id="preview_Animal" style="margin-top:6px;"></div>
+</div>
+
+<!-- Signatures -->
     <div class="section">
         <p class="bold">Fait à Autrechêne, le
             <input type="date" class="editable editable-date" id="dateFait">
@@ -227,13 +283,14 @@
     creerEntete({ dateId: 'dateReservation', dateLabel: 'Date réservation :' });
     creerSignature('sig1');
     creerSignature('sig2');
+    appliquerPrefill();
 
     var today = new Date().toISOString().split('T')[0];
     ['dateReservation', 'dateFait'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
-    // Forcer le vidage APRÈS le remplissage automatique du JS commun
+
     document.addEventListener('DOMContentLoaded', function() {
         ['dateAdoption', 'dateNaissance', 'dateNaissancePersonne'].forEach(function(id) {
             var el = document.getElementById(id);
@@ -246,7 +303,6 @@
         if (box) box.classList.toggle('checked');
     }
 
-    // Validation spécifique à ce formulaire
     validateRequiredFields = function() {
         var missing = [];
 
@@ -255,7 +311,7 @@
             var label = el.getAttribute('data-label') || el.id;
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 if (!el.value || el.value.trim() === '') {
-                   missing.push(label);
+                    missing.push(label);
                     el.style.borderBottom = '2px solid red';
                 } else {
                     el.style.borderBottom = '';
@@ -263,7 +319,7 @@
             }
         });
 
-        // Email format
+        // Email
         var elEmail = document.getElementById('email');
         if (elEmail && elEmail.value.trim()) {
             var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(elEmail.value.trim());
@@ -273,7 +329,7 @@
             }
         }
 
-        // Cases à cocher obligatoires
+        // Groupes radio obligatoires
         var groupesObligatoires = [
             { group: 'sexe_chat',  label: 'Sexe du chat' },
             { group: 'habitation', label: 'Type d\'habitation' },
@@ -295,33 +351,23 @@
             }
         });
 
-        // Paiement : au moins un mode obligatoire
-        var payIds = ['pay_cb', 'pay_espece', 'pay_virement', 'pay_cheque'];
-        var paiementCoche = payIds.some(function(id) {
+        // Paiement : au moins un mode
+        var allPayIds = ['pay_cb','pay_espece','pay_virement','pay_cheque','pay_plusieurs_cheques'];
+        var paiementCoche = allPayIds.some(function(id) {
             var el = document.getElementById(id);
             return el && el.classList.contains('checked');
         });
         if (!paiementCoche) {
-            missing.push('Mode de règlement (au moins un à cocher)');
-            payIds.forEach(function(id) {
+            missing.push('Mode de règlement (au moins un)');
+            allPayIds.forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) { el.style.outline = '2px solid red'; el.style.outlineOffset = '1px'; }
             });
         } else {
-            payIds.forEach(function(id) {
+            allPayIds.forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) el.style.outline = '';
             });
-        }
-
-        // N° chèque obligatoire si chèque coché
-        var payCheque = document.getElementById('pay_cheque');
-        if (payCheque && payCheque.classList.contains('checked')) {
-            var numCheque = document.getElementById('numeroPaiement');
-            if (!numCheque || !numCheque.value.trim()) {
-                missing.push('Numéro de chèque');
-                if (numCheque) numCheque.style.borderBottom = '2px solid red';
-            }
         }
 
         // Lu et approuvé
@@ -329,12 +375,11 @@
             var el = document.getElementById(id);
             if (el) {
                 var cb = el.querySelector('.checkbox');
-                if (!cb.classList.contains('checked')) {
+                if (cb && !cb.classList.contains('checked')) {
                     var labels = { luApprouve1_resa: 'Lu et approuvé (Arche de Mallo)', luApprouve2_resa: 'Lu et approuvé (Adoptant)' };
                     missing.push(labels[id]);
                     cb.style.outline = '2px solid red';
-                    cb.style.outlineOffset = '1px';
-                } else {
+                } else if (cb) {
                     cb.style.outline = '';
                 }
             }
@@ -344,13 +389,35 @@
         ['sig1', 'sig2'].forEach(function(sigId) {
             var container = document.getElementById(sigId);
             if (container && !container._signed) {
-                var labels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature de l\'adoptant' };
+                var labels = { sig1: 'Signature Arche de Mallo', sig2: "Signature de l'adoptant" };
                 missing.push(labels[sigId]);
             }
         });
 
+        // Photo de l'animal obligatoire
+        var photoAnimal = document.getElementById('photoAnimal');
+        if (!photoAnimal || !photoAnimal.files || !photoAnimal.files[0]) {
+            missing.push("Photo de l'animal (obligatoire)");
+            var lblAnimal = photoAnimal ? photoAnimal.parentElement : null;
+            if (lblAnimal) lblAnimal.style.outline = '2px solid red';
+        } else {
+            var lblAnimal2 = photoAnimal.parentElement;
+            if (lblAnimal2) lblAnimal2.style.outline = '';
+        }
+
         return missing;
     };
+
+    // Envoi photo après sauvegarde réussie
+    async function postSavePhotos(data, filename) {
+        var nomEl    = document.getElementById('nomComplet');
+        var animalEl = document.getElementById('nomChat');
+        var dateEl   = document.getElementById('dateFait');
+        await envoyerPhotoAnimal('Contrat_reservation_chat',
+            nomEl    ? nomEl.value    : '',
+            animalEl ? animalEl.value : '',
+            dateEl   ? dateEl.value   : '');
+    }
 </script>
 	
 </body>

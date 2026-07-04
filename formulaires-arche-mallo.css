@@ -214,6 +214,12 @@ p {
     user-select: none;
 }
 
+/* Checkbox aligned to first line of text */
+.clickable-row .checkbox {
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
 .checkbox {
     width: 13px;
     height: 13px;
@@ -644,6 +650,17 @@ input[type="date"] {
     }
     .page-break { page-break-before: always; }
     .no-print { display: none !important; }
+
+    /* Photo de l'animal — toujours visible à l'impression */
+    #preview_Animal {
+        display: block !important;
+    }
+    #preview_Animal img {
+        display: block !important;
+        max-width: 220px !important;
+        max-height: 160px !important;
+        border: 1px solid #ccc !important;
+    }
     label[style*="background:#0563c1"] { display: none !important; }
     .signature-pad-wrap + button { display: none !important; }
     .header-adoption {
@@ -791,4 +808,52 @@ body[data-form-id="Depot_Chat"] #email {
         text-align: right;
         white-space: nowrap;
     }
+}
+
+
+/* === Paiement dynamique avec montant === */
+.paiement-ligne {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.paiement-ligne .clickable-row {
+    margin-right: 4px;
+}
+#paiement-section {
+    margin: 8px 0;
+    padding: 6px 0;
+}
+
+/* Motif lines (CBS absent, décharge) — block display for long wrapped text */
+.motif-ligne {
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    gap: 0;
+    cursor: pointer;
+    user-select: none;
+}
+.motif-ligne .checkbox {
+    margin: 0 5px;
+    flex-shrink: 0;
+}
+
+/* Lu et approuvé — toujours sur une seule ligne (checkbox + texte alignés) */
+[id^="luApprouve"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px;
+}
+[id^="luApprouve"] .checkbox {
+    margin-top: 0 !important;
+    flex-shrink: 0;
+}
+
+/* Impression : masquer le titre "📷 Photo de l'animal" mais garder l'aperçu */
+@media print {
+    #preview_Animal + * { }
+    .section:has(#preview_Animal) > p.bold.blue { display: none !important; }
 }

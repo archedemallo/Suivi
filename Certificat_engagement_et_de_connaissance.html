@@ -155,29 +155,36 @@
 <div class="signature-section mt-30">
     <p class="bold underline"><strong><span class="red">La famille :</span></strong></p>
     <p>
-        <span class="blue">Je soussigné(e)<span/>
-        <input type="text" class="editable editable-long" style="width:80%;" id="nomAdoptant" data-required="true" data-label="Nom de la famille" oninput="this.value=this.value.toUpperCase()">
+        <span class="blue">Nom :</span>
+        <input type="text" class="editable editable-long" id="nomAdoptant" data-required="true" data-label="Nom" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p>
-        <span class="blue">résidant à</span>
-        <input type="text" class="editable" style="width:80%;" id="adresseAdoptant" data-required="true" data-label="Adresse">
+        <span class="blue">Prénom :</span>
+        <input type="text" class="editable editable-long" id="prenomAdoptant" data-required="true" data-label="Prénom" oninput="this.value=this.value.toUpperCase()">
     </p>
     <p>
-        <input type="text" class="editable" style="width:100%;display:block;margin-top:4px;" id="adresse2" data-label="Adresse (suite)">
+        <span class="blue">Adresse :</span>
+        <input type="text" class="editable editable-long" id="adresseAdoptant" data-required="true" data-label="Adresse">
+    </p>
+    <p>
+        <span class="blue">Code postal :</span>
+        <input type="text" class="editable editable-short" id="codePostalAdoptant" data-label="Code postal" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        &nbsp;&nbsp;
+        <span class="blue">Ville :</span>
+        <input type="text" class="editable editable-medium" id="villeAdoptant" data-label="Ville" oninput="this.value=this.value.toUpperCase()">
+    </p>
+    <p>
+        <span class="blue">Téléphone :</span>
+        <input type="tel" class="editable editable-tel" id="telephone" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
     </p>
     <p>
         <span class="blue">Email :</span>
         <input type="email" class="editable editable-email" id="email" data-required="true" data-label="Email">
-    </p>    
+    </p>
     <p>atteste avoir pris connaissance de toutes les informations ci-dessus.</p>
     <p>Fait à Autrechêne, le <input type="date" class="editable editable-date" id="dateAdoptant"></p>
 
-    <div class="mention-manuscrite mt-20"><span class="bold">
-        Signature de la famille précédée de la mention manuscrite :<br>
-        « Je m'engage à respecter les besoins et l'intégrité de l'animal cédé tout au long de sa vie »</span>
-    </div>
-
-    <!-- Case à cocher obligatoire -->
+        <!-- Case à cocher obligatoire -->
     <p class="mt-20">
         <span class="clickable-row" onclick="toggleCheck(this)" id="checkEngagement">
             <span class="checkbox"></span>
@@ -189,12 +196,12 @@
     <table class="signature-table mt-30">
         <tr>
             <td>
-                <p class="bold underline">Signature de la famille :</p>
+                <p class="bold underline">Signature de l'Arche de Mallo :</p>
                 <div id="sig1"></div>
                 <div id="sig1-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
             </td>
             <td>
-                <p class="bold underline">Signature de l'Arche de Mallo :</p>
+                <p class="bold underline">Signature de la famille :</p>
                 <div id="sig2"></div>
                 <div id="sig2-print" style="display:none;">[[SIGNATURE_IMAGE]]</div>
             </td>
@@ -215,6 +222,7 @@
     creerEntete({ dateId: 'dateCertificat', dateLabel: 'Date :' });
     creerSignature('sig1');
     creerSignature('sig2');
+    appliquerPrefill();
     var today = new Date().toISOString().split('T')[0];
 var elDate = document.getElementById('dateCertificat');
     if (elDate && !elDate.value) elDate.value = today;
