@@ -2,7 +2,7 @@
 // Formulaires L'Arche de Mallo
 // ============================================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwwibQbDq2iircsT1ZAh5YM9-SgenjlI089QX_Xl2gchXqczOESA5CVnhljUkVfijRpfg/exec';
+// APPS_SCRIPT_URL est défini dans config.js
 
 // ============================================================
 // EN-TÊTE ASSOCIATION
