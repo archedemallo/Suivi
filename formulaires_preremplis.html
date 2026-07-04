@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulaires pré-remplis — L'Arche de Mallo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --cream: #faf7f2;
+        --warm: #f0e8d8;
+        --brown: #3d2b1f;
+        --orange: #c96b2a;
+        --orange-light: #e8843a;
+        --grey: #8a7968;
+        --white: #ffffff;
+        --shadow: 0 4px 24px rgba(61,43,31,0.10);
+        --shadow-hover: 0 8px 40px rgba(201,107,42,0.18);
+        --green: #2a7a4b;
+        --green-light: #e8f5ee;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background-color: var(--cream);
+        color: var(--brown);
+        min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+        background: var(--white);
+        border-bottom: 3px solid var(--orange);
+        padding: 22px 40px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(61,43,31,0.08);
+    }
+
+    .logo-header { width: 60px; height: 60px; object-fit: contain; }
+
+    .header-text h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 20pt;
+        color: var(--brown);
+    }
+
+    .header-text p {
+        font-size: 13pt;
+        color: var(--grey);
+        font-weight: 300;
+        margin-top: 2px;
+    }
+
+    .header-back {
+        margin-left: auto;
+        text-decoration: none;
+        color: var(--orange);
+        font-size: 13pt;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: opacity 0.2s;
+    }
+    .header-back:hover { opacity: 0.7; }
+
+    /* HERO */
+    .hero {
+        background: linear-gradient(135deg, var(--brown) 0%, #6b3d22 100%);
+        color: white;
+        text-align: center;
+        padding: 40px 20px 32px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '📋';
+        position: absolute;
+        font-size: 160px;
+        opacity: 0.05;
+        right: -10px;
+        top: -10px;
+    }
+    .hero h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 20pt;
+        margin-bottom: 8px;
+    }
+    .hero p {
+        font-size: 14pt;
+        opacity: 0.75;
+        font-weight: 300;
+    }
+
+    /* CONTENU PRINCIPAL */
+    .main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 36px 20px 60px;
+    }
+
+    /* ÉTAPES */
+    .etape-label {
+        font-family: 'Playfair Display', serif;
+        font-size: 16pt;
+        color: var(--orange);
+        margin-bottom: 14px;
+        margin-top: 32px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--warm);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .etape-label:first-child { margin-top: 0; }
+
+    /* BLOC RECHERCHE */
+    .search-bloc {
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 28px 32px;
+    }
+
+    .search-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 9px 20px;
+        border-radius: 8px;
+        border: 2px solid var(--warm);
+        background: var(--cream);
+        color: var(--brown);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13pt;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--orange); }
+    .tab-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+    }
+
+    .search-row {
+        display: flex;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid var(--warm);
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14pt;
+        color: var(--brown);
+        background: var(--cream);
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--orange); background: white; }
+    .search-input::placeholder { color: var(--grey); }
+
+    .search-btn {
+        padding: 12px 24px;
+        background: var(--orange);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14pt;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+        white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--orange-light); }
+    .search-btn:active { transform: scale(0.98); }
+
+    .search-hint {
+        margin-top: 10px;
+        font-size: 11pt;
+        color: var(--grey);
+        font-style: italic;
+    }
+
+    /* CHARGEMENT */
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 30px;
+        color: var(--grey);
+        font-size: 14pt;
+    }
+    .spinner {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--warm);
+        border-top-color: var(--orange);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* RÉSULTATS */
+    .resultats-bloc {
+        display: none;
+        margin-top: 28px;
+    }
+
+    .resultats-count {
+        font-size: 13pt;
+        color: var(--grey);
+        margin-bottom: 14px;
+    }
+    .resultats-count strong { color: var(--orange); }
+
+    .result-item {
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 18px 22px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+    }
+    .result-item:hover {
+        border-color: var(--orange);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-hover);
+    }
+    .result-item.selected {
+        border-color: var(--green);
+        background: var(--green-light);
+    }
+
+    .result-icon {
+        font-size: 22px;
+        width: 44px;
+        height: 44px;
+        background: var(--cream);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .result-item.selected .result-icon { background: white; }
+
+    .result-info { flex: 1; min-width: 0; }
+
+    .result-nom {
+        font-weight: 700;
+        font-size: 15pt;
+        color: var(--brown);
+    }
+
+    .result-details {
+        font-size: 12pt;
+        color: var(--grey);
+        margin-top: 2px;
+    }
+
+    .result-tag {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 10pt;
+        font-weight: 500;
+        background: var(--warm);
+        color: var(--brown);
+        flex-shrink: 0;
+    }
+
+    .result-check {
+        font-size: 22px;
+        flex-shrink: 0;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .result-item.selected .result-check { opacity: 1; }
+
+    /* AUCUN RÉSULTAT */
+    .no-result {
+        text-align: center;
+        padding: 36px;
+        color: var(--grey);
+        font-size: 14pt;
+    }
+    .no-result .emoji { font-size: 40px; display: block; margin-bottom: 12px; }
+
+    /* CHOIX FORMULAIRE */
+    .formulaire-bloc {
+        display: none;
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 28px 32px;
+    }
+
+    .selected-recap {
+        background: var(--green-light);
+        border: 1px solid #b2d8c2;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 22px;
+        font-size: 13pt;
+        color: var(--green);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+    }
+
+    .form-card {
+        background: var(--cream);
+        border-radius: 12px;
+        border: 2px solid var(--warm);
+        padding: 18px 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: all 0.2s;
+        text-decoration: none;
+        color: var(--brown);
+    }
+    .form-card:hover {
+        border-color: var(--orange);
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .form-card-icon {
+        font-size: 24px;
+        width: 44px;
+        height: 44px;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .form-card-text { flex: 1; min-width: 0; }
+
+    .form-card-title {
+        font-weight: 600;
+        font-size: 13pt;
+        line-height: 1.3;
+    }
+
+    .form-card-desc {
+        font-size: 10pt;
+        color: var(--grey);
+        margin-top: 3px;
+    }
+
+    /* MESSAGE ERREUR */
+    .erreur {
+        display: none;
+        background: #fff0f0;
+        border: 1px solid #f5c6cb;
+        border-radius: 10px;
+        padding: 14px 18px;
+        color: #721c24;
+        font-size: 13pt;
+        margin-top: 16px;
+    }
+
+    /* FOOTER */
+    footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 10pt;
+        color: var(--grey);
+        border-top: 1px solid var(--warm);
+        background: var(--white);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+        header { padding: 14px 16px; gap: 12px; }
+        .logo-header { width: 44px; height: 44px; }
+        .header-text h1 { font-size: 16pt; }
+        .main { padding: 20px 14px 40px; }
+        .search-bloc, .formulaire-bloc { padding: 20px 16px; }
+        .search-row { flex-direction: column; }
+        .search-btn { width: 100%; }
+        .form-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <img src="logo_arche.png" alt="Logo L'Arche de Mallo" class="logo-header">
+    <div class="header-text">
+        <h1>L'Arche de Mallo</h1>
+        <p>Formulaires pré-remplis</p>
+    </div>
+    <a href="Index.html" class="header-back">‹ Retour</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+    <h2>Formulaires pré-remplis</h2>
+    <p>Recherchez un chat ou une personne pour pré-remplir automatiquement un formulaire</p>
+</div>
+
+<div class="main">
+
+    <!-- ÉTAPE 1 : RECHERCHE -->
+    <div class="etape-label">① Rechercher</div>
+
+    <div class="search-bloc">
+
+        <!-- ONGLETS TYPE DE RECHERCHE -->
+        <div class="search-tabs">
+            <button class="tab-btn active" data-type="chat" onclick="setTypeRecherche('chat', this)">
+                🐱 Nom du chat
+            </button>
+            <button class="tab-btn" data-type="personne" onclick="setTypeRecherche('personne', this)">
+                👤 Nom de la personne
+            </button>
+        </div>
+
+        <div class="search-row">
+            <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Tapez un nom de chat…"
+                onkeydown="if(event.key==='Enter') lancerRecherche()"
+                oninput="resetResultats()"
+            >
+            <button class="search-btn" onclick="lancerRecherche()">🔍 Rechercher</button>
+        </div>
+
+        <p class="search-hint">Insensible aux accents et à la casse · Ex : "moza", "Martin", "perle"</p>
+
+        <div class="erreur" id="erreurMsg"></div>
+    </div>
+
+    <!-- CHARGEMENT -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div><br>
+        Chargement des données…
+    </div>
+
+    <!-- RÉSULTATS -->
+    <div class="resultats-bloc" id="resultatsBoc">
+        <div class="etape-label" style="margin-top:28px;">② Sélectionner un résultat</div>
+        <div class="resultats-count" id="resultatsCount"></div>
+        <div id="resultatsListe"></div>
+    </div>
+
+    <!-- CHOIX DU FORMULAIRE -->
+    <div class="formulaire-bloc" id="formulaireBloc">
+        <div class="etape-label" style="margin-top:0; border:none; padding:0 0 14px;">③ Choisir le formulaire à ouvrir</div>
+
+        <div class="selected-recap" id="selectedRecap">
+            ✅ <span id="selectedNom"></span>
+        </div>
+
+        <div class="form-grid" id="formGrid"></div>
+    </div>
+
+</div>
+
+<footer>
+    Association L'Arche de Mallo — 8 ter rue d'Eschène, 90140 Autrechêne — 07 71 64 69 89
+</footer>
+
+<script>
+// ============================================================
+// CONFIGURATION — remplacez par votre URL Apps Script
+// ============================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzrE8Airs5j5e9X9wOtq6641GEa7VJ8iYubBOSBBjab9_74W6KfQP5iFGD67YmnfRVspg/exec';
+
+// ============================================================
+// FORMULAIRES DISPONIBLES
+// ============================================================
+const FORMULAIRES = [
+    { id: 'adoption',        icon: '📋', titre: 'Contrat de cession à charge',          desc: 'Adoption définitive',          url: 'Contrat_adoption.html',                                    lieChatEt: true },
+    { id: 'reserv_chat',     icon: '🐱', titre: 'Réservation — Chat',                   desc: 'Acompte 50€ chat adulte',      url: 'Contrat_reservation_chat.html',                            lieChatEt: true },
+    { id: 'reserv_chaton',   icon: '🐾', titre: 'Réservation — Chaton',                 desc: 'Acompte 50€ chaton',           url: 'Contrat_reservation_chaton.html',                          lieChatEt: true },
+    { id: 'fa_provisoire',   icon: '⏳', titre: 'Famille d\'accueil provisoire',        desc: 'Accueil temporaire',           url: 'Formulaire_famille_accueil_provisoire.html',               lieChatEt: true },
+    { id: 'fa_libre',        icon: '🌿', titre: 'Famille d\'accueil — chat libre',      desc: 'Accueil en extérieur',         url: 'Formulaire_famille_accueil_definitive_chat_libre.html',    lieChatEt: true },
+    { id: 'fa_adoption',     icon: '🤝', titre: 'Famille d\'accueil — adoption',        desc: 'Avant adoption définitive',    url: 'Contrat_famille_accueil_adoption_definitive.html',         lieChatEt: true },
+    { id: 'abandon',         icon: '💔', titre: 'Formulaire d\'abandon',                desc: 'Cession à l\'association',     url: 'Formulaire_abandon.html',                                  lieChatEt: true },
+    { id: 'depot',           icon: '📦', titre: 'Dépôt chat / chaton',                  desc: 'Chat errant trouvé',           url: 'Formulaire_depot_chat.html',                               lieChatEt: false },
+    { id: 'certificat',      icon: '📜', titre: 'Certificat d\'engagement',             desc: '7 jours avant cession',        url: 'Certificat_engagement_et_de_connaissance.html',            lieChatEt: false },
+    { id: 'adhesion',        icon: '🎗️', titre: 'Bulletin d\'adhésion',                desc: 'Adhésion annuelle',            url: 'Bulletin_adhesion.html',                                   lieChatEt: false },
+    { id: 'don',             icon: '💝', titre: 'Don',                                  desc: 'Don à l\'association',         url: 'Dons.html',                                                lieChatEt: false },
+    { id: 'reserv_autre',    icon: '🐇', titre: 'Réservation — Autre animal',            desc: 'Acompte 50€ autre animal',     url: 'Contrat_reservation_autre_animal.html',                    lieChatEt: true },
+    { id: 'decharge',        icon: '💉', titre: 'Décharge — avant 2ème vaccin',          desc: 'Engagement rappel vaccinal',   url: 'Formulaire_decharge_vaccin.html',                          lieChatEt: true },
+    { id: 'cbs_absent',      icon: '🩺', titre: 'Attestation CBS Absent',                desc: 'CBS non fourni',               url: 'Formulaire_CBS_absent.html',                               lieChatEt: true },
+    { id: 'pret',            icon: '🪤', titre: 'Contrat prêt de matériel',              desc: 'Prêt cage trappe/transport',   url: 'Formulaire_pret_materiel.html',                            lieChatEt: false },
+    { id: 'retour_pret',     icon: '↩️', titre: 'Retour de matériel',                   desc: 'Constat de retour',            url: 'Formulaire_retour_materiel.html',                          lieChatEt: false },
+];
+
+// ============================================================
+// MAPPING COLONNES PAR ONGLET
+// ============================================================
+const ONGLETS_CONFIG = {
+    'Adoption': {
+        nomChat:     'nomUsuel',
+        nomPersonne: ['nom', 'prenom'],
+        date:        'dateAdoption',
+        icone:       '🏠',
+        label:       'Adoption',
+        champs: {
+            nomUsuel: 'nomUsuel', nomAdoption: 'nomAdoption', dateNaissance: 'dateNaissance',
+            puce: 'puce', couleur: 'couleur', sexe: 'sexe',
+            dateVermifuge: 'dateVermifuge', produitVermifuge: 'produitVermifuge', prochainVermifuge: 'prochainVermifuge',
+            dateAntiPuces: 'dateAntiPuces', produitAntiPuces: 'produitAntiPuces', dateprochainAntiPuces: 'dateprochainAntiPuces',
+            dateVaccin: 'dateVaccin', dateRappel: 'dateRappel',
+            dateSterilisationPrevue: 'dateSterilisationPrevue',
+            nom: 'nom', prenom: 'prenom', adresse: 'adresse',
+            codePostal: 'codePostal', ville: 'ville', portable: 'portable', email: 'email'
+        }
+    },
+    'Reservation_Chaton': {
+        nomChat:     'nomChat',
+        nomPersonne: ['nomComplet'],
+        date:        'dateReservation',
+        icone:       '🐾',
+        label:       'Réservation chaton',
+        champs: {
+            nomChat: 'nomChat', nomMaman: 'nomMaman', dateNaissance: 'dateNaissance',
+            couleur: 'couleur', identification: 'identification', nomComplet: 'nomComplet',
+            adresseAdoptant: 'adresseAdoptant', telephone: 'telephone', email: 'email'
+        }
+    },
+    'Reservation_Chat': {
+        nomChat:     'nomChat',
+        nomPersonne: ['nomComplet'],
+        date:        'dateReservation',
+        icone:       '🐱',
+        label:       'Réservation chat',
+        champs: {
+            nomChat: 'nomChat', dateNaissance: 'dateNaissance', couleur: 'couleur',
+            identification: 'identification',
+            nom: 'nom', prenom: 'prenom',
+            adresseAdoptant: 'adresseAdoptant', codePostal: 'codePostal', ville: 'ville',
+            telephone: 'telephone', email: 'email'
+        }
+    },
+    'Famille_Accueil_Provisoire': {
+        nomChat:     'nom_animal',
+        nomPersonne: ['nom', 'prenom'],
+        date:        'date_signature',
+        icone:       '⏳',
+        label:       'FA provisoire',
+        champs: {
+            nom_animal: 'nom_animal', date_naissance: 'date_naissance',
+            couleur: 'couleur', puce: 'puce', nom: 'nom', prenom: 'prenom',
+            adresse: 'adresse', code_postal: 'code_postal', ville: 'ville',
+            telephone: 'telephone', email: 'email', sexe: 'sexe'
+        }
+    },
+    'Famille_Accueil_Chat_Libre': {
+        nomChat:     'nom_animal',
+        nomPersonne: ['nom', 'prenom'],
+        date:        'date_signature',
+        icone:       '🌿',
+        label:       'FA chat libre',
+        champs: {
+            nom_animal: 'nom_animal', date_naissance: 'date_naissance',
+            couleur: 'couleur', puce: 'puce', nom: 'nom', prenom: 'prenom',
+            adresse: 'adresse', code_postal: 'code_postal', ville: 'ville',
+            telephone: 'telephone', email: 'email', sexe: 'sexe'
+        }
+    },
+    'Famille_Accueil_Adoption': {
+        nomChat:     'nom_chat',
+        nomPersonne: ['nom', 'prenom'],
+        date:        'date_signature',
+        icone:       '🤝',
+        label:       'FA adoption',
+        champs: {
+            nom_chat: 'nom_chat', nom: 'nom', prenom: 'prenom',
+            dateNaissance: 'dateNaissance', date_naissance: 'date_naissance',
+            couleur: 'couleur', puce: 'puce',
+            adresse: 'adresse', code_postal: 'code_postal', ville: 'ville',
+            telephone: 'telephone', email: 'email'
+        }
+    },
+    'Abandon': {
+        nomChat:     null,
+        nomPersonne: ['nom', 'prenom'],
+        date:        'dateFait',
+        icone:       '💔',
+        label:       'Abandon',
+        champs: {
+            nom: 'nom', prenom: 'prenom',
+            adresse: 'adresse', codePostal: 'codePostal', ville: 'ville',
+            telephone: 'telephone', email: 'email'
+        }
+    },
+    'Depot_Chat': {
+        nomChat:     null,
+        nomPersonne: ['nom', 'prenom'],
+        date:        'dateFait',
+        icone:       '📦',
+        label:       'Dépôt',
+        champs: {
+            nom: 'nom', prenom: 'prenom', adresse: 'adresse',
+            codePostal: 'codePostal', ville: 'ville', telephone: 'telephone', email: 'email',
+            nomChat: 'nomChat', dateNaissance: 'dateNaissance', couleur: 'couleur', puce: 'puce'
+        }
+    },
+    'Certificat_Engagement': {
+        nomChat:     null,
+        nomPersonne: ['nomAdoptant'],
+        date:        'dateCertificat',
+        icone:       '📜',
+        label:       'Certificat',
+        champs: {
+            nomAdoptant: 'nomAdoptant', prenomAdoptant: 'prenomAdoptant',
+            adresseAdoptant: 'adresseAdoptant',
+            codePostalAdoptant: 'codePostalAdoptant', villeAdoptant: 'villeAdoptant',
+            telephone: 'telephone', email: 'email'
+        }
+    },
+    'Adhesion': {
+        nomChat:     null,
+        nomPersonne: ['nom', 'prenom'],
+        date:        'dateAdhesion',
+        icone:       '🎗️',
+        label:       'Adhésion',
+        champs: {
+            nom: 'nom', prenom: 'prenom', adresse: 'adresse',
+            codePostal: 'codePostal', ville: 'ville', portable: 'portable', email: 'email'
+        }
+    },
+    'Dons': {
+        nomChat:     null,
+        nomPersonne: ['nom', 'prenom'],
+        date:        'dateEntete',
+        icone:       '💝',
+        label:       'Don',
+        champs: {
+            nom: 'nom', prenom: 'prenom', raisonSociale: 'raisonSociale',
+            adresse: 'adresse', codePostal: 'codePostal', ville: 'ville', email: 'email',
+            montantDon: 'montantDon', numeroCheque: 'numeroCheque'
+        }
+    },
+    'Contrat_reservation_autre_animal': {
+        nomChat:     'nomChat',
+        nomPersonne: ['nomComplet'],
+        date:        'dateReservation',
+        icone:       '🐇',
+        label:       'Réservation autre animal',
+        champs: {
+            espece: 'espece', nomChat: 'nomChat', dateNaissance: 'dateNaissance',
+            couleur: 'couleur', identification: 'identification',
+            nomComplet: 'nomComplet', adresseAdoptant: 'adresseAdoptant',
+            telephone: 'telephone', email: 'email'
+        }
+    },
+    'Decharge_Vaccin': {
+        nomChat:     'nomChat',
+        nomPersonne: ['nomAdoptant'],
+        date:        'dateFait',
+        icone:       '💉',
+        label:       'Décharge vaccin',
+        champs: {
+            nomAdoptant: 'nomAdoptant', prenomAdoptant: 'prenomAdoptant',
+            nomChat: 'nomChat', dateNaissanceChat: 'dateNaissanceChat',
+            datePrimoVaccin: 'datePrimoVaccin', dateLimiteRappel: 'dateLimiteRappel',
+            adresseAdoptant: 'adresseAdoptant', codePostalAdoptant: 'codePostalAdoptant',
+            villeAdoptant: 'villeAdoptant', telephone: 'telephone', email: 'email'
+        }
+    },
+    'CBS_Absent': {
+        nomChat:     'nomChat',
+        nomPersonne: ['nomSignataire'],
+        date:        'dateFait',
+        icone:       '🩺',
+        label:       'CBS Absent',
+        champs: {
+            nomSignataire: 'nomSignataire', prenomSignataire: 'prenomSignataire',
+            email: 'email', nomChat: 'nomChat', dateNaissance: 'dateNaissance',
+            motifCBS: 'motifCBS', motifTraitement: 'motifTraitement',
+            dateRdvVet: 'dateRdvVet', motifAutre: 'motifAutre'
+        }
+    },
+    'Pret_Materiel': {
+        nomChat:     null,
+        nomPersonne: ['nomEmprunteur'],
+        date:        'dateFait',
+        icone:       '🪤',
+        label:       'Prêt de matériel',
+        champs: {
+            nomEmprunteur: 'nomEmprunteur', prenomEmprunteur: 'prenomEmprunteur',
+            adresseEmprunteur: 'adresseEmprunteur',
+            codePostalEmprunteur: 'codePostalEmprunteur', villeEmprunteur: 'villeEmprunteur',
+            telephoneEmprunteur: 'telephoneEmprunteur', emailEmprunteur: 'emailEmprunteur',
+            datePriseEnCharge: 'datePriseEnCharge', materiel: 'materiel',
+            numeroCage: 'numeroCage', dateRetour: 'dateRetour'
+        }
+    },
+    'Retour_Materiel': {
+        nomChat:     null,
+        nomPersonne: ['nomEmprunteur'],
+        date:        'dateRetourEffectif',
+        icone:       '↩️',
+        label:       'Retour matériel',
+        champs: {
+            nomEmprunteur: 'nomEmprunteur', prenomEmprunteur: 'prenomEmprunteur',
+            emailEmprunteur: 'emailEmprunteur', numeroCage: 'numeroCage',
+            dateRetourEffectif: 'dateRetourEffectif', etatMateriel: 'etatMateriel',
+            anomalie: 'anomalie', restitutionCaution: 'restitutionCaution'
+        }
+    }
+};
+
+// ============================================================
+// ÉTAT
+// ============================================================
+let typeRecherche  = 'chat';
+let donneesCache   = null;
+let selectedResult = null;
+
+// ============================================================
+// NORMALISATION (accents, casse)
+// ============================================================
+function normaliser(str) {
+    return String(str || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+}
+
+function contient(valeur, terme) {
+    return normaliser(valeur).includes(normaliser(terme));
+}
+
+// ============================================================
+// ONGLETS RECHERCHE
+// ============================================================
+function setTypeRecherche(type, btn) {
+    typeRecherche = type;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const input = document.getElementById('searchInput');
+    input.placeholder = type === 'chat' ? 'Tapez un nom de chat…' : 'Tapez un nom ou prénom…';
+    resetResultats();
+    input.focus();
+}
+
+// ============================================================
+// RESET
+// ============================================================
+function resetResultats() {
+    document.getElementById('resultatsBoc').style.display    = 'none';
+    document.getElementById('formulaireBloc').style.display  = 'none';
+    document.getElementById('erreurMsg').style.display       = 'none';
+    selectedResult = null;
+}
+
+// ============================================================
+// CHARGEMENT DONNÉES
+// ============================================================
+async function chargerDonnees() {
+    if (donneesCache) return donneesCache;
+
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('erreurMsg').style.display = 'none';
+
+    try {
+        const url = APPS_SCRIPT_URL + '?action=lire&onglet=tous';
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        donneesCache = await resp.json();
+        return donneesCache;
+    } catch(e) {
+        afficherErreur('Impossible de contacter le serveur. Vérifiez l\'URL Apps Script. (' + e.message + ')');
+        return null;
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+    }
+}
+
+function afficherErreur(msg) {
+    const el = document.getElementById('erreurMsg');
+    el.textContent = '⚠️ ' + msg;
+    el.style.display = 'block';
+}
+
+// ============================================================
+// RECHERCHE
+// ============================================================
+async function lancerRecherche() {
+    const terme = document.getElementById('searchInput').value.trim();
+    if (!terme) {
+        afficherErreur('Veuillez saisir un terme de recherche.');
+        return;
+    }
+
+    resetResultats();
+    const donnees = await chargerDonnees();
+    if (!donnees) return;
+
+    const resultats = [];
+
+    Object.keys(donnees).forEach(onglet => {
+        const config = ONGLETS_CONFIG[onglet];
+        if (!config) return;
+
+        const { headers, rows } = donnees[onglet];
+        if (!rows || !rows.length) return;
+
+        rows.forEach(row => {
+            // Construire un objet ligne
+            const ligne = {};
+            headers.forEach((h, i) => { ligne[h] = row[i] || ''; });
+
+            let correspond = false;
+            let nomAffiche = '';
+
+            if (typeRecherche === 'chat') {
+                // Recherche par nom de chat
+                const colChat = config.nomChat;
+                if (!colChat) return;
+                const valChat = ligne[colChat] || '';
+                if (!valChat) return;
+                correspond = contient(valChat, terme);
+                if (correspond) nomAffiche = valChat;
+            } else {
+                // Recherche par nom de personne
+                const colsPersonne = config.nomPersonne || [];
+                const valeurs = colsPersonne.map(c => ligne[c] || '').join(' ');
+                correspond = contient(valeurs, terme);
+                if (correspond) nomAffiche = valeurs.trim();
+            }
+
+            if (correspond) {
+                // Info supplémentaire à afficher
+                let detail = '';
+                if (typeRecherche === 'chat') {
+                    // Afficher le nom de la personne
+                    const colsP = config.nomPersonne || [];
+                    detail = colsP.map(c => ligne[c] || '').join(' ').trim();
+                } else {
+                    // Afficher le nom du chat si disponible
+                    if (config.nomChat) detail = ligne[config.nomChat] || '';
+                }
+
+                const dateCol = config.date;
+                const date = ligne[dateCol] || '';
+
+                resultats.push({
+                    onglet,
+                    config,
+                    ligne,
+                    nomAffiche: nomAffiche.trim(),
+                    detail:     detail.trim(),
+                    date,
+                    icone:      config.icone,
+                    label:      config.label
+                });
+            }
+        });
+    });
+
+    // Tri par date décroissante
+    resultats.sort((a, b) => {
+        const da = parseDate(a.date), db = parseDate(b.date);
+        return db - da;
+    });
+
+    afficherResultats(resultats, terme);
+}
+
+function parseDate(str) {
+    if (!str) return 0;
+    const p = str.split('/');
+    if (p.length === 3) return new Date(p[2], p[1]-1, p[0]).getTime();
+    return 0;
+}
+
+// ============================================================
+// AFFICHAGE RÉSULTATS
+// ============================================================
+function afficherResultats(resultats, terme) {
+    const bloc  = document.getElementById('resultatsBoc');
+    const count = document.getElementById('resultatsCount');
+    const liste = document.getElementById('resultatsListe');
+
+    bloc.style.display = 'block';
+
+    if (!resultats.length) {
+        count.innerHTML = '';
+        liste.innerHTML = `
+            <div class="no-result">
+                <span class="emoji">🔍</span>
+                Aucun résultat pour <strong>"${escHtml(terme)}"</strong><br>
+                <span style="font-size:12pt;">Vérifiez l'orthographe ou essayez un autre terme</span>
+            </div>`;
+        return;
+    }
+
+    count.innerHTML = `<strong>${resultats.length}</strong> résultat${resultats.length > 1 ? 's' : ''} trouvé${resultats.length > 1 ? 's' : ''}`;
+
+    liste.innerHTML = resultats.map((r, i) => `
+        <div class="result-item" onclick="selectionnerResultat(${i})" data-idx="${i}">
+            <div class="result-icon">${r.icone}</div>
+            <div class="result-info">
+                <div class="result-nom">${surlignerTerme(r.nomAffiche, terme)}</div>
+                <div class="result-details">
+                    ${r.detail ? surlignerTerme(r.detail, terme) + ' · ' : ''}
+                    ${r.date ? r.date + ' · ' : ''}
+                    ${r.label}
+                </div>
+            </div>
+            <span class="result-tag">${r.onglet.replace(/_/g,' ')}</span>
+            <span class="result-check">✅</span>
+        </div>
+    `).join('');
+
+    // Stocker les résultats pour y accéder lors de la sélection
+    window._resultatsActuels = resultats;
+}
+
+function surlignerTerme(texte, terme) {
+    if (!terme || !texte) return escHtml(texte);
+    const norm    = normaliser(terme);
+    const normTxt = normaliser(texte);
+    const idx     = normTxt.indexOf(norm);
+    if (idx === -1) return escHtml(texte);
+    return escHtml(texte.slice(0, idx))
+        + '<mark style="background:#ffe0b2;border-radius:3px;padding:0 2px;">' + escHtml(texte.slice(idx, idx + terme.length)) + '</mark>'
+        + escHtml(texte.slice(idx + terme.length));
+}
+
+function escHtml(str) {
+    return String(str || '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+}
+
+// ============================================================
+// SÉLECTION D'UN RÉSULTAT
+// ============================================================
+function selectionnerResultat(idx) {
+    // Désélectionner l'ancien
+    document.querySelectorAll('.result-item').forEach(el => el.classList.remove('selected'));
+
+    // Sélectionner le nouveau
+    const el = document.querySelector(`.result-item[data-idx="${idx}"]`);
+    if (el) el.classList.add('selected');
+
+    selectedResult = window._resultatsActuels[idx];
+
+    // Scroll vers choix formulaire
+    afficherChoixFormulaire();
+}
+
+// ============================================================
+// CHOIX DU FORMULAIRE
+// ============================================================
+function afficherChoixFormulaire() {
+    const bloc = document.getElementById('formulaireBloc');
+    const grid = document.getElementById('formGrid');
+    const recap = document.getElementById('selectedNom');
+
+    const r = selectedResult;
+    recap.textContent = r.nomAffiche + (r.detail ? ' — ' + r.detail : '') + ' (' + r.label + ')';
+
+    // Construire les données pré-remplies
+    const prefill = construirePrefill(r);
+    const prefillJson = encodeURIComponent(JSON.stringify(prefill));
+
+    grid.innerHTML = FORMULAIRES.map(f => `
+        <a class="form-card" href="${f.url}?prefill=${prefillJson}" title="${f.desc}">
+            <div class="form-card-icon">${f.icon}</div>
+            <div class="form-card-text">
+                <div class="form-card-title">${f.titre}</div>
+                <div class="form-card-desc">${f.desc}</div>
+            </div>
+        </a>
+    `).join('');
+
+    bloc.style.display = 'block';
+
+    // Scroll doux
+    setTimeout(() => {
+        bloc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+// ============================================================
+// CONSTRUCTION PREFILL
+// ============================================================
+function construirePrefill(r) {
+    const ligne  = r.ligne;
+    const config = r.config;
+    const prefill = {};
+
+    // Copier tous les champs définis dans la config
+    Object.keys(config.champs || {}).forEach(dest => {
+        const src = config.champs[dest];
+        const val = ligne[src];
+        if (val && String(val).trim()) {
+            prefill[dest] = String(val).trim();
+        }
+    });
+
+    // Champs universels personne (tentative sur plusieurs noms de colonnes)
+    const mappingUniversel = {
+        nom:          ['nom'],
+        prenom:       ['prenom'],
+        adresse:      ['adresse', 'adresseAdoptant'],
+        codePostal:   ['codePostal', 'code_postal'],
+        ville:        ['ville'],
+        email:        ['email'],
+        telephone:    ['telephone', 'portable'],
+        portable:     ['portable', 'telephone'],
+        nomComplet:   ['nomComplet', 'nomAdoptant'],
+        prenomAdoptant: ['prenomAdoptant', 'prenom'],
+        nomAdoptant:  ['nomAdoptant', 'nom', 'nomComplet'],
+        prenomSignataire: ['prenomSignataire', 'prenom'],
+        nomSignataire: ['nomSignataire', 'nom'],
+        prenomEmprunteur: ['prenomEmprunteur', 'prenom'],
+        nomEmprunteur: ['nomEmprunteur', 'nom'],
+        codePostalAdoptant: ['codePostalAdoptant', 'codePostal', 'code_postal'],
+        villeAdoptant: ['villeAdoptant', 'ville'],
+        codePostalEmprunteur: ['codePostalEmprunteur', 'codePostal', 'code_postal'],
+        villeEmprunteur: ['villeEmprunteur', 'ville'],
+        adresseEmprunteur: ['adresseEmprunteur', 'adresse'],
+        telephoneEmprunteur: ['telephoneEmprunteur', 'telephone', 'portable'],
+        emailEmprunteur: ['emailEmprunteur', 'email'],
+    };
+
+    Object.keys(mappingUniversel).forEach(dest => {
+        if (prefill[dest]) return; // déjà rempli
+        mappingUniversel[dest].forEach(src => {
+            if (!prefill[dest] && ligne[src] && String(ligne[src]).trim()) {
+                prefill[dest] = String(ligne[src]).trim();
+            }
+        });
+    });
+
+    // Champs chat universels
+    const mappingChat = {
+        nomUsuel:     ['nomUsuel', 'nomChat', 'nom_animal', 'nom_chat', 'nomAnimal'],
+        nomChat:      ['nomChat', 'nomUsuel', 'nom_animal', 'nom_chat', 'nomAnimal'],
+        nom_animal:   ['nom_animal', 'nomAnimal', 'nom_chat', 'nomUsuel', 'nomChat'],
+        nom_chat:     ['nom_chat', 'nom_animal', 'nomAnimal', 'nomUsuel', 'nomChat'],
+        dateNaissance:['dateNaissance', 'date_naissance'],
+        date_naissance:['date_naissance', 'dateNaissance'],
+        couleur:      ['couleur'],
+        puce:         ['puce', 'identification'],
+        identification:['identification', 'puce'],
+        sexe:         ['sexe'],
+    };
+
+    Object.keys(mappingChat).forEach(dest => {
+        if (prefill[dest]) return;
+        mappingChat[dest].forEach(src => {
+            if (!prefill[dest] && ligne[src] && String(ligne[src]).trim()) {
+                prefill[dest] = String(ligne[src]).trim();
+            }
+        });
+    });
+
+    // Source de la donnée (pour info)
+    prefill._source = r.onglet;
+
+    return prefill;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('searchInput').focus();
+});
+</script>
+
+</body>
+</html>
