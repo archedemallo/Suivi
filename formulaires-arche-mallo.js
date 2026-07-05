@@ -74,7 +74,12 @@ function toggleCheck(element, groupName) {
 }
 
 // Toggle case à cocher multi-sélection (sans exclusion de groupe)
-function toggleCheckMulti(element) {
+function toggleCheckMulti(element, event) {
+    // Ignorer les clics qui viennent d'un input, textarea ou select enfant
+    if (event && event.target) {
+        var tag = event.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    }
     // Support direct click on div.motif-ligne or span.clickable-row
     var box = element.querySelector ? element.querySelector('.checkbox') : element;
     if (box) box.classList.toggle('checked');
@@ -975,6 +980,26 @@ function appliquerPrefill() {
                 remplis++;
             }
         });
+
+        // Gérer le sexe (case à cocher radio) — cherche la case dont le texte correspond
+        var sexeVal = data['sexe'] || data['check_sexe'] || data['check_sexe_chat'] || '';
+        if (sexeVal) {
+            // Chercher dans les groupes 'sterilise', 'sexe', 'sexe_chat'
+            ['sexe', 'sexe_chat', 'check_sexe'].forEach(function(grp) {
+                document.querySelectorAll('.checkbox[data-group="' + grp + '"]').forEach(function(cb) {
+                    var txt = (cb.parentElement ? cb.parentElement.textContent : '').trim().toLowerCase();
+                    var sexeNorm = sexeVal.trim().toLowerCase();
+                    if (txt === sexeNorm || 
+                        (sexeNorm.includes('mâle') && txt === 'mâle') ||
+                        (sexeNorm.includes('male') && txt === 'mâle') ||
+                        (sexeNorm.includes('femelle') && txt === 'femelle')) {
+                        // Décocher tous du groupe puis cocher celui-ci
+                        document.querySelectorAll('.checkbox[data-group="' + grp + '"]').forEach(function(c) { c.classList.remove('checked'); });
+                        cb.classList.add('checked');
+                    }
+                });
+            });
+        }
 
         console.log('[Prefill] ' + remplis + ' champ(s) pré-rempli(s) depuis ' + (data._source || '?'));
 
