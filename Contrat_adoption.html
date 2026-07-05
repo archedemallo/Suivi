@@ -375,7 +375,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
 <p><strong><span class="blue">Paiement effectué par :</span></strong></p>
 <div id="paiement-section">
     <div class="paiement-ligne">
-        <span class="clickable-row" onclick="togglePaiement(this, 'virement')">
+        <span class="clickable-row" onclick='togglePaiement(this, 'virement', event)'>
             <span class="checkbox" id="pay_virement"></span> Virement
         </span>
         <span id="detail_virement" style="display:none;">
@@ -383,7 +383,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
         </span>
     </div>
     <div class="paiement-ligne">
-        <span class="clickable-row" onclick="togglePaiement(this, 'cb')">
+        <span class="clickable-row" onclick='togglePaiement(this, 'cb', event)'>
             <span class="checkbox" id="pay_cb"></span> CB
         </span>
         <span id="detail_cb" style="display:none;">
@@ -391,7 +391,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
         </span>
     </div>
     <div class="paiement-ligne">
-        <span class="clickable-row" onclick="togglePaiement(this, 'espece')">
+        <span class="clickable-row" onclick='togglePaiement(this, 'espece', event)'>
             <span class="checkbox" id="pay_espece"></span> Espèce
         </span>
         <span id="detail_espece" style="display:none;">
@@ -399,7 +399,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
         </span>
     </div>
     <div class="paiement-ligne">
-        <span class="clickable-row" onclick="togglePaiement(this, 'cheque')">
+        <span class="clickable-row" onclick='togglePaiement(this, 'cheque', event)'>
             <span class="checkbox" id="pay_cheque"></span> Chèque
         </span>
         <span id="detail_cheque" style="display:none;">
@@ -408,7 +408,7 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
         </span>
     </div>
     <div class="paiement-ligne">
-        <span class="clickable-row" onclick="togglePaiement(this, 'plusieurs_cheques')">
+        <span class="clickable-row" onclick='togglePaiement(this, 'plusieurs_cheques', event)'>
             <span class="checkbox" id="pay_plusieurs_cheques"></span> Plusieurs chèques
         </span>
         <span id="detail_plusieurs_cheques" style="display:none;">
