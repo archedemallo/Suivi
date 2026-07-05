@@ -512,19 +512,25 @@
 // FORMULAIRES DISPONIBLES
 // ============================================================
 const FORMULAIRES = [
+    // CESSION
     { id: 'adoption',        icon: '📋', titre: 'Contrat de cession à charge',          desc: 'Adoption définitive',          url: 'Contrat_adoption.html',                                    lieChatEt: true },
+    { id: 'certificat',      icon: '📜', titre: 'Certificat d\'engagement',             desc: '7 jours avant cession',        url: 'Certificat_engagement_et_de_connaissance.html',            lieChatEt: false },
+    { id: 'decharge',        icon: '💉', titre: 'Décharge — avant 2ème vaccin',          desc: 'Engagement rappel vaccinal',   url: 'Formulaire_decharge_vaccin.html',                          lieChatEt: true },
+    // RÉSERVATION
     { id: 'reserv_chat',     icon: '🐱', titre: 'Réservation — Chat',                   desc: 'Acompte 50€ chat adulte',      url: 'Contrat_reservation_chat.html',                            lieChatEt: true },
     { id: 'reserv_chaton',   icon: '🐾', titre: 'Réservation — Chaton',                 desc: 'Acompte 50€ chaton',           url: 'Contrat_reservation_chaton.html',                          lieChatEt: true },
+    { id: 'reserv_autre',    icon: '🐇', titre: 'Réservation — Autre animal',            desc: 'Acompte 50€ autre animal',     url: 'Contrat_reservation_autre_animal.html',                    lieChatEt: true },
+    // ADHÉSION & DONS
+    { id: 'adhesion',        icon: '🎗️', titre: 'Bulletin d\'adhésion',                desc: 'Adhésion annuelle',            url: 'Bulletin_adhesion.html',                                   lieChatEt: false },
+    { id: 'don',             icon: '💝', titre: 'Don',                                  desc: 'Don à l\'association',         url: 'Dons.html',                                                lieChatEt: false },
+    // DÉPÔT & ABANDON
+    { id: 'abandon',         icon: '💔', titre: 'Formulaire d\'abandon',                desc: 'Cession à l\'association',     url: 'Formulaire_abandon.html',                                  lieChatEt: true },
+    { id: 'depot',           icon: '📦', titre: 'Dépôt chat / chaton',                  desc: 'Chat errant trouvé',           url: 'Formulaire_depot_chat.html',                               lieChatEt: false },
+    // FAMILLE D'ACCUEIL
     { id: 'fa_provisoire',   icon: '⏳', titre: 'Famille d\'accueil provisoire',        desc: 'Accueil temporaire',           url: 'Formulaire_famille_accueil_provisoire.html',               lieChatEt: true },
     { id: 'fa_libre',        icon: '🌿', titre: 'Famille d\'accueil — chat libre',      desc: 'Accueil en extérieur',         url: 'Formulaire_famille_accueil_definitive_chat_libre.html',    lieChatEt: true },
     { id: 'fa_adoption',     icon: '🤝', titre: 'Famille d\'accueil — adoption',        desc: 'Avant adoption définitive',    url: 'Contrat_famille_accueil_adoption_definitive.html',         lieChatEt: true },
-    { id: 'abandon',         icon: '💔', titre: 'Formulaire d\'abandon',                desc: 'Cession à l\'association',     url: 'Formulaire_abandon.html',                                  lieChatEt: true },
-    { id: 'depot',           icon: '📦', titre: 'Dépôt chat / chaton',                  desc: 'Chat errant trouvé',           url: 'Formulaire_depot_chat.html',                               lieChatEt: false },
-    { id: 'certificat',      icon: '📜', titre: 'Certificat d\'engagement',             desc: '7 jours avant cession',        url: 'Certificat_engagement_et_de_connaissance.html',            lieChatEt: false },
-    { id: 'adhesion',        icon: '🎗️', titre: 'Bulletin d\'adhésion',                desc: 'Adhésion annuelle',            url: 'Bulletin_adhesion.html',                                   lieChatEt: false },
-    { id: 'don',             icon: '💝', titre: 'Don',                                  desc: 'Don à l\'association',         url: 'Dons.html',                                                lieChatEt: false },
-    { id: 'reserv_autre',    icon: '🐇', titre: 'Réservation — Autre animal',            desc: 'Acompte 50€ autre animal',     url: 'Contrat_reservation_autre_animal.html',                    lieChatEt: true },
-    { id: 'decharge',        icon: '💉', titre: 'Décharge — avant 2ème vaccin',          desc: 'Engagement rappel vaccinal',   url: 'Formulaire_decharge_vaccin.html',                          lieChatEt: true },
+    // FORMULAIRES DIVERS
     { id: 'cbs_absent',      icon: '🩺', titre: 'Attestation CBS Absent',                desc: 'CBS non fourni',               url: 'Formulaire_CBS_absent.html',                               lieChatEt: true },
     { id: 'pret',            icon: '🪤', titre: 'Contrat prêt de matériel',              desc: 'Prêt cage trappe/transport',   url: 'Formulaire_pret_materiel.html',                            lieChatEt: false },
     { id: 'retour_pret',     icon: '↩️', titre: 'Retour de matériel',                   desc: 'Constat de retour',            url: 'Formulaire_retour_materiel.html',                          lieChatEt: false },
@@ -853,19 +859,31 @@ async function lancerRecherche() {
             let nomAffiche = '';
 
             if (typeRecherche === 'chat') {
-                // Recherche par nom de chat
+                // Recherche par nom de chat — cherche dans toutes les colonnes chat possibles
                 const colChat = config.nomChat;
                 if (!colChat) return;
                 const valChat = ligne[colChat] || '';
-                if (!valChat) return;
-                correspond = contient(valChat, terme);
-                if (correspond) nomAffiche = valChat;
+                // Chercher aussi dans nomAdoption (nom donné par l'adoptant) et nomUsuel
+                const valAdoption = ligne['nomAdoption'] || ligne['nomUsuel'] || '';
+                const valNomChat  = ligne['nomChat'] || ligne['nom_chat'] || ligne['nom_animal'] || '';
+                const toutesVals  = [valChat, valAdoption, valNomChat].filter(Boolean).join(' ');
+                if (!toutesVals.trim()) return;
+                correspond = contient(toutesVals, terme);
+                if (correspond) {
+                    // Afficher le nom le plus pertinent
+                    nomAffiche = valChat || valNomChat || valAdoption;
+                    if (valAdoption && valAdoption !== nomAffiche) {
+                        nomAffiche += ' (' + valAdoption + ')';
+                    }
+                }
             } else {
-                // Recherche par nom de personne
+                // Recherche par nom de personne — cherche dans nom, prenom, nomComplet, nomAdoptant
                 const colsPersonne = config.nomPersonne || [];
-                const valeurs = colsPersonne.map(c => ligne[c] || '').join(' ');
+                const colsExtra = ['nom', 'prenom', 'nomComplet', 'nomAdoptant', 'nomEmprunteur', 'nomSignataire'];
+                const toutesColsPers = [...new Set([...colsPersonne, ...colsExtra])];
+                const valeurs = toutesColsPers.map(c => ligne[c] || '').filter(Boolean).join(' ');
                 correspond = contient(valeurs, terme);
-                if (correspond) nomAffiche = valeurs.trim();
+                if (correspond) nomAffiche = colsPersonne.map(c => ligne[c] || '').join(' ').trim() || valeurs.trim();
             }
 
             if (correspond) {
@@ -1046,7 +1064,7 @@ function construirePrefill(r) {
     const mappingUniversel = {
         nom:          ['nom'],
         prenom:       ['prenom'],
-        adresse:      ['adresse', 'adresseAdoptant'],
+        adresse:      ['adresse', 'adresseAdoptant', 'adresseEmprunteur'],
         codePostal:   ['codePostal', 'code_postal'],
         ville:        ['ville'],
         email:        ['email'],
@@ -1063,7 +1081,8 @@ function construirePrefill(r) {
         villeAdoptant: ['villeAdoptant', 'ville'],
         codePostalEmprunteur: ['codePostalEmprunteur', 'codePostal', 'code_postal'],
         villeEmprunteur: ['villeEmprunteur', 'ville'],
-        adresseEmprunteur: ['adresseEmprunteur', 'adresse'],
+        adresseEmprunteur: ['adresseEmprunteur', 'adresse', 'adresseAdoptant'],
+        adresseAdoptant: ['adresseAdoptant', 'adresse'],
         telephoneEmprunteur: ['telephoneEmprunteur', 'telephone', 'portable'],
         emailEmprunteur: ['emailEmprunteur', 'email'],
     };
@@ -1079,16 +1098,27 @@ function construirePrefill(r) {
 
     // Champs chat universels
     const mappingChat = {
-        nomUsuel:     ['nomUsuel', 'nomChat', 'nom_animal', 'nom_chat', 'nomAnimal'],
-        nomChat:      ['nomChat', 'nomUsuel', 'nom_animal', 'nom_chat', 'nomAnimal'],
-        nom_animal:   ['nom_animal', 'nomAnimal', 'nom_chat', 'nomUsuel', 'nomChat'],
-        nom_chat:     ['nom_chat', 'nom_animal', 'nomAnimal', 'nomUsuel', 'nomChat'],
-        dateNaissance:['dateNaissance', 'date_naissance'],
+        nomUsuel:      ['nomUsuel', 'nomChat', 'nom_animal', 'nom_chat', 'nomAnimal'],
+        nomChat:       ['nomChat', 'nomUsuel', 'nom_animal', 'nom_chat', 'nomAnimal'],
+        nom_animal:    ['nom_animal', 'nomAnimal', 'nom_chat', 'nomUsuel', 'nomChat'],
+        nom_chat:      ['nom_chat', 'nom_animal', 'nomAnimal', 'nomUsuel', 'nomChat'],
+        dateNaissance: ['dateNaissance', 'date_naissance'],
         date_naissance:['date_naissance', 'dateNaissance'],
-        couleur:      ['couleur'],
-        puce:         ['puce', 'identification'],
+        couleur:       ['couleur'],
+        puce:          ['puce', 'identification'],
         identification:['identification', 'puce'],
-        sexe:         ['sexe'],
+        sexe:          ['sexe', 'check_sexe', 'check_sexe_chat'],
+        check_sexe:    ['check_sexe', 'sexe', 'check_sexe_chat'],
+        check_sexe_chat: ['check_sexe_chat', 'sexe', 'check_sexe'],
+        nomAdoption:   ['nomAdoption'],
+        nomMaman:      ['nomMaman'],
+        dateVermifuge: ['dateVermifuge'],
+        produitVermifuge: ['produitVermifuge'],
+        dateAntiPuces: ['dateAntiPuces'],
+        produitAntiPuces: ['produitAntiPuces'],
+        dateVaccin:    ['dateVaccin'],
+        dateRappel:    ['dateRappel'],
+        dateSterilisationPrevue: ['dateSterilisationPrevue'],
     };
 
     Object.keys(mappingChat).forEach(dest => {
