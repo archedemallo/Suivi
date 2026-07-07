@@ -651,7 +651,7 @@ function resetForm() {
     if (!confirm('Voulez-vous vraiment reinitialiser le formulaire ? Toutes les donnees saisies seront perdues.')) return;
 
     var today      = getTodayISO();
-    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge','dateprochainAntiPuces', 'dateAntipuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin', 'dateNaissanceMembre'];
+    var excludeIds = ['dateNaissance', 'dateSterilisationPrevue', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge','dateprochainAntiPuces', 'dateAntipuces', 'dateVaccin' ,'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin', 'dateNaissanceMembre'];
 
     document.querySelectorAll('input.editable').forEach(function(input) {
         if (input.type === 'date') {
@@ -700,7 +700,7 @@ function getTodayISO() {
 // ============================================================
 document.addEventListener('DOMContentLoaded', function() {
     var today      = getTodayISO();
-    var excludeIds = ['dateNaissance', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntipuces', 'dateAntiPuces', 'dateprochainAntiPuces', 'dateVaccin', 'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin'];
+    var excludeIds = ['dateNaissance', 'dateSterilisationPrevue', 'dateNaissancePersonne', 'dateVermifuge', 'prochainVermifuge', 'dateAntipuces', 'dateAntiPuces', 'dateprochainAntiPuces', 'dateVaccin', 'dateRappel', 'dateSterilisationCas1', 'dateLimiteSterilisation', 'dateCertificatVeto', 'date_debut', 'date_fin'];
 
     document.querySelectorAll('input[type="date"].editable').forEach(function(el) {
         if (!excludeIds.includes(el.id) && !el.value) {
