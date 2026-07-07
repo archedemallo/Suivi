@@ -145,10 +145,13 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
                 onchange="aperçuPhoto(this, 'preview_Animal')">
         </label>
     </div>
-    <!-- Aperçu visible dans le PDF — HORS no-print intentionnellement -->
+<!-- Aperçu visible dans le PDF — HORS no-print intentionnellement -->
     <div id="preview_Animal" style="margin-top:6px;"></div>
+    <div class="no-print" style="margin-top:4px;">
+        <button type="button" class="btn-voir-photo" onclick="ouvrirPhoto('preview_Animal')" id="btn_voir_animal" style="display:none;">Voir la photo de l'animal</button>
+    </div>
 </div>
-
+	
 <div class="section">
     <p class="bold blue">Pièce d'identité :
         <span class="clickable-row" onclick="toggleCheck(this, 'cni_statut')">
@@ -634,12 +637,29 @@ function aperçuPhoto(input, previewId) {
     var reader = new FileReader();
     reader.onload = function(e) {
         var src = e.target.result;
-        preview.innerHTML = '<img src="' + src + '" style="max-width:200px;max-height:150px;margin-top:4px;border:1px solid #ccc;border-radius:4px;display:block;" alt="Photo">' +
-            '<span class="no-print" style="font-size:10px;color:green;">✔ ' + file.name + '</span>';
-        // Stocker la base64 sur le div pour buildHtmlWithData
         preview._photoBase64 = src;
+        if (previewId === 'preview_Animal') {
+            preview.innerHTML =
+                '<img src="' + src + '" style="max-width:200px;max-height:150px;margin-top:4px;border:1px solid #ccc;border-radius:4px;display:block;" alt="Photo animal">' +
+                '<span class="no-print" style="font-size:10px;color:green;display:block;margin-top:2px;">✔ ' + file.name + '</span>';
+            // Afficher le bouton Voir la photo
+            var btnVoir = document.getElementById('btn_voir_animal');
+            if (btnVoir) btnVoir.style.display = 'inline-block';
+        } else {
+            preview.innerHTML =
+                '<span style="font-size:11px;color:green;display:block;">✔ ' + file.name + '</span>' +
+                '<button type="button" class="btn-voir-photo no-print" onclick="ouvrirPhoto('' + previewId + '')" style="margin-top:4px;">Voir la photo</button>';
+        }
     };
     reader.readAsDataURL(file);
+}
+
+function ouvrirPhoto(previewId) {
+    var preview = document.getElementById(previewId);
+    if (!preview || !preview._photoBase64) return;
+    var w = window.open();
+    w.document.write('<body style="margin:0;background:#000;"><img src="' + preview._photoBase64 + '" style="max-width:100%;height:auto;display:block;margin:auto;"></body>');
+    w.document.close();
 }
 
     // Redimensionner une image avant envoi (max 1200px, qualité 0.7)
