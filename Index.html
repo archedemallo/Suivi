@@ -345,11 +345,77 @@
         .don-btn { justify-content: center; }
     }
 
+    /* --- BANDEAU MAINTENANCE DÉFILANT --- */
+    .bandeau-maintenance {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 200;
+        background: var(--orange);
+        color: white;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 10px 0;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        font-size: 11pt;
+    }
+
+    .bandeau-maintenance span {
+        display: inline-block;
+        padding-left: 100%;
+        animation: defilement 40s linear infinite;
+    }
+
+    @keyframes defilement {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+    }
 
 </style>
 <script src="config.js"></script>
 </head>
 <body>
+<script>
+  // ==== Configuration maintenance — à modifier avant chaque opération ====
+  const MAINTENANCE = {
+    active: false,        // true = redirige tout le monde vers Maintenance.html false, = pas de redirection / true, = redirection
+    banniere: true,       // true = affiche un bandeau d'annonce même hors maintenance -->true,  = banniere active
+    jour: "vendredi 10 juillet", 		// Changer la date ICI
+    debut: "17h00", 				// Changer l'heure  ICI
+    fin: "19h00" 				// Changer l'heure  ICI
+  };
+
+  if (MAINTENANCE.active) {
+    const params = new URLSearchParams({
+      jour: MAINTENANCE.jour, debut: MAINTENANCE.debut, fin: MAINTENANCE.fin
+    }).toString();
+    window.location.href = "Maintenance.html?" + params;
+  } else if (MAINTENANCE.banniere) {
+    window.addEventListener('DOMContentLoaded', () => {
+      const message = "🔧 Maintenance prévue le " + MAINTENANCE.jour + " de " + MAINTENANCE.debut + " à " + MAINTENANCE.fin +
+        " — Si un rendez-vous est programmé sur ce créneau, merci de le signaler sur le groupe WhatsApp";
+
+      const bandeau = document.createElement('div');
+      bandeau.className = 'bandeau-maintenance';
+
+      const texte = document.createElement('span');
+      texte.textContent = message + '\u00A0\u00A0\u00A0\u00A0•\u00A0\u00A0\u00A0\u00A0' + message;
+      bandeau.appendChild(texte);
+
+      document.body.prepend(bandeau);
+
+      // Décale le header (sticky) et le contenu de la hauteur du bandeau fixe
+      const hauteur = bandeau.offsetHeight;
+      document.body.style.paddingTop = hauteur + 'px';
+      const header = document.querySelector('header');
+      if (header) header.style.top = hauteur + 'px';
+    });
+  }
+</script>
+
+
 
 <!-- EN-TÊTE -->
 <header>
@@ -617,6 +683,10 @@
         const el = document.getElementById('virementInfo');
         el.style.display = el.style.display === 'none' || el.style.display === '' ? 'block' : 'none';
     }
+	
+	
+	
+	
     </script>
 
 </body>
