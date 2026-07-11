@@ -29,7 +29,7 @@
         <span class="clickable-row" onclick="toggleCheck(this, 'espece')"><span class="checkbox" data-group="espece" id="espece_lapin"></span> Lapin</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'espece')"><span class="checkbox" data-group="espece" id="espece_chien"></span> Chien</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'espece')"><span class="checkbox" data-group="espece" id="espece_autre"></span> Autre :
-            <input type="text" class="editable editable-medium" id="espece_autre_texte" style="width:150px;">
+            <input type="text" class="editable editable-medium" id="espece_autre_texte" style="width:150px;" onclick="event.stopPropagation()">
         </span>
     </p>
     <p>
@@ -134,7 +134,7 @@
         </span>
         <span class="clickable-row" onclick="toggleCheckMulti(this, event)">
             <span class="checkbox" id="animal_autre"></span> Autre :
-            <input type="text" class="editable editable-medium" id="animal_autre_texte">
+            <input type="text" class="editable editable-medium" id="animal_autre_texte" onclick="event.stopPropagation()">
         </span>
     </p>
     <p>
@@ -244,6 +244,9 @@
     </div>
     <!-- Aperçu visible dans le PDF — HORS no-print intentionnellement -->
     <div id="preview_Animal" style="margin-top:6px;"></div>
+    <div class="no-print" style="margin-top:4px;">
+        <button type="button" class="btn-voir-photo" onclick="ouvrirPhoto('preview_Animal')" id="btn_voir_animal" style="display:none;">Voir la photo de l'animal</button>
+    </div>
 </div>
 
 <!-- Signatures -->
