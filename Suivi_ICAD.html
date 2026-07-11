@@ -76,10 +76,10 @@ tr.done-row td { opacity:.75; }
 
 .chat-name { font-weight:500; font-size:14px; }
 .badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:500; margin-left:6px; background:var(--blue-light); color:var(--blue); }
-.puce { font-size:11px; color:var(--grey); }
+.puce { font-size:11px; color:var(--grey); display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom; }
 
 /* COMMENTAIRE INLINE */
-.comment-input { border:1px solid #e0d8ce; border-radius:6px; padding:5px 8px; font-size:12px; font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--brown); width:100%; min-width:120px; max-width:180px; resize:none; }
+.comment-input { border:1px solid #e0d8ce; border-radius:6px; padding:5px 8px; font-size:12px; font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--brown); width:100%; box-sizing:border-box; resize:none; }
 .comment-input:focus { outline:none; border-color:var(--orange); }
 
 /* ICAD ACTION */
@@ -476,7 +476,6 @@ function rendreLignes(icadMap) {
         const icad = icadMap[cle] || {};
         const fait = icad.statut === 'ok' && icad.date;
         const nom  = l.nom + ' ' + l.prenom;
-        const puceShort = l.puce ? l.puce.substring(0,8) + '...' : '—';
 
         const chatCell = `<span class="chat-name">${esc(l.nomUsuel || '—')}</span>${l.nomAdoption ? '<span class="badge">' + esc(l.nomAdoption) + '</span>' : ''}`;
 
@@ -499,7 +498,7 @@ function rendreLignes(icadMap) {
 
         return `<tr class="${rowClass}" id="row-${i}">
             <td>${chatCell}</td>
-            <td><span class="puce" title="${esc(l.puce)}">${puceShort}</span></td>
+            <td><span class="puce" title="${esc(l.puce)}">${esc(l.puce) || '—'}</span></td>
             <td>${esc(nom)}</td>
             <td>${esc(l.dateAdoption)}</td>
             <td>${commentCell}</td>
