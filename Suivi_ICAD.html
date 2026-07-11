@@ -225,15 +225,11 @@ tr.done-row td { opacity:.75; }
 
 <script>
 // ============================================================
-// CONFIG — même URL Apps Script que le projet Suivi
+// CONFIG — APPS_SCRIPT_URL est déjà déclaré par config.js
+// (ne pas le redéclarer ici avec const, sinon SyntaxError
+// "already been declared", les <script> classiques partagent
+// le même scope lexical au niveau racine du document)
 // ============================================================
-const APPS_SCRIPT_URL = (typeof window.APPS_SCRIPT_URL !== 'undefined')
-    ? window.APPS_SCRIPT_URL
-    : 'https://script.google.com/macros/s/AKfycbyi6VoI-aVRqRn6ggz5hNL2N5oSTIBvtkn7fNnOTd9jTlIB5XztmL_EkuWSun8OBxwyqg/exec';
-
-const SPREADSHEET_ID = (typeof window.SPREADSHEET_ID !== 'undefined')
-    ? window.SPREADSHEET_ID
-    : '';
 
 // ============================================================
 // ÉTAT
