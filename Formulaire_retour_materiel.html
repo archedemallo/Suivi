@@ -58,7 +58,7 @@
         </div>
         <div class="motif-ligne" onclick="toggleCheckMulti(this)">
             <span class="checkbox" id="materiel_autre"></span>
-            <span>Autre : <input type="text" class="editable editable-medium" id="materiel_autre_texte"></span>
+            <span>Autre : <input type="text" class="editable editable-medium" onclick="event.stopPropagation()" id="materiel_autre_texte"></span>
         </div>
         <p>
             <span class="blue">N° de la cage / trappe ou de transport :</span>
@@ -116,9 +116,9 @@
             <span class="blue">Mode de restitution de la caution :</span>
         </p>
         <div class="motif-ligne" onclick="toggleCheckMulti(this)">
-            <span class="checkbox" id="restitution_cheque"></span>
+            <span class="checkbox" id="restitution_cheque" onclick="event.stopPropagation()"></span>
             <span>Restitution par chèque — N°
-                <input type="text" class="editable editable-medium" id="numeroChequeRestitution" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                <input type="text" class="editable editable-medium" onclick="event.stopPropagation()" id="numeroChequeRestitution" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </span>
         </div>
         <div class="motif-ligne" onclick="toggleCheckMulti(this)">
