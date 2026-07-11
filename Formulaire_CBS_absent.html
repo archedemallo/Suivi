@@ -54,7 +54,7 @@
         <div class="motif-ligne" onclick="toggleCheckMulti(this)">
             <span class="checkbox" id="motif_traitement"></span>
             <span>L'animal est actuellement sous traitement :
-                <input type="text" class="editable editable-long" id="motifTraitement" placeholder="préciser le traitement">
+                <input type="text" class="editable editable-long" onclick="event.stopPropagation()" id="motifTraitement" placeholder="préciser le traitement">
             </span>
         </div>
 
@@ -71,7 +71,7 @@
 
         <div class="motif-ligne" onclick="toggleCheckMulti(this)">
             <span class="checkbox" id="motif_autre"></span>
-            <span>Autre motif : <input type="text" class="editable editable-long" id="motifAutre"></span>
+            <span>Autre motif : <input type="text" class="editable editable-long" onclick="event.stopPropagation()" id="motifAutre"></span>
         </div>
 
         <p class="mt-20">
