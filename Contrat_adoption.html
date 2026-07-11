@@ -5,6 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contrat_adoption</title>
 <link rel="stylesheet" href="formulaires-arche-mallo.css">
+<style>
+    .champ-ligne {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 10px;
+        row-gap: 4px;
+    }
+    .champ-label {
+        display: inline-block;
+        min-width: 150px;
+        flex-shrink: 0;
+    }
+    .groupe-oui-non {
+        display: inline-flex;
+        gap: 16px;
+        min-width: 100px;
+        flex-shrink: 0;
+    }
+    .si-oui-label {
+        min-width: 55px;
+        flex-shrink: 0;
+    }
+    .groupe-resultat {
+        display: inline-flex;
+        gap: 16px;
+    }
+</style>
 </head>
 <body data-form-id="Adoption">
 
@@ -75,22 +103,30 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     </p>
 	
     <p><span class="blue">Prochain Anti-puces et tiques :</span> le <input type="date" class="editable editable-date" id="dateprochainAntiPuces"></p>
-    <p>
-        <span class="blue">Testé(e) FIV/FEL :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'testFIV'); majObligatoire('testFIV', ['resultatFIV'])"><span class="checkbox" data-group="testFIV"></span> OUI</span>
-<span class="clickable-row" onclick="toggleCheck(this, 'testFIV'); majObligatoire('testFIV', ['resultatFIV'])"><span class="checkbox" data-group="testFIV"></span> NON</span>
-        Si oui :
-        <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> NÉGATIF</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> POSITIF</span>
-    </p>
-    <p><span class="blue">
-        Test diarrhée :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee'); majObligatoire('testDiarrhee', ['resultatDiarrhee'])"><span class="checkbox" data-group="testDiarrhee"></span> OUI</span>
-<span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee'); majObligatoire('testDiarrhee', ['resultatDiarrhee'])"><span class="checkbox" data-group="testDiarrhee"></span> NON</span>
-         Si oui :
-        <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> NÉGATIF</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> POSITIF</span>
-    </p>
+    <div class="champ-ligne">
+        <span class="champ-label blue">Testé(e) FIV/FEL :</span>
+        <span class="groupe-oui-non">
+            <span class="clickable-row" onclick="toggleCheck(this, 'testFIV'); majObligatoire('testFIV', ['resultatFIV'])"><span class="checkbox" data-group="testFIV"></span> OUI</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'testFIV'); majObligatoire('testFIV', ['resultatFIV'])"><span class="checkbox" data-group="testFIV"></span> NON</span>
+        </span>
+        <span class="si-oui-label">Si oui :</span>
+        <span class="groupe-resultat">
+            <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> NÉGATIF</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'resultatFIV')"><span class="checkbox" data-group="resultatFIV"></span> POSITIF</span>
+        </span>
+    </div>
+    <div class="champ-ligne">
+        <span class="champ-label blue">Test diarrhée :</span>
+        <span class="groupe-oui-non">
+            <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee'); majObligatoire('testDiarrhee', ['resultatDiarrhee'])"><span class="checkbox" data-group="testDiarrhee"></span> OUI</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'testDiarrhee'); majObligatoire('testDiarrhee', ['resultatDiarrhee'])"><span class="checkbox" data-group="testDiarrhee"></span> NON</span>
+        </span>
+        <span class="si-oui-label">Si oui :</span>
+        <span class="groupe-resultat">
+            <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> NÉGATIF</span>
+            <span class="clickable-row" onclick="toggleCheck(this, 'resultatDiarrhee')"><span class="checkbox" data-group="resultatDiarrhee"></span> POSITIF</span>
+        </span>
+    </div>
     <p><span class="blue">
         Vaccin Coryza-Typhus :</span>
         <span class="clickable-row" onclick="var n=document.getElementById('vaccin_non'); if(n){n.classList.toggle('checked'); if(n.classList.contains('checked')){['vaccin_primo','vaccin_secundo'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.remove('checked');});}}"><span class="checkbox" data-group="vaccin_non" id="vaccin_non"></span> NON</span>
@@ -147,6 +183,9 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
     </div>
     <!-- Aperçu visible dans le PDF — HORS no-print intentionnellement -->
     <div id="preview_Animal" style="margin-top:6px;"></div>
+    <div class="no-print" style="margin-top:4px;">
+        <button type="button" class="btn-voir-photo" onclick="ouvrirPhoto('preview_Animal')" id="btn_voir_animal" style="display:none;">Voir la photo de l'animal</button>
+    </div>
 </div>
 
 <div class="section">
@@ -615,6 +654,9 @@ creerEntete({ dateId: 'dateAdoption', dateLabel: 'Date de cession à charge :' }
         var el = document.getElementById(id);
         if (el && !el.value) el.value = today;
     });
+    // Ne pas pré-remplir la date de stérilisation
+    var steril = document.getElementById('dateSterilisationPrevue');
+    if (steril) steril.value = '';
     appliquerPrefill();
 
 // remplie le nom de la partie je soussigné avec le nom de la famille
@@ -634,12 +676,29 @@ function aperçuPhoto(input, previewId) {
     var reader = new FileReader();
     reader.onload = function(e) {
         var src = e.target.result;
-        preview.innerHTML = '<img src="' + src + '" style="max-width:200px;max-height:150px;margin-top:4px;border:1px solid #ccc;border-radius:4px;display:block;" alt="Photo">' +
-            '<span class="no-print" style="font-size:10px;color:green;">✔ ' + file.name + '</span>';
-        // Stocker la base64 sur le div pour buildHtmlWithData
         preview._photoBase64 = src;
+        if (previewId === 'preview_Animal') {
+            preview.innerHTML =
+                '<img src="' + src + '" style="max-width:200px;max-height:150px;margin-top:4px;border:1px solid #ccc;border-radius:4px;display:block;" alt="Photo animal">' +
+                '<span class="no-print" style="font-size:10px;color:green;display:block;margin-top:2px;">✔ ' + file.name + '</span>';
+            // Afficher le bouton Voir la photo
+            var btnVoir = document.getElementById('btn_voir_animal');
+            if (btnVoir) btnVoir.style.display = 'inline-block';
+        } else {
+            preview.innerHTML =
+                `<span style="font-size:11px;color:green;display:block;">✔ ${file.name}</span>` +
+                `<button type="button" class="btn-voir-photo no-print" onclick="ouvrirPhoto('${previewId}')" style="margin-top:4px;">Voir la photo</button>`;
+        }
     };
     reader.readAsDataURL(file);
+}
+
+function ouvrirPhoto(previewId) {
+    var preview = document.getElementById(previewId);
+    if (!preview || !preview._photoBase64) return;
+    var w = window.open();
+    w.document.write('<body style="margin:0;background:#000;"><img src="' + preview._photoBase64 + '" style="max-width:100%;height:auto;display:block;margin:auto;"></body>');
+    w.document.close();
 }
 
     // Redimensionner une image avant envoi (max 1200px, qualité 0.7)
