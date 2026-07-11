@@ -373,6 +373,45 @@
         100% { transform: translateX(-100%); }
     }
 
+
+    /* --- ONGLETS --- */
+    .tabbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 28px;
+    }
+
+    .tab-btn {
+        padding: 11px 20px;
+        border-radius: 10px;
+        border: 2px solid var(--warm);
+        background: var(--white);
+        color: var(--brown);
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        font-size: 11pt;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .tab-btn:hover { border-color: var(--orange-light); }
+
+    .tab-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    @media (max-width: 600px) {
+        .tabbar { gap: 8px; }
+        .tab-btn { padding: 9px 14px; font-size: 10pt; }
+    }
 </style>
 <script src="config.js"></script>
 </head>
@@ -435,8 +474,20 @@
 <!-- GRILLE DES FORMULAIRES -->
 <div class="grid-container">
 
-    <!-- 0. ACCÈS RAPIDE -->
-    <div class="section-label">✨ Accès rapide</div>
+    <div class="tabbar">
+        <button type="button" class="tab-btn" data-slug="rapide" onclick="activerOnglet('rapide')">🔍 Formulaires pré-remplis</button>
+        <button type="button" class="tab-btn" data-slug="reservation" onclick="activerOnglet('reservation')">📅 Réservation</button>
+        <button type="button" class="tab-btn active" data-slug="cession" onclick="activerOnglet('cession')">🏠 Cession</button>
+        <button type="button" class="tab-btn" data-slug="adhesion-dons" onclick="activerOnglet('adhesion-dons')">📌 Adhésion & Dons</button>
+        <button type="button" class="tab-btn" data-slug="depot-abandon" onclick="activerOnglet('depot-abandon')">📥 Dépôt & Abandon</button>
+        <button type="button" class="tab-btn" data-slug="famille" onclick="activerOnglet('famille')">🏡 Famille d'accueil</button>
+        <button type="button" class="tab-btn" data-slug="pret-materiel" onclick="activerOnglet('pret-materiel')">🪤 Prêt matériel</button>
+        <button type="button" class="tab-btn" data-slug="impression" onclick="activerOnglet('impression')">🖨️ Impression</button>
+        <button type="button" class="tab-btn" data-slug="icad" onclick="activerOnglet('icad')">🏷️ ICAD</button>
+        <button type="button" class="tab-btn" data-slug="dashboard" onclick="activerOnglet('dashboard')">📊 Tableau de bord</button>
+    </div>
+
+    <div class="tab-content" data-slug="rapide" id="tab-rapide">
     <div class="grid">
         <a class="card" href="formulaires_preremplis.html" style="border-color:var(--orange);background:linear-gradient(135deg,#fff8f0,#fff3e6);">
             <div class="card-icon" style="background:var(--warm);">🔍</div>
@@ -447,38 +498,9 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
-
-    <!-- 1. CESSION -->
-    <div class="section-label">🏠 Cession</div>
-    <div class="grid">
-        <a class="card" href="Contrat_adoption.html">
-            <div class="card-icon">📋</div>
-            <div class="card-text">
-                <div class="card-title">Contrat de cession à charge</div>
-                <div class="card-desc">Contrat complet avec engagement stérilisation et frais</div>
-            </div>
-            <div class="card-arrow">›</div>
-        </a>
-        <a class="card" href="Certificat_engagement_et_de_connaissance.html">
-            <div class="card-icon">📜</div>
-            <div class="card-text">
-                <div class="card-title">Certificat d'engagement et de connaissance</div>
-                <div class="card-desc">Loi 2021-1539 — Obligatoire 7 jours avant la cession</div>
-            </div>
-            <div class="card-arrow">›</div>
-        </a>
-        <a class="card" href="Formulaire_decharge_vaccin.html">
-            <div class="card-icon">💉</div>
-            <div class="card-text">
-                <div class="card-title">Décharge — Adoption avant 2ème vaccin</div>
-                <div class="card-desc">Engagement de l'adoptant à faire le rappel vaccinal</div>
-            </div>
-            <div class="card-arrow">›</div>
-        </a>
     </div>
 
-    <!-- 2. RÉSERVATION -->
-    <div class="section-label">📅 Réservation</div>
+    <div class="tab-content" data-slug="reservation" id="tab-reservation">
     <div class="grid">
         <a class="card" href="Contrat_reservation_chat.html">
             <div class="card-icon">🐱</div>
@@ -505,9 +527,46 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
 
-    <!-- 3. DÉPÔT & ABANDON -->
-    <div class="section-label">📌 Adhésion & Dons</div>
+    <div class="tab-content active" data-slug="cession" id="tab-cession">
+    <div class="grid">
+        <a class="card" href="Contrat_adoption.html">
+            <div class="card-icon">📋</div>
+            <div class="card-text">
+                <div class="card-title">Contrat de cession à charge</div>
+                <div class="card-desc">Contrat complet avec engagement stérilisation et frais</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Certificat_engagement_et_de_connaissance.html">
+            <div class="card-icon">📜</div>
+            <div class="card-text">
+                <div class="card-title">Certificat d'engagement et de connaissance</div>
+                <div class="card-desc">Loi 2021-1539 — Obligatoire 7 jours avant la cession</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Formulaire_decharge_vaccin.html">
+            <div class="card-icon">💉</div>
+            <div class="card-text">
+                <div class="card-title">Décharge — Adoption avant 2ème vaccin</div>
+                <div class="card-desc">Engagement de l'adoptant à faire le rappel vaccinal</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+        <a class="card" href="Formulaire_CBS_absent.html">
+            <div class="card-icon">🩺</div>
+            <div class="card-text">
+                <div class="card-title">Attestation CBS Absent</div>
+                <div class="card-desc">Attestation d'absence de certificat de bonne santé</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+    </div>
+    </div>
+
+    <div class="tab-content" data-slug="adhesion-dons" id="tab-adhesion-dons">
     <div class="grid">
         <a class="card" href="Bulletin_adhesion.html">
             <div class="card-icon">🎫</div>
@@ -526,9 +585,9 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
 
-    <!-- 7. IMPRESSION -->
-    <div class="section-label">📥 Dépôt & Abandon</div>
+    <div class="tab-content" data-slug="depot-abandon" id="tab-depot-abandon">
     <div class="grid">
         <a class="card" href="Formulaire_depot_chat.html">
             <div class="card-icon">🏠</div>
@@ -547,9 +606,9 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
 
-    <!-- 4. FAMILLE D'ACCUEIL -->
-    <div class="section-label">🏡 Famille d'accueil</div>
+    <div class="tab-content" data-slug="famille" id="tab-famille">
     <div class="grid">
         <a class="card" href="Formulaire_famille_accueil_provisoire.html">
             <div class="card-icon">🤝</div>
@@ -576,18 +635,10 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
 
-    <!-- 5. FORMULAIRES DIVERS -->
-    <div class="section-label">📝 Formulaires divers</div>
+    <div class="tab-content" data-slug="pret-materiel" id="tab-pret-materiel">
     <div class="grid">
-        <a class="card" href="Formulaire_CBS_absent.html">
-            <div class="card-icon">🩺</div>
-            <div class="card-text">
-                <div class="card-title">Attestation CBS Absent</div>
-                <div class="card-desc">Attestation d'absence de certificat de bonne santé</div>
-            </div>
-            <div class="card-arrow">›</div>
-        </a>
         <a class="card" href="Formulaire_pret_materiel.html">
             <div class="card-icon">🪤</div>
             <div class="card-text">
@@ -605,9 +656,9 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
 
-    <!-- 6. ADHÉSION & DONS -->
-    <div class="section-label">🖨️ Impression</div>
+    <div class="tab-content" data-slug="impression" id="tab-impression">
     <div class="grid">
         <a class="card" href="Fiche_Conseils.pdf">
             <div class="card-icon">📄</div>
@@ -658,9 +709,22 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
 
-    <!-- 8. TABLEAU DE BORD -->
-    <div class="section-label">📊 Tableau de bord</div>
+    <div class="tab-content" data-slug="icad" id="tab-icad">
+    <div class="grid">
+        <a class="card" href="Suivi_ICAD.html">
+            <div class="card-icon">🏷️</div>
+            <div class="card-text">
+                <div class="card-title">Suivi ICAD</div>
+                <div class="card-desc">Suivre les transferts par adoption</div>
+            </div>
+            <div class="card-arrow">›</div>
+        </a>
+    </div>
+    </div>
+
+    <div class="tab-content" data-slug="dashboard" id="tab-dashboard">
     <div class="grid">
         <a class="card" href="#" onclick="window.open(window.APPS_SCRIPT_URL || APPS_SCRIPT_URL, '_blank'); return false;">
             <div class="card-icon">📊</div>
@@ -671,6 +735,8 @@
             <div class="card-arrow">›</div>
         </a>
     </div>
+    </div>
+</div>
 
 <footer>
     Association L'Arche de Mallo — 8 ter rue d'Eschène, 90140 Autrechêne — 07 71 64 69 89
@@ -689,6 +755,25 @@
 	
     </script>
 
+<script>
+function activerOnglet(slug) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.slug === slug));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.dataset.slug === slug));
+    const url = new URL(window.location);
+    url.searchParams.set('onglet', slug);
+    window.history.replaceState({}, '', url);
+}
+
+(function initOnglet() {
+    const alias = { adoption: 'cession' };
+    const params = new URLSearchParams(window.location.search);
+    let slug = params.get('onglet') || (window.location.hash ? window.location.hash.slice(1) : '');
+    if (alias[slug]) slug = alias[slug];
+    if (slug && document.getElementById('tab-' + slug)) {
+        activerOnglet(slug);
+    }
+})();
+</script>
 </body>
 
 </html>
