@@ -3,7 +3,7 @@
 // Modifier uniquement ici pour changer l'URL Apps Script
 // ============================================================
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0XMFOM3LT5NMUecFTkMJVN5aTtxrCNu-cJbsvDfvdzNNRR5pdIX4_uJINIphBeAq9SQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzbDDZqck1w6-eHBU2Wm74Gyu9lqtXWxNP-oogkJ8XYK1e-HlfqzUIV6RIh7AET6DZQw/exec';
                          
 // URL du tableau de bord (même Apps Script, sans paramètre)
 const DASHBOARD_URL = APPS_SCRIPT_URL;
