@@ -253,6 +253,50 @@ function cleICAD(ligne) {
 }
 
 // ============================================================
+// SYNCHRONISATION ICAD DEPUIS LE GOOGLE SHEET
+// (source de vérité — permet de retrouver les statuts sur
+// n'importe quel PC, pas seulement celui où la validation a été faite)
+// ============================================================
+async function chargerICADDepuisSheet() {
+    try {
+        const url = APPS_SCRIPT_URL + '?onglet=ICAD_Suivi';
+        const resp = await fetch(url, { mode: 'cors' });
+        const json = await resp.json();
+        const data = json['ICAD_Suivi'];
+        if (!data || !data.headers || !data.rows) return null;
+
+        const h = data.headers;
+        const iCle = h.findIndex(x => x.toLowerCase() === 'cle');
+        const iDate = h.findIndex(x => x.toLowerCase() === 'datetransfert');
+        const iCmt = h.findIndex(x => x.toLowerCase() === 'commentaire');
+        if (iCle < 0) return null;
+
+        const map = {};
+        data.rows.forEach(row => {
+            const cle = row[iCle];
+            if (!cle) return;
+            map[cle] = {
+                statut: 'ok',
+                date: iDate >= 0 ? (row[iDate] || '') : '',
+                commentaire: iCmt >= 0 ? (row[iCmt] || '') : ''
+            };
+        });
+        return map;
+    } catch(e) {
+        return null; // hors ligne ou erreur réseau : on gardera le cache local
+    }
+}
+
+async function synchroniserICAD() {
+    const sheetMap = await chargerICADDepuisSheet();
+    if (!sheetMap) return; // échec réseau : on garde ce qu'il y a en local
+    const local = chargerICAD();
+    // Le Sheet fait foi ; on fusionne par-dessus le cache local
+    const fusion = Object.assign({}, local, sheetMap);
+    sauverICAD(fusion);
+}
+
+// ============================================================
 // CHARGEMENT DONNÉES depuis Google Sheets (onglet Adoption)
 // ============================================================
 async function chargerDonnees() {
@@ -451,11 +495,10 @@ function sauverCommentaire(cle, val) {
     const map = chargerICAD();
     if (!map[cle]) map[cle] = {};
     map[cle].commentaire = val;
-    if (!map[cle].dateEnCours) {
-        // Pré-remplir avec la date du jour si vide
-        const dateInput = document.querySelector(`[id^="date-"]`);
-    }
     sauverICAD(map);
+
+    // Sauvegarde aussi côté Sheet (on garde la date déjà connue, le cas échéant)
+    envoyerICAD(cle, map[cle].date || '', val);
 }
 
 function validerICAD(cle, idx) {
@@ -634,7 +677,12 @@ function imprimer(filtre) {
 // ============================================================
 // INIT
 // ============================================================
-chargerDonnees();
+async function init() {
+    await chargerDonnees();     // charge les lignes Adoption (+ 1er affichage)
+    await synchroniserICAD();   // récupère le statut ICAD depuis le Sheet (source de vérité)
+    filtrer();                  // ré-affiche avec les statuts à jour
+}
+init();
 </script>
 </body>
 </html>
