@@ -406,6 +406,16 @@ function filtrer() {
         return true;
     });
 
+    // Tri par date d'adoption décroissante (la plus récente en premier)
+    lignesFiltres.sort((a, b) => {
+        const da = parseDate(a.dateAdoption);
+        const db = parseDate(b.dateAdoption);
+        if (!da && !db) return 0;
+        if (!da) return 1;   // pas de date -> relégué en bas
+        if (!db) return -1;
+        return db - da;
+    });
+
     mettreAJourStats(icadMap);
     rendreLignes(icadMap);
     mettreAJourOnglets(icadMap);
