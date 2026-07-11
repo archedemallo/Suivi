@@ -84,6 +84,8 @@ tr.done-row td { opacity:.75; }
 .btn-ok { background:var(--orange); color:white; border:none; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; }
 .btn-ok:hover { background:var(--orange-light); }
 .btn-ok:disabled { background:#ccc; cursor:not-allowed; }
+.btn-annuler { background:none; border:1px solid var(--grey); color:var(--grey); border-radius:6px; padding:3px 8px; font-size:11px; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; margin-left:6px; }
+.btn-annuler:hover { background:var(--warm); color:var(--brown); border-color:var(--brown); }
 
 /* STATUT */
 .status-done { display:inline-flex; align-items:center; gap:5px; color:var(--green); font-size:13px; font-weight:500; background:var(--green-light); padding:4px 10px; border-radius:8px; }
@@ -290,10 +292,9 @@ async function chargerICADDepuisSheet() {
 async function synchroniserICAD() {
     const sheetMap = await chargerICADDepuisSheet();
     if (!sheetMap) return; // échec réseau : on garde ce qu'il y a en local
-    const local = chargerICAD();
-    // Le Sheet fait foi ; on fusionne par-dessus le cache local
-    const fusion = Object.assign({}, local, sheetMap);
-    sauverICAD(fusion);
+    // Le Sheet est la source de vérité : on remplace le cache local par son contenu
+    // (ainsi une suppression faite sur un autre poste se propage bien ici aussi)
+    sauverICAD(sheetMap);
 }
 
 // ============================================================
@@ -466,7 +467,7 @@ function rendreLignes(icadMap) {
                </div>`;
 
         const statutCell = fait
-            ? `<span class="status-done">✓ ${icad.date}</span>`
+            ? `<span class="status-done">✓ ${icad.date}</span> <button class="btn-annuler" onclick="annulerICAD('${cle}')" title="Annuler cette validation ICAD">↩ Annuler</button>`
             : `<span class="status-todo">À faire</span>`;
 
         const rowClass = fait ? 'done-row' : '';
@@ -527,6 +528,29 @@ function validerICAD(cle, idx) {
     envoyerICAD(cle, dateFR, commentaire);
 
     filtrer(); // rafraîchir
+}
+
+function annulerICAD(cle) {
+    if (!confirm('Annuler cette validation ICAD ? Le chat repassera en "À faire".')) return;
+
+    const map = chargerICAD();
+    delete map[cle];
+    sauverICAD(map);
+
+    // Supprimer aussi la ligne côté Sheet pour que ce soit annulé partout
+    supprimerICAD(cle);
+
+    filtrer(); // rafraîchir
+}
+
+async function supprimerICAD(cle) {
+    try {
+        await fetch(APPS_SCRIPT_URL, {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'icad_delete', cle })
+        });
+    } catch(e) { /* silencieux */ }
 }
 
 async function envoyerICAD(cle, date, commentaire) {
