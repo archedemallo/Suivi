@@ -297,16 +297,22 @@ async function chargerICADDepuisSheet() {
         const iCle = h.findIndex(x => x.toLowerCase() === 'cle');
         const iDate = h.findIndex(x => x.toLowerCase() === 'datetransfert');
         const iCmt = h.findIndex(x => x.toLowerCase() === 'commentaire');
+        const iFileSteri = h.findIndex(x => x.toLowerCase() === 'fichiersterilisationurl');
+        const iFileIcad  = h.findIndex(x => x.toLowerCase() === 'fichiericadurl');
         if (iCle < 0) return null;
 
         const map = {};
         data.rows.forEach(row => {
             const cle = row[iCle];
             if (!cle) return;
+            const dateVal = iDate >= 0 ? (row[iDate] || '') : '';
+            const cmtVal  = iCmt  >= 0 ? (row[iCmt]  || '') : '';
             map[cle] = {
-                statut: 'ok',
-                date: iDate >= 0 ? (row[iDate] || '') : '',
-                commentaire: iCmt >= 0 ? (row[iCmt] || '') : ''
+                statut: dateVal ? 'ok' : '',
+                date: dateVal,
+                commentaire: cmtVal,
+                fichierSterilisation: iFileSteri >= 0 ? (row[iFileSteri] || '') : '',
+                fichierIcad:          iFileIcad  >= 0 ? (row[iFileIcad]  || '') : ''
             };
         });
         return map;
@@ -516,14 +522,35 @@ function rendreLignes(icadMap) {
             <td>${icadCell}</td>
             <td>${statutCell}</td>
             <td><button class="btn-open" onclick="ouvrirDetail(${lignesFiltres.indexOf(l)})">Ouvrir</button></td>
-            <td><button class="btn-upload" id="btn-sterilisation-${i}" onclick="declencherUploadICAD('${cle}','sterilisation',${i})" title="Ajouter le certificat de stérilisation">📎 Stérilisation</button></td>
-            <td><button class="btn-upload" id="btn-icad-${i}" onclick="declencherUploadICAD('${cle}','icad',${i})" title="Ajouter le certificat ICAD">📎 ICAD</button></td>
+            <td>${celluleCertificat(cle, 'sterilisation', i, l, icad.fichierSterilisation)}</td>
+            <td>${celluleCertificat(cle, 'icad', i, l, icad.fichierIcad)}</td>
         </tr>`;
     }).join('');
 }
 
 function esc(s) {
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function escJs(s) {
+    return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+// Rendu d'une cellule "Certif. stérilisation" / "Certif. ICAD" :
+// si un lien de fichier existe déjà dans le Sheet (envoyé depuis n'importe
+// quel PC), on affiche le bouton en vert + un lien "Voir" vers le Drive.
+function celluleCertificat(cle, typeDoc, i, ligne, urlFichier) {
+    const label   = typeDoc === 'sterilisation' ? 'Stérilisation' : 'ICAD';
+    const done    = !!urlFichier && urlFichier !== 'true';
+    const texte   = done ? ('✓ ' + label) : ('📎 ' + label);
+    const titre   = done ? 'Certificat déjà envoyé — cliquer pour en envoyer un autre' : ('Ajouter le certificat ' + (typeDoc === 'sterilisation' ? 'de stérilisation' : 'ICAD'));
+    const onclick = `declencherUploadICAD('${cle}','${typeDoc}',${i},'${escJs(ligne.nomUsuel)}','${escJs(ligne.puce)}')`;
+
+    let html = `<button class="btn-upload ${done ? 'done' : ''}" id="btn-${typeDoc}-${i}" onclick="${onclick}" title="${esc(titre)}">${texte}</button>`;
+    if (done) {
+        html += `<a href="${esc(urlFichier)}" target="_blank" style="display:block;text-align:center;font-size:10px;margin-top:2px;color:var(--grey);">Voir le fichier</a>`;
+    }
+    return html;
 }
 
 // ============================================================
@@ -606,8 +633,8 @@ async function envoyerICAD(cle, date, commentaire) {
 // ============================================================
 let icadUploadPending = null; // { cle, typeDoc, i }
 
-function declencherUploadICAD(cle, typeDoc, i) {
-    icadUploadPending = { cle, typeDoc, i };
+function declencherUploadICAD(cle, typeDoc, i, nomChat, numeroIcad) {
+    icadUploadPending = { cle, typeDoc, i, nomChat, numeroIcad };
     document.getElementById('icad-file-input').click();
 }
 
@@ -615,7 +642,7 @@ async function onIcadFileChosen(e) {
     const file = e.target.files[0];
     e.target.value = ''; // permet de reprendre le même fichier plus tard
     if (!file || !icadUploadPending) return;
-    const { cle, typeDoc, i } = icadUploadPending;
+    const { cle, typeDoc, i, nomChat, numeroIcad } = icadUploadPending;
     icadUploadPending = null;
 
     const btn = document.getElementById(`btn-${typeDoc}-${i}`);
@@ -625,7 +652,13 @@ async function onIcadFileChosen(e) {
     try {
         const base64 = await fichierEnBase64(file);
         const ext = (file.name.split('.').pop() || 'pdf').toLowerCase();
-        const filename = `${cle}_${typeDoc}_${Date.now()}.${ext}`;
+
+        // Nom de fichier : Icad_<nom du chat>_<numéro icad> ou sterilisation_<nom du chat>_<numéro icad>
+        const prefixe   = typeDoc === 'sterilisation' ? 'sterilisation' : 'Icad';
+        const nomPropre = (nomChat    || 'chat').replace(/[\\/:*?"<>|]+/g, '').trim() || 'chat';
+        const numPropre = (numeroIcad || 'sans-numero').replace(/[\\/:*?"<>|]+/g, '').trim() || 'sans-numero';
+        const filename  = `${prefixe}_${nomPropre}_${numPropre}.${ext}`;
+
         await fetch(APPS_SCRIPT_URL, {
             method: 'POST', mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
@@ -636,6 +669,16 @@ async function onIcadFileChosen(e) {
                 fichierBase64: base64
             })
         });
+
+        // Mémorisation locale optimiste (mode no-cors : pas de retour serveur lisible).
+        // L'URL réelle du fichier sera récupérée depuis le Sheet au prochain
+        // rechargement / synchroniserICAD(), qui remplacera ce marqueur temporaire.
+        const map = chargerICAD();
+        if (!map[cle]) map[cle] = {};
+        if (typeDoc === 'sterilisation') map[cle].fichierSterilisation = 'true';
+        else map[cle].fichierIcad = 'true';
+        sauverICAD(map);
+
         if (btn) {
             btn.disabled = false;
             btn.classList.add('done');
