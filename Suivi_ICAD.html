@@ -61,7 +61,7 @@ header {
 
 /* TABLEAU */
 .table-wrap { background:var(--white); border-radius:12px; box-shadow:var(--shadow); overflow-x:auto; overflow-y:hidden; }
-table { width:100%; min-width:920px; border-collapse:collapse; table-layout:fixed; }
+table { width:100%; min-width:1100px; border-collapse:collapse; table-layout:fixed; }
 thead tr { background:var(--warm); }
 th { padding:10px 12px; text-align:left; font-size:12px; font-weight:500; color:var(--grey); letter-spacing:.03em; white-space:nowrap;
      position:sticky; top:0; z-index:2; background:var(--warm); overflow:hidden; }
@@ -99,6 +99,12 @@ tr.done-row td { opacity:.75; }
 /* BOUTON OUVRIR */
 .btn-open { background:var(--white); color:var(--brown); border:1.5px solid #d0c8be; border-radius:6px; padding:5px 12px; font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; }
 .btn-open:hover { border-color:var(--orange); color:var(--orange); }
+
+/* BOUTONS AJOUT CERTIFICATS */
+.btn-upload { background:var(--white); color:var(--brown); border:1.5px solid #d0c8be; border-radius:6px; padding:5px 10px; font-size:11px; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; width:100%; box-sizing:border-box; }
+.btn-upload:hover { border-color:var(--orange); color:var(--orange); }
+.btn-upload:disabled { opacity:.6; cursor:wait; }
+.btn-upload.done { border-color:var(--green); color:var(--green); background:var(--green-light); }
 
 /* MODAL DÉTAIL */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(61,43,31,.45); z-index:200; align-items:center; justify-content:center; }
@@ -200,14 +206,16 @@ tr.done-row td { opacity:.75; }
     <div class="table-wrap">
         <table>
             <colgroup>
-                <col style="width:14%">
-                <col style="width:11%">
-                <col style="width:13%">
-                <col style="width:9%">
-                <col style="width:17%">
-                <col style="width:15%">
                 <col style="width:13%">
                 <col style="width:8%">
+                <col style="width:11%">
+                <col style="width:8%">
+                <col style="width:8.5%">
+                <col style="width:14%">
+                <col style="width:8%">
+                <col style="width:7%">
+                <col style="width:12%">
+                <col style="width:10.5%">
             </colgroup>
             <thead>
                 <tr>
@@ -219,13 +227,16 @@ tr.done-row td { opacity:.75; }
                     <th>ICAD</th>
                     <th>Statut</th>
                     <th></th>
+                    <th title="Ajouter le certificat de stérilisation">Certif. stérilisation</th>
+                    <th title="Ajouter le certificat ICAD">Certif. ICAD</th>
                 </tr>
             </thead>
             <tbody id="tbody">
-                <tr><td colspan="8" class="loading">Chargement des données...</td></tr>
+                <tr><td colspan="10" class="loading">Chargement des données...</td></tr>
             </tbody>
         </table>
     </div>
+    <input type="file" id="icad-file-input" accept="image/*,.pdf" style="display:none" onchange="onIcadFileChosen(event)">
 
 </div><!-- /main -->
 
@@ -467,7 +478,7 @@ function mettreAJourOnglets(icadMap) {
 function rendreLignes(icadMap) {
     const tbody = document.getElementById('tbody');
     if (!lignesFiltres.length) {
-        tbody.innerHTML = '<tr><td colspan="8" class="empty">Aucun résultat</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="empty">Aucun résultat</td></tr>';
         return;
     }
 
@@ -505,6 +516,8 @@ function rendreLignes(icadMap) {
             <td>${icadCell}</td>
             <td>${statutCell}</td>
             <td><button class="btn-open" onclick="ouvrirDetail(${lignesFiltres.indexOf(l)})">Ouvrir</button></td>
+            <td><button class="btn-upload" id="btn-sterilisation-${i}" onclick="declencherUploadICAD('${cle}','sterilisation',${i})" title="Ajouter le certificat de stérilisation">📎 Stérilisation</button></td>
+            <td><button class="btn-upload" id="btn-icad-${i}" onclick="declencherUploadICAD('${cle}','icad',${i})" title="Ajouter le certificat ICAD">📎 ICAD</button></td>
         </tr>`;
     }).join('');
 }
@@ -585,6 +598,62 @@ async function envoyerICAD(cle, date, commentaire) {
             body: JSON.stringify({ action: 'icad', cle, date, commentaire, onglet: 'ICAD_Suivi' })
         });
     } catch(e) { /* silencieux */ }
+}
+
+// ============================================================
+// AJOUT DES CERTIFICATS (stérilisation / ICAD) — envoyés vers le
+// dossier Drive dédié "Icad" via Apps Script (action icad_fichier)
+// ============================================================
+let icadUploadPending = null; // { cle, typeDoc, i }
+
+function declencherUploadICAD(cle, typeDoc, i) {
+    icadUploadPending = { cle, typeDoc, i };
+    document.getElementById('icad-file-input').click();
+}
+
+async function onIcadFileChosen(e) {
+    const file = e.target.files[0];
+    e.target.value = ''; // permet de reprendre le même fichier plus tard
+    if (!file || !icadUploadPending) return;
+    const { cle, typeDoc, i } = icadUploadPending;
+    icadUploadPending = null;
+
+    const btn = document.getElementById(`btn-${typeDoc}-${i}`);
+    const label = typeDoc === 'sterilisation' ? '📎 Stérilisation' : '📎 ICAD';
+    if (btn) { btn.disabled = true; btn.textContent = 'Envoi…'; }
+
+    try {
+        const base64 = await fichierEnBase64(file);
+        const ext = (file.name.split('.').pop() || 'pdf').toLowerCase();
+        const filename = `${cle}_${typeDoc}_${Date.now()}.${ext}`;
+        await fetch(APPS_SCRIPT_URL, {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'icad_fichier',
+                cle, typeDoc, filename,
+                mimeType: file.type || 'application/octet-stream',
+                fichierBase64: base64
+            })
+        });
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.add('done');
+            btn.textContent = '✓ ' + (typeDoc === 'sterilisation' ? 'Stérilisation' : 'ICAD');
+        }
+    } catch(err) {
+        if (btn) { btn.disabled = false; btn.textContent = label; }
+        alert("Erreur lors de l'envoi du fichier : " + (err.message || err));
+    }
+}
+
+function fichierEnBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
 // ============================================================
