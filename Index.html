@@ -345,32 +345,72 @@
         .don-btn { justify-content: center; }
     }
 
-    /* --- BANDEAU MAINTENANCE DÉFILANT --- */
-    .bandeau-maintenance {
+    /* --- POP-UP MAINTENANCE --- */
+    .maintenance-popup-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
+        inset: 0;
+        z-index: 300;
+        background: rgba(61,43,31,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: popup-fade 0.2s ease;
+    }
+
+    @keyframes popup-fade {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    .maintenance-popup {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 32px 28px;
+        max-width: 420px;
         width: 100%;
-        z-index: 200;
+        text-align: center;
+        box-shadow: 0 16px 48px rgba(61,43,31,0.25);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .maintenance-popup-icon {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
+
+    .maintenance-popup h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 19pt;
+        color: var(--brown);
+        margin: 0 0 10px;
+    }
+
+    .maintenance-popup p {
+        font-size: 11pt;
+        color: var(--grey);
+        line-height: 1.5;
+        margin: 0 0 22px;
+    }
+
+    .maintenance-popup button {
         background: var(--orange);
         color: white;
-        overflow: hidden;
-        white-space: nowrap;
-        padding: 10px 0;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 28px;
         font-family: 'DM Sans', sans-serif;
         font-weight: 500;
         font-size: 11pt;
+        cursor: pointer;
+        transition: background 0.2s ease;
     }
 
-    .bandeau-maintenance span {
-        display: inline-block;
-        padding-left: 100%;
-        animation: defilement 40s linear infinite;
-    }
+    .maintenance-popup button:hover { background: var(--orange-light); }
 
-    @keyframes defilement {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-100%); }
+    @media (max-width: 480px) {
+        .maintenance-popup { padding: 26px 20px; }
+        .maintenance-popup h3 { font-size: 16pt; }
     }
 
 
@@ -423,7 +463,7 @@
     banniere: true,       // true = affiche un bandeau d'annonce même hors maintenance -->true,  = banniere active
     jour: "mercredi 22 juillet", 		// Changer la date ICI
     debut: "17h00", 				// Changer l'heure  ICI
-    fin: "18h00" 				// Changer l'heure  ICI
+    fin: "18h30" 				// Changer l'heure  ICI
   };
 
   if (MAINTENANCE.active) {
@@ -433,23 +473,30 @@
     window.location.href = "Maintenance.html?" + params;
   } else if (MAINTENANCE.banniere) {
     window.addEventListener('DOMContentLoaded', () => {
-      const message = "🔧 Maintenance prévue le " + MAINTENANCE.jour + " de " + MAINTENANCE.debut + " à " + MAINTENANCE.fin +
-        " — Si un rendez-vous est programmé sur ce créneau, merci de le signaler sur le groupe WhatsApp";
+      // N'affiche le pop-up qu'une fois par session (évite de le montrer à
+      // chaque changement d'onglet/page). Pour le montrer à chaque page vue,
+      // retirer les 2 lignes ci-dessous liées à sessionStorage.
+      if (sessionStorage.getItem('maintenance_popup_vu')) return;
 
-      const bandeau = document.createElement('div');
-      bandeau.className = 'bandeau-maintenance';
+      const overlay = document.createElement('div');
+      overlay.className = 'maintenance-popup-overlay';
+      overlay.innerHTML =
+        '<div class="maintenance-popup">' +
+          '<div class="maintenance-popup-icon">🔧</div>' +
+          '<h3>Maintenance à venir</h3>' +
+          '<p>Maintenance prévue le ' + MAINTENANCE.jour + ' de ' + MAINTENANCE.debut + ' à ' + MAINTENANCE.fin + '.<br>' +
+          'Si un rendez-vous est programmé sur ce créneau, merci de le signaler sur le groupe WhatsApp.</p>' +
+          '<button type="button">J\'ai compris</button>' +
+        '</div>';
 
-      const texte = document.createElement('span');
-      texte.textContent = message + '\u00A0\u00A0\u00A0\u00A0•\u00A0\u00A0\u00A0\u00A0' + message;
-      bandeau.appendChild(texte);
+      document.body.appendChild(overlay);
 
-      document.body.prepend(bandeau);
-
-      // Décale le header (sticky) et le contenu de la hauteur du bandeau fixe
-      const hauteur = bandeau.offsetHeight;
-      document.body.style.paddingTop = hauteur + 'px';
-      const header = document.querySelector('header');
-      if (header) header.style.top = hauteur + 'px';
+      const fermer = () => {
+        sessionStorage.setItem('maintenance_popup_vu', '1');
+        overlay.remove();
+      };
+      overlay.querySelector('button').addEventListener('click', fermer);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) fermer(); });
     });
   }
 </script>
