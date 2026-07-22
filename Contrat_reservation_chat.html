@@ -451,9 +451,9 @@
         var nomEl2   = document.getElementById('nom');
         var animalEl = document.getElementById('nomChat');
         var dateEl   = document.getElementById('dateFait');
-        var nomComplet = ((prenomEl ? prenomEl.value : '') + ' ' + (nomEl2 ? nomEl2.value : '')).trim();
         await envoyerPhotoAnimal('Contrat_reservation_chat',
-            nomComplet,
+            prenomEl ? prenomEl.value : '',
+            nomEl2   ? nomEl2.value   : '',
             animalEl ? animalEl.value : '',
             dateEl   ? dateEl.value   : '');
     }
