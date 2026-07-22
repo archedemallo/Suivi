@@ -453,10 +453,9 @@
         var nomEl2   = document.getElementById('nom');
         var animalEl = document.getElementById('nomChat');
         var dateEl   = document.getElementById('dateFait');
-        var nom    = ((prenomEl ? prenomEl.value : '') + ' ' + (nomEl2 ? nomEl2.value : '')).trim();
         var animal = animalEl ? animalEl.value : '';
         var date   = dateEl   ? dateEl.value   : '';
-        await envoyerPhotoAnimal('Reservation_Chaton', nom, animal, date);
+        await envoyerPhotoAnimal('Reservation_Chaton', prenomEl ? prenomEl.value : '', nomEl2 ? nomEl2.value : '', animal, date);
     }
 </script>
 	
