@@ -981,6 +981,21 @@ function appliquerPrefill() {
             }
         });
 
+        // Afficher la photo prise lors de la réservation (référence visuelle
+        // uniquement — un input[type=file] ne peut pas être prérempli par
+        // script, la capture de la photo d'adoption reste obligatoire).
+        if (data.photoReservation) {
+            var zonePhotoReservation = document.getElementById('photoReservationPreview');
+            if (zonePhotoReservation) {
+                zonePhotoReservation.innerHTML =
+                    '<p class="bold blue no-print" style="margin:0 0 6px;">📷 Photo prise lors de la réservation</p>' +
+                    '<img src="' + data.photoReservation + '" style="max-width:200px;max-height:150px;border:1px solid #ccc;border-radius:4px;display:block;" alt="Photo réservation">' +
+                    '<button type="button" class="btn-voir-photo no-print" style="margin-top:4px;" onclick="window.open(\'' + data.photoReservation + '\', \'_blank\')">Voir la photo</button>' +
+                    '<p class="no-print" style="font-size:11px;color:#666;margin:4px 0 0;">Référence uniquement, non modifiable ici</p>';
+                zonePhotoReservation.style.display = 'block';
+            }
+        }
+
         // Gérer le sexe (case à cocher radio) — cherche la case dont le texte correspond
         var sexeVal = data['sexe'] || data['check_sexe'] || data['check_sexe_chat'] || '';
         if (sexeVal) {
@@ -1026,7 +1041,10 @@ async function envoyerPhotoAnimal(onglet, nomPers, nomAnimal, dateStr) {
                     onglet:      onglet,
                     filename:    filename,
                     imageBase64: base64,
-                    mimeType:    'image/jpeg'
+                    mimeType:    'image/jpeg',
+                    personne:    nom,
+                    animal:      animal,
+                    dateDossier: date
                 })
             }).then(resolve).catch(resolve);
         });
