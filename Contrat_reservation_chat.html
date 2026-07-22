@@ -447,11 +447,13 @@
 
     // Envoi photo après sauvegarde réussie
     async function postSavePhotos(data, filename) {
-        var nomEl    = document.getElementById('nomComplet');
+        var prenomEl = document.getElementById('prenom');
+        var nomEl2   = document.getElementById('nom');
         var animalEl = document.getElementById('nomChat');
         var dateEl   = document.getElementById('dateFait');
+        var nomComplet = ((prenomEl ? prenomEl.value : '') + ' ' + (nomEl2 ? nomEl2.value : '')).trim();
         await envoyerPhotoAnimal('Contrat_reservation_chat',
-            nomEl    ? nomEl.value    : '',
+            nomComplet,
             animalEl ? animalEl.value : '',
             dateEl   ? dateEl.value   : '');
     }
