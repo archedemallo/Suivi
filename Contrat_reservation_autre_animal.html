@@ -501,10 +501,9 @@
         var nomEl2   = document.getElementById('nom');
         var animalEl = document.getElementById('nomChat');
         var dateEl   = document.getElementById('dateFait');
-        var nom    = ((prenomEl ? prenomEl.value : '') + ' ' + (nomEl2 ? nomEl2.value : '')).trim();
         var animal = animalEl ? animalEl.value : '';
         var date   = dateEl   ? dateEl.value   : '';
-        await envoyerPhotoAnimal('Contrat_reservation_autre_animal', nom, animal, date);
+        await envoyerPhotoAnimal('Contrat_reservation_autre_animal', prenomEl ? prenomEl.value : '', nomEl2 ? nomEl2.value : '', animal, date);
     }
 </script>
 </body>
