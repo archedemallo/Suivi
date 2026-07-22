@@ -199,6 +199,14 @@ data.montantAdhesion = montant;
 // ============================================================
 // NOM DU FICHIER
 // ============================================================
+// Remplace les caractères accentués par leur équivalent sans accent
+// (é -> e, à -> a, ç -> c...) au lieu de les transformer en "_" comme
+// le fait le regex [^a-zA-Z0-9] plus loin. Sans ça, "prêt" devenait
+// "pr_t" et "matériel" devenait "mat_riel" dans les noms de fichiers.
+function retirerAccents(str) {
+    return String(str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function buildFilename(data) {
     var date    = new Date();
     var dateStr = [
@@ -206,9 +214,12 @@ function buildFilename(data) {
         String(date.getMonth() + 1).padStart(2, '0'),
         date.getFullYear()
     ].join('-');
-    var nom   = (data.nomAdoptant || data.nomComplet || data.nomProprietaire || data.nom || data.raisonSociale || '').replace(/[^a-zA-Z0-9]/g, '_');
-    var chat  = (data.nomChat || data.nomAnimal || data.chat || data.nom_animal || '').replace(/[^a-zA-Z0-9]/g, '_');
-    var titre = document.title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
+    var nomComplet = data.nomAdoptant || data.nomComplet || data.nomProprietaire ||
+                      ((data.prenom || '') + ' ' + (data.nom || '')).trim() ||
+                      data.raisonSociale || '';
+    var nom   = retirerAccents(nomComplet).replace(/[^a-zA-Z0-9]/g, '_');
+    var chat  = retirerAccents(data.nomChat || data.nomAnimal || data.chat || data.nom_animal || '').replace(/[^a-zA-Z0-9]/g, '_');
+    var titre = retirerAccents(document.title).replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
     var parts = [titre];
     if (nom)  parts.push(nom);
     if (chat) parts.push(chat);
@@ -1023,20 +1034,15 @@ function appliquerPrefill() {
     }
 }
 
-async function envoyerPhotoAnimal(onglet, nomPers, nomAnimal, dateStr) {
+async function envoyerPhotoAnimal(onglet, prenom, nom, nomAnimal, dateStr) {
     var input = document.getElementById('photoAnimal');
     if (!input || !input.files || !input.files[0]) return;
+    var date = dateStr || new Date().toISOString().split('T')[0];
     // Version "propre" (underscores) réservée UNIQUEMENT au nom de fichier.
-    var nomFichier    = (nomPers   || 'Inconnu').replace(/\s+/g, '_');
-    var animalFichier = (nomAnimal || 'Animal' ).replace(/\s+/g, '_');
-    var date   = dateStr || new Date().toISOString().split('T')[0];
-    var filename = nomFichier + '_' + animalFichier + '_Photo_' + date;
-    // Versions brutes (avec espaces) pour "personne"/"animal" : Code.gs
-    // s'en sert pour retrouver la ligne du Sheet via nom/prenom/nomChat,
-    // qui contiennent des espaces — envoyer la version à underscores ici
-    // empêchait toute correspondance et donc l'enregistrement du lien.
-    var personneBrute = (nomPers   || 'Inconnu').trim();
-    var animalBrut     = (nomAnimal || 'Animal' ).trim();
+    var prenomFichier = (prenom   || ''       ).replace(/\s+/g, '_');
+    var nomFichier     = (nom     || 'Inconnu').replace(/\s+/g, '_');
+    var animalFichier  = (nomAnimal || 'Animal').replace(/\s+/g, '_');
+    var filename = [prenomFichier, nomFichier, animalFichier, 'Photo', date].filter(Boolean).join('_');
     await new Promise(function(resolve) {
         redimensionnerImage(input.files[0], function(base64) {
             fetch(window.APPS_SCRIPT_URL || APPS_SCRIPT_URL, {
@@ -1049,8 +1055,9 @@ async function envoyerPhotoAnimal(onglet, nomPers, nomAnimal, dateStr) {
                     filename:    filename,
                     imageBase64: base64,
                     mimeType:    'image/jpeg',
-                    personne:    personneBrute,
-                    animal:      animalBrut,
+                    prenom:      (prenom   || ''       ).trim(),
+                    nom:         (nom      || 'Inconnu').trim(),
+                    animal:      (nomAnimal || 'Animal').trim(),
                     dateDossier: date
                 })
             }).then(resolve).catch(resolve);
