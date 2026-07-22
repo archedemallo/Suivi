@@ -1026,10 +1026,17 @@ function appliquerPrefill() {
 async function envoyerPhotoAnimal(onglet, nomPers, nomAnimal, dateStr) {
     var input = document.getElementById('photoAnimal');
     if (!input || !input.files || !input.files[0]) return;
-    var nom    = (nomPers   || 'Inconnu').replace(/\s+/g, '_');
-    var animal = (nomAnimal || 'Animal' ).replace(/\s+/g, '_');
+    // Version "propre" (underscores) réservée UNIQUEMENT au nom de fichier.
+    var nomFichier    = (nomPers   || 'Inconnu').replace(/\s+/g, '_');
+    var animalFichier = (nomAnimal || 'Animal' ).replace(/\s+/g, '_');
     var date   = dateStr || new Date().toISOString().split('T')[0];
-    var filename = nom + '_' + animal + '_Photo_' + date;
+    var filename = nomFichier + '_' + animalFichier + '_Photo_' + date;
+    // Versions brutes (avec espaces) pour "personne"/"animal" : Code.gs
+    // s'en sert pour retrouver la ligne du Sheet via nom/prenom/nomChat,
+    // qui contiennent des espaces — envoyer la version à underscores ici
+    // empêchait toute correspondance et donc l'enregistrement du lien.
+    var personneBrute = (nomPers   || 'Inconnu').trim();
+    var animalBrut     = (nomAnimal || 'Animal' ).trim();
     await new Promise(function(resolve) {
         redimensionnerImage(input.files[0], function(base64) {
             fetch(window.APPS_SCRIPT_URL || APPS_SCRIPT_URL, {
@@ -1042,8 +1049,8 @@ async function envoyerPhotoAnimal(onglet, nomPers, nomAnimal, dateStr) {
                     filename:    filename,
                     imageBase64: base64,
                     mimeType:    'image/jpeg',
-                    personne:    nom,
-                    animal:      animal,
+                    personne:    personneBrute,
+                    animal:      animalBrut,
                     dateDossier: date
                 })
             }).then(resolve).catch(resolve);
