@@ -171,6 +171,9 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
 	
  <p class="mt-20"><strong><span class="red">Pièces justificatives obligatoires à nous fournir :</span></strong></p>
 
+<!-- Photo prise lors de la réservation (référence, si formulaire préremplié) -->
+<div class="section no-print" id="photoReservationPreview" style="display:none;"></div>
+
 <!-- Photo de l'animal -->
 <div class="section">
     <p class="bold blue no-print">📷 Photo de l'animal <span class="red">*</span> (obligatoire)</p>
@@ -741,6 +744,11 @@ function ouvrirPhoto(previewId) {
         var nom  = (nomAdoptant || 'Inconnu').replace(/\s+/g, '_');
         var chat = (nomChat     || 'Chat'   ).replace(/\s+/g, '_');
         var date = (dateStr     || today    );
+        // Date ISO dédiée au nom du sous-dossier Drive (dateStr reçu ici est
+        // déjà au format JJ-MM-AAAA pour le nom de fichier legacy — on
+        // reconstruit l'ISO à partir de dateAdoption pour le tri Drive).
+        var dateAdoptionEl = document.getElementById('dateAdoption');
+        var dateISODossier = (dateAdoptionEl && dateAdoptionEl.value) || new Date().toISOString().split('T')[0];
 
         for (var i = 0; i < photos.length; i++) {
             var input = document.getElementById(photos[i].id);
@@ -759,7 +767,10 @@ function ouvrirPhoto(previewId) {
                             onglet:      'Adoption',
                             filename:    fn,
                             imageBase64: base64,
-                            mimeType:    'image/jpeg'
+                            mimeType:    'image/jpeg',
+                            personne:    nom,
+                            animal:      chat,
+                            dateDossier: dateISODossier
                         })
                     }).then(resolve).catch(resolve);
                 });
