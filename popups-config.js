@@ -22,3 +22,4 @@ const MAJ = {
   // Texte libre. Utiliser <br> pour un retour à la ligne.
   texte: "Une mise à jour a été effectuée.<br>Possibilité d'enregistrer un don anonyme et création des reçus fiscaux. Il ne faut donc plus utiliser les reçus manuels"
 };
+ 
