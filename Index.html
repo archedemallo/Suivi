@@ -413,6 +413,70 @@
         .maintenance-popup h3 { font-size: 16pt; }
     }
 
+    /* --- POP-UP MISE A JOUR --- */
+    .maj-popup-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 300;
+        background: rgba(61,43,31,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: popup-fade 0.2s ease;
+    }
+
+    .maj-popup {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 32px 28px;
+        max-width: 420px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 16px 48px rgba(61,43,31,0.25);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .maj-popup-icon {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
+
+    .maj-popup h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 19pt;
+        color: var(--brown);
+        margin: 0 0 10px;
+    }
+
+    .maj-popup p {
+        font-size: 11pt;
+        color: var(--grey);
+        line-height: 1.5;
+        margin: 0 0 22px;
+        text-align: left;
+    }
+
+    .maj-popup button {
+        background: var(--orange);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 28px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        font-size: 11pt;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .maj-popup button:hover { background: var(--orange-light); }
+
+    @media (max-width: 480px) {
+        .maj-popup { padding: 26px 20px; }
+        .maj-popup h3 { font-size: 16pt; }
+    }
+
 
     /* --- ONGLETS --- */
     .tabbar {
@@ -454,17 +518,12 @@
     }
 </style>
 <script src="config.js"></script>
+<script src="popups-config.js"></script>
 </head>
 <body>
 <script>
-  // ==== Configuration maintenance — à modifier avant chaque opération ====
-  const MAINTENANCE = {
-    active: false,        // true = redirige tout le monde vers Maintenance.html false, = pas de redirection / true, = redirection
-    banniere: false,       // true = affiche un bandeau d'annonce même hors maintenance -->true,  = banniere active
-    jour: "mercredi 22 juillet", 		// Changer la date ICI
-    debut: "17h00", 				// Changer l'heure  ICI
-    fin: "18h30" 				// Changer l'heure  ICI
-  };
+  // Les réglages des 2 pop-up (MAINTENANCE et MAJ) sont dans popups-config.js
+  // — c'est le seul fichier à ouvrir pour les modifier.
 
   if (MAINTENANCE.active) {
     const params = new URLSearchParams({
@@ -498,6 +557,43 @@
       overlay.querySelector('button').addEventListener('click', fermer);
       overlay.addEventListener('click', (e) => { if (e.target === overlay) fermer(); });
     });
+  }
+
+  // ==== Pop-up "Mise à jour" — réglages dans popups-config.js ====
+  // S'affiche automatiquement pendant MAJ.dureeJours jours à partir de
+  // MAJ.dateDebut, puis disparaît toute seule.
+  if (MAJ.active) {
+    const debut = new Date(MAJ.dateDebut + "T00:00:00");
+    const fin = new Date(debut.getTime() + MAJ.dureeJours * 24 * 60 * 60 * 1000);
+    const maintenant = new Date();
+
+    if (maintenant >= debut && maintenant < fin) {
+      window.addEventListener('DOMContentLoaded', () => {
+        // Clé liée à dateDebut : si on change la date lors d'une prochaine
+        // mise à jour, la pop-up se réaffiche même si déjà vue avant.
+        const cle = 'maj_popup_vu_' + MAJ.dateDebut;
+        if (sessionStorage.getItem(cle)) return;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'maj-popup-overlay';
+        overlay.innerHTML =
+          '<div class="maj-popup">' +
+            '<div class="maj-popup-icon">✨</div>' +
+            '<h3>' + MAJ.titre + '</h3>' +
+            '<p>' + MAJ.texte + '</p>' +
+            '<button type="button">J\'ai compris</button>' +
+          '</div>';
+
+        document.body.appendChild(overlay);
+
+        const fermer = () => {
+          sessionStorage.setItem(cle, '1');
+          overlay.remove();
+        };
+        overlay.querySelector('button').addEventListener('click', fermer);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) fermer(); });
+      });
+    }
   }
 </script>
 
