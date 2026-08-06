@@ -88,25 +88,11 @@
 
     <br>
 
-    <p>
-        <span class="blue">Reçu fiscal :</span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'recuFiscal'); toggleRecuFiscal()">
-            <span class="checkbox" data-group="recuFiscal"></span> OUI
-        </span>
-        <span class="clickable-row" onclick="toggleCheck(this, 'recuFiscal'); toggleRecuFiscal()">
-            <span class="checkbox" data-group="recuFiscal"></span> NON
-        </span>
+    <p class="italic" style="font-size:10pt; color:#555;">
+        Ce document atteste uniquement de la remise du don. Le reçu fiscal donnant droit
+        à réduction d'impôt (article 200 du CGI) est un document distinct, généré séparément
+        après la sauvegarde de ce formulaire.
     </p>
-    <div id="bloc_recu_fiscal" style="display:none;">
-        <p>
-            <span class="blue">N° du reçu fiscal :</span>
-            <input type="text" class="editable editable-medium" id="numeroRecuFiscal" data-label="N° reçu fiscal">
-        </p>
-        <p class="italic" style="font-size:10pt; color:#555;">
-            Le reçu fiscal ouvre droit à une réduction d'impôt de 66% du montant du don
-            dans la limite de 20% du revenu imposable (article 200 du CGI).
-        </p>
-    </div>
 
 </div>
 
@@ -115,6 +101,17 @@
 <!-- Donateur -->
 <div><strong><span class="highlight-red">DONATEUR</span></strong></div>
 <div class="section">
+    <p>
+        <span class="clickable-row" onclick="toggleCheck(this, 'anonyme'); toggleAnonyme()">
+            <span class="checkbox" data-group="anonyme"></span>
+            <span class="blue bold">Don anonyme</span>
+        </span>
+        <span class="italic" style="font-size:9pt; color:#666;">
+            (ex : don trouvé dans la boîte aux lettres, sans identité du donateur — aucun reçu fiscal ne pourra être émis)
+        </span>
+    </p>
+
+    <div id="bloc_identite_donateur">
     <p>
         <span class="blue">Type :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'typeDonateur'); toggleSociete()">
@@ -159,7 +156,6 @@
         </p>
     </div>
 
-    <!-- Adresse : obligatoire seulement si reçu fiscal OUI -->
     <p>
         <span class="blue">Adresse :</span>
         <input type="text" class="editable editable-long" id="adresse" data-label="Adresse">
@@ -179,6 +175,7 @@
         <span class="blue">Téléphone :</span>
         <input type="tel" class="editable editable-tel" id="telephone" data-label="Téléphone" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
     </p>
+    </div><!-- /bloc_identite_donateur -->
 </div>
 
 
@@ -237,6 +234,25 @@ var today = new Date().toISOString().split('T')[0];
     if (el && !el.value) el.value = today;
 });
 
+// Afficher/masquer l'identité du donateur si don anonyme
+function toggleAnonyme() {
+    var estAnonyme = document.querySelector('.checkbox[data-group="anonyme"].checked') !== null;
+    document.getElementById('bloc_identite_donateur').style.display = estAnonyme ? 'none' : '';
+
+    // Signature du donateur : sans intérêt si le don est anonyme (personne à faire signer)
+    var tdDonateur = document.getElementById('sig2').closest('td');
+    if (tdDonateur) tdDonateur.style.display = estAnonyme ? 'none' : '';
+
+    if (estAnonyme) {
+        ['nom', 'prenom', 'raisonSociale'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) { el.removeAttribute('data-required'); el.style.borderBottom = ''; }
+        });
+    } else {
+        toggleSociete(); // rétablit nom/prénom ou raisonSociale requis selon le type
+    }
+}
+
 // Afficher/masquer bloc société ou particulier
 function toggleSociete() {
     var checked = document.querySelector('.checkbox[data-group="typeDonateur"].checked');
@@ -258,34 +274,6 @@ function toggleSociete() {
         if (prenomEl) { prenomEl.setAttribute('data-required', 'true'); prenomEl.setAttribute('data-label', 'Prénom'); }
         if (raisonEl) { raisonEl.removeAttribute('data-required'); raisonEl.style.borderBottom = ''; }
     }
-}
-
-// Afficher/masquer reçu fiscal + rendre adresse obligatoire si OUI
-function toggleRecuFiscal() {
-    var checked = document.querySelector('.checkbox[data-group="recuFiscal"].checked');
-    if (!checked) return;
-    var estOui = checked.parentElement.textContent.trim().indexOf('OUI') >= 0;
-
-    document.getElementById('bloc_recu_fiscal').style.display = estOui ? '' : 'none';
-
-    var champsOblig = {
-        adresse:          'Adresse',
-        codePostal:       'Code postal',
-        ville:            'Ville',
-        email:            'Email',
-        numeroRecuFiscal: 'N° reçu fiscal'
-    };
-    Object.keys(champsOblig).forEach(function(id) {
-        var el = document.getElementById(id);
-        if (!el) return;
-        if (estOui) {
-            el.setAttribute('data-required', 'true');
-            el.setAttribute('data-label', champsOblig[id]);
-        } else {
-            el.removeAttribute('data-required');
-            el.style.borderBottom = '';
-        }
-    });
 }
 
 function toggleCheckMulti(element) {
@@ -310,28 +298,16 @@ validateRequiredFields = function() {
         }
     });
 
-    // Type donateur obligatoire
+    // Type donateur obligatoire (sauf don anonyme)
+    var estAnonyme = document.querySelector('.checkbox[data-group="anonyme"].checked') !== null;
     var typeDonateur = document.querySelector('.checkbox[data-group="typeDonateur"].checked');
-    if (!typeDonateur) {
+    if (!estAnonyme && !typeDonateur) {
         missing.push('Type de donateur (Particulier ou Société)');
         document.querySelectorAll('.checkbox[data-group="typeDonateur"]').forEach(function(cb) {
             cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
         });
     } else {
         document.querySelectorAll('.checkbox[data-group="typeDonateur"]').forEach(function(cb) {
-            cb.style.outline = '';
-        });
-    }
-
-    // Reçu fiscal obligatoire
-    var recuFiscal = document.querySelector('.checkbox[data-group="recuFiscal"].checked');
-    if (!recuFiscal) {
-        missing.push('Reçu fiscal (OUI ou NON)');
-        document.querySelectorAll('.checkbox[data-group="recuFiscal"]').forEach(function(cb) {
-            cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
-        });
-    } else {
-        document.querySelectorAll('.checkbox[data-group="recuFiscal"]').forEach(function(cb) {
             cb.style.outline = '';
         });
     }
@@ -375,8 +351,9 @@ validateRequiredFields = function() {
         }
     }
 
-    // Lu et approuvé
-    ['luApprouve1', 'luApprouve2'].forEach(function(id) {
+    // Lu et approuvé (le donateur n'a rien à approuver/signer si le don est anonyme)
+    var luApprouveIds = estAnonyme ? ['luApprouve1'] : ['luApprouve1', 'luApprouve2'];
+    luApprouveIds.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
             var cb = el.querySelector('.checkbox');
@@ -391,7 +368,8 @@ validateRequiredFields = function() {
     });
 
     // Signatures
-    ['sig1', 'sig2'].forEach(function(sigId) {
+    var sigIds = estAnonyme ? ['sig1'] : ['sig1', 'sig2'];
+    sigIds.forEach(function(sigId) {
         var container = document.getElementById(sigId);
         if (container && !container._signed) {
             var labels = { sig1: 'Signature Arche de Mallo', sig2: 'Signature du donateur' };
@@ -401,6 +379,55 @@ validateRequiredFields = function() {
 
     return missing;
 };
+
+// ============================================================
+// RÉCU FISCAL — ouverture automatique après sauvegarde du don
+// (postSavePhotos est un hook déjà appelé automatiquement par
+// saveForm() dans formulaires-arche-mallo.js une fois la
+// sauvegarde réussie ; on le réutilise ici, aucune modification
+// du fichier partagé n'est nécessaire)
+// ============================================================
+function postSavePhotos(data /*, filename */) {
+    // Don anonyme : personne à qui adresser un reçu fiscal
+    var estAnonyme = document.querySelector('.checkbox[data-group="anonyme"].checked') !== null;
+    if (estAnonyme) return;
+
+    ouvrirRecuFiscal(data);
+}
+
+function ouvrirRecuFiscal(data) {
+    // On ne transmet que les champs utiles au reçu fiscal (pas le PDF/htmlContent/
+    // signature en base64, qui rendraient l'URL bien trop longue).
+    var champsUtiles = [
+        'nom', 'prenom', 'raisonSociale', 'representant',
+        'adresse', 'codePostal', 'ville', 'telephone', 'email',
+        'montantDon', 'dateSignature', 'check_paiement'
+    ];
+    var slim = {};
+    champsUtiles.forEach(function(cle) {
+        if (data[cle]) slim[cle] = data[cle];
+    });
+    var prefill  = encodeURIComponent(JSON.stringify(slim));
+    var fichier  = data.raisonSociale ? 'Recu_fiscal_entreprise.html' : 'Recu_fiscal_particulier.html';
+    var url      = fichier + '?prefill=' + prefill;
+
+    var fenetre = window.open(url, '_blank');
+    if (!fenetre) {
+        // Popup bloqué par le navigateur : proposer un lien de secours
+        afficherLienRecuFiscal(url);
+    }
+}
+
+function afficherLienRecuFiscal(url) {
+    var conteneur = document.querySelector('.buttons');
+    if (!conteneur || document.getElementById('btnRecuFiscal')) return;
+    var btn = document.createElement('button');
+    btn.id = 'btnRecuFiscal';
+    btn.className = 'btn btn-save';
+    btn.textContent = '🧾 Ouvrir le reçu fiscal (bloqué par le navigateur)';
+    btn.onclick = function() { window.open(url, '_blank'); };
+    conteneur.appendChild(btn);
+}
 </script>
 
 </body>
