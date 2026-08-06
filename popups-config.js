@@ -20,5 +20,5 @@ const MAJ = {
   dureeJours: 7,                // nombre de jours d'affichage à partir de dateDebut
   titre: "Mise à jour",
   // Texte libre. Utiliser <br> pour un retour à la ligne.
-  texte: "Une mise à jour a été effectuée.<br>Décrivez ici les changements apportés."
+  texte: "Une mise à jour a été effectuée.<br>Possibilité d'enregistré un don anonyme et création des reçus fiscaux. Il ne faut donc plus utiliser les reçus manuels"
 };
