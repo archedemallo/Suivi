@@ -518,7 +518,12 @@
     }
 </style>
 <script src="config.js"></script>
-<script src="popups-config.js"></script>
+<script>
+  // Cache-busting : force le navigateur à toujours recharger la dernière
+  // version de popups-config.js (sinon l'ancien texte reste affiché après
+  // une modification, à cause du cache du navigateur / de GitHub Pages).
+  document.write('<script src="popups-config.js?v=' + Date.now() + '"><\/script>');
+</script>
 </head>
 <body>
 <script>
