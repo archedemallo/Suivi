@@ -15,7 +15,7 @@ const MAINTENANCE = {
 // `dateDebut`, puis disparaît toute seule (rien à désactiver après coup).
 // Pour une nouvelle annonce : changer dateDebut (+ texte).
 const MAJ = {
-  active: false,                // true = pop-up active / false = désactivée
+  active: true,                // true = pop-up active / false = désactivée
   dateDebut: "2026-08-06",     // date de mise en ligne, format AAAA-MM-JJ
   dureeJours: 7,                // nombre de jours d'affichage à partir de dateDebut
   titre: "Mise à jour",
