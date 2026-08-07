@@ -540,15 +540,23 @@ function escJs(s) {
 // si un lien de fichier existe déjà dans le Sheet (envoyé depuis n'importe
 // quel PC), on affiche le bouton en vert + un lien "Voir" vers le Drive.
 function celluleCertificat(cle, typeDoc, i, ligne, urlFichier) {
-    const label   = typeDoc === 'sterilisation' ? 'Stérilisation' : 'ICAD';
-    const done    = !!urlFichier && urlFichier !== 'true';
-    const texte   = done ? ('✓ ' + label) : ('📎 ' + label);
-    const titre   = done ? 'Certificat déjà envoyé — cliquer pour en envoyer un autre' : ('Ajouter le certificat ' + (typeDoc === 'sterilisation' ? 'de stérilisation' : 'ICAD'));
-    const onclick = `declencherUploadICAD('${cle}','${typeDoc}',${i},'${escJs(ligne.nomUsuel)}','${escJs(ligne.puce)}')`;
+    const label     = typeDoc === 'sterilisation' ? 'Stérilisation' : 'ICAD';
+    // "done" doit rester vrai pour le marqueur local temporaire ('true', posé
+    // juste après un envoi tant que l'URL réelle n'est pas revenue du Sheet),
+    // sinon le bouton repasse en "à faire" au moindre re-rendu du tableau
+    // (changement d'onglet, recherche, reset des filtres) alors que le
+    // fichier est déjà bien enregistré côté serveur.
+    const done      = !!urlFichier;
+    const urlReelle = done && urlFichier !== 'true'; // vraie URL Drive connue (vs marqueur local en attente de sync)
+    const texte     = done ? ('✓ ' + label) : ('📎 ' + label);
+    const titre     = done ? 'Certificat déjà envoyé — cliquer pour en envoyer un autre' : ('Ajouter le certificat ' + (typeDoc === 'sterilisation' ? 'de stérilisation' : 'ICAD'));
+    const onclick   = `declencherUploadICAD('${cle}','${typeDoc}',${i},'${escJs(ligne.nomUsuel)}','${escJs(ligne.puce)}')`;
 
     let html = `<button class="btn-upload ${done ? 'done' : ''}" id="btn-${typeDoc}-${i}" onclick="${onclick}" title="${esc(titre)}">${texte}</button>`;
-    if (done) {
+    if (urlReelle) {
         html += `<a href="${esc(urlFichier)}" target="_blank" style="display:block;text-align:center;font-size:10px;margin-top:2px;color:var(--grey);">Voir le fichier</a>`;
+    } else if (done) {
+        html += `<span style="display:block;text-align:center;font-size:10px;margin-top:2px;color:var(--grey);">Envoyé</span>`;
     }
     return html;
 }
