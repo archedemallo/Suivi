@@ -215,7 +215,7 @@ var CONFIG_ONGLETS = {
     colNom:  'nomComplet',
     colPrenom: null,
     colDate: 'Date',
-    colMontant: null,
+    colMontant: ['montant_cb','montant_espece','montant_virement','montant_cheque','montant_cheque1','montant_cheque2','montant_cheque3','montant_cheque4'],
     colPaiement: 'check_paiement',
     colSaisi: 'saisiPar',
   },
@@ -226,7 +226,7 @@ var CONFIG_ONGLETS = {
     colNom:  'nomComplet',
     colPrenom: null,
     colDate: 'Date',
-    colMontant: null,
+    colMontant: ['montant_cb','montant_espece','montant_virement','montant_cheque','montant_cheque1','montant_cheque2','montant_cheque3','montant_cheque4'],
     colPaiement: 'check_paiement',
     colSaisi: 'saisiPar',
   },
@@ -346,11 +346,27 @@ function traiterDonnees(data) {
     var rows = bloc.rows;
 
     function col(nom) { return nom ? hdrs.indexOf(nom) : -1; }
+    // Calcule le montant d'une ligne : colMontant peut être un nom de colonne
+    // unique (ex. 'totalParticipation') ou un tableau de colonnes à additionner
+    // (ex. les différents modes de paiement d'une réservation).
+    function calcMontant(row) {
+      if (!cfg.colMontant) return '';
+      var noms = Array.isArray(cfg.colMontant) ? cfg.colMontant : [cfg.colMontant];
+      var total = 0;
+      var trouve = false;
+      noms.forEach(function(nom) {
+        var i = col(nom);
+        if (i >= 0 && row[i] !== '' && row[i] != null) {
+          var v = Number(row[i]);
+          if (!isNaN(v)) { total += v; trouve = true; }
+        }
+      });
+      return trouve ? total : '';
+    }
     var iChat    = col(cfg.colChat);
     var iNom     = col(cfg.colNom);
     var iPrenom  = col(cfg.colPrenom);
     var iDate    = col(cfg.colDate);
-    var iMontant = col(cfg.colMontant);
     var iPaie    = col(cfg.colPaiement);
     var iSaisi   = col(cfg.colSaisi);
 
@@ -367,7 +383,7 @@ function traiterDonnees(data) {
         nomPers:  (iNom    >= 0 ? row[iNom]    : '') || '',
         prenom:   (iPrenom >= 0 ? row[iPrenom] : '') || '',
         date:     (iDate   >= 0 ? row[iDate]   : '') || '',
-        montant:  (iMontant>= 0 ? row[iMontant]: '') || '',
+        montant:  calcMontant(row),
         paiement: (iPaie   >= 0 ? row[iPaie]   : '') || '',
         saisiPar: (iSaisi  >= 0 ? row[iSaisi]  : '') || '',
       });
