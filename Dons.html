@@ -113,6 +113,16 @@
 
     <div id="bloc_identite_donateur">
     <p>
+        <span class="clickable-row" onclick="toggleCheck(this, 'souhaiteRecu')">
+            <span class="checkbox checked" data-group="souhaiteRecu"></span>
+            <span class="blue bold">Le donateur souhaite un reçu fiscal</span>
+        </span>
+        <span class="italic" style="font-size:9pt; color:#666;">
+            (décocher si le donateur ne le demande pas — le reçu fiscal n'est pas obligatoire)
+        </span>
+    </p>
+
+    <p>
         <span class="blue">Type :</span>
         <span class="clickable-row" onclick="toggleCheck(this, 'typeDonateur'); toggleSociete()">
             <span class="checkbox" data-group="typeDonateur"></span> Particulier
@@ -391,6 +401,11 @@ function postSavePhotos(data /*, filename */) {
     // Don anonyme : personne à qui adresser un reçu fiscal
     var estAnonyme = document.querySelector('.checkbox[data-group="anonyme"].checked') !== null;
     if (estAnonyme) return;
+
+    // Le reçu fiscal n'est pas obligatoire : on ne l'ouvre que si le donateur le souhaite
+    // (case cochée par défaut, à décocher si le donateur ne le demande pas)
+    var souhaiteRecu = document.querySelector('.checkbox[data-group="souhaiteRecu"].checked') !== null;
+    if (!souhaiteRecu) return;
 
     ouvrirRecuFiscal(data);
 }
