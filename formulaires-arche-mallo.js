@@ -616,7 +616,7 @@ async function saveForm() {
 
         afficherMessage('✅ Mail généré<br>Vous pouvez maintenant imprimer si besoin.');
     } else {
-        alert('Erreur lors de la sauvegarde. Verifiez votre connexion.');
+        alert('Erreur lors de la sauvegarde. Vérifiez votre connexion.');
     }
 }
 
@@ -646,7 +646,7 @@ function afficherMessage(texte, type) {
 // ============================================================
 function printForm() {
     if (!formSaved) {
-        alert('Veuillez dabord sauvegarder le formulaire.');
+        alert('Veuillez d'abord sauvegarder le formulaire.');
         return;
     }
     var originalTitle = document.title;
