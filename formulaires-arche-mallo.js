@@ -646,7 +646,7 @@ function afficherMessage(texte, type) {
 // ============================================================
 function printForm() {
     if (!formSaved) {
-        alert('Veuillez d'abord sauvegarder le formulaire.');
+        alert("Veuillez d'abord sauvegarder le formulaire.");
         return;
     }
     var originalTitle = document.title;
