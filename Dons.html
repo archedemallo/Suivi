@@ -331,6 +331,32 @@ function appliquerPrefillDons() {
                 else boxRecu.classList.remove('checked');
             }
         }
+
+        // Civilité (Monsieur / Madame)
+        if (data._civilite === 'Monsieur' || data._civilite === 'Madame') {
+            var boxesCivilite = document.querySelectorAll('.checkbox[data-group="civilite"]');
+            var boxCivilite = null;
+            boxesCivilite.forEach(function(cb) {
+                if (cb.parentElement.textContent.trim() === data._civilite) boxCivilite = cb;
+            });
+            if (boxCivilite) {
+                boxesCivilite.forEach(function(cb) { cb.classList.remove('checked'); });
+                boxCivilite.classList.add('checked');
+            }
+        }
+
+        // Mode(s) de règlement — coche la ou les cases correspondantes et
+        // affiche le détail (montant / n° de chèque, déjà pré-remplis par
+        // appliquerPrefill() juste avant, via les ids identiques entre les
+        // deux formulaires).
+        if (Array.isArray(data._modesPaiement)) {
+            data._modesPaiement.forEach(function(mode) {
+                var box    = document.getElementById('pay_' + mode);
+                var detail = document.getElementById('detail_' + mode);
+                if (box)    box.classList.add('checked');
+                if (detail) detail.style.display = 'inline';
+            });
+        }
     } catch (e) {
         console.warn('[Prefill Dons] Erreur lors du pré-remplissage :', e.message);
     }
