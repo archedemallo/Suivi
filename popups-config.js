@@ -3,7 +3,7 @@
 
 // --- Pop-up MAINTENANCE ---
 const MAINTENANCE = {
-  active: true,               // true = redirige tout le monde vers Maintenance.html
+  active: false,               // true = redirige tout le monde vers Maintenance.html
   banniere: false,              // true = affiche un bandeau d'annonce même hors maintenance
   jour: "dimanche 23 août",  // Changer la date ICI
   debut: "14h30",               // Changer l'heure ICI
