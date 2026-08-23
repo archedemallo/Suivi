@@ -900,8 +900,46 @@ function ouvrirFormulaireDon() {
     var dateAdoptionEl = document.getElementById('dateAdoption');
     if (dateAdoptionEl && dateAdoptionEl.value) slim.dateSignature = dateAdoptionEl.value;
 
+    // Civilité (Monsieur / Madame)
+    var civiliteChoisie = document.querySelector('.checkbox[data-group="civilite"].checked');
+    if (civiliteChoisie) {
+        slim._civilite = civiliteChoisie.parentElement.textContent.trim();
+    }
+
+    // Mode(s) de règlement — repris tel quel (mode(s) coché(s), montant(s)
+    // et numéro(s) de chèque le cas échéant), pour éviter à l'association
+    // de ressaisir cette information sur le formulaire de don. Les ids des
+    // champs montant/numéro de chèque sont identiques entre les deux
+    // formulaires, donc ils seront pré-remplis automatiquement ; seuls les
+    // cases à cocher "pay_..." ont besoin d'un traitement particulier
+    // (voir _modesPaiement, interprété par Dons.html).
+    var modesPaiement = [];
+    ['virement', 'cb', 'espece', 'cheque', 'plusieurs_cheques'].forEach(function(mode) {
+        var box = document.getElementById('pay_' + mode);
+        if (!box || !box.classList.contains('checked')) return;
+        modesPaiement.push(mode);
+
+        var montantModeEl = document.getElementById('montant_' + mode);
+        if (montantModeEl && montantModeEl.value) slim['montant_' + mode] = montantModeEl.value;
+
+        if (mode === 'cheque') {
+            var numEl = document.getElementById('numeroPaiement');
+            if (numEl && numEl.value) slim.numeroPaiement = numEl.value;
+        }
+        if (mode === 'plusieurs_cheques') {
+            ['1', '2', '3', '4'].forEach(function(n) {
+                var numEl = document.getElementById('cheque' + n);
+                var mtEl  = document.getElementById('montant_cheque' + n);
+                if (numEl && numEl.value) slim['cheque' + n] = numEl.value;
+                if (mtEl  && mtEl.value)  slim['montant_cheque' + n] = mtEl.value;
+            });
+        }
+    });
+    if (modesPaiement.length > 0) slim._modesPaiement = modesPaiement;
+
     // Champs spéciaux, non liés à un input : interprétés par Dons.html
-    // pour pré-cocher "Particulier" et le choix de reçu fiscal.
+    // pour pré-cocher "Particulier", la civilité, le choix de reçu fiscal
+    // et le(s) mode(s) de paiement.
     slim._typeDonateur       = 'Particulier';
     slim._recuFiscalSouhaite = recuFiscalSouhaite;
     slim._source              = 'Adoption';
