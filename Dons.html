@@ -234,6 +234,7 @@ creerEntete({ dateId: 'dateEntete', dateLabel: 'Date :' });
 creerSignature('sig1');
 creerSignature('sig2');
 appliquerPrefill();
+appliquerPrefillDons();
 
 var today = new Date().toISOString().split('T')[0];
 ['dateEntete', 'dateFait', 'dateSignature'].forEach(function(id) {
@@ -287,6 +288,66 @@ function toggleCheckMulti(element) {
     var box = element.querySelector('.checkbox');
     if (box) box.classList.toggle('checked');
 }
+
+// ============================================================
+// PRÉ-REMPLISSAGE DEPUIS UN AUTRE FORMULAIRE (ex : Dons libre
+// saisi sur le Contrat d'adoption)
+// appliquerPrefill() (fonction commune) ne sait remplir que les
+// champs input/textarea par id. Elle ignore silencieusement les
+// clés préfixées par "_" (comme "_source"), qu'on utilise ici
+// pour transmettre le type de donateur et le choix avec/sans
+// reçu fiscal, qui correspondent à des cases à cocher et non à
+// des champs texte.
+// ============================================================
+function appliquerPrefillDons() {
+    try {
+        var params = new URLSearchParams(window.location.search);
+        var raw    = params.get('prefill');
+        if (!raw) return;
+        var data = JSON.parse(decodeURIComponent(raw));
+        if (!data || typeof data !== 'object') return;
+
+        // Type de donateur par défaut = Particulier
+        if (data._typeDonateur === 'Particulier') {
+            var boxes = document.querySelectorAll('.checkbox[data-group="typeDonateur"]');
+            var boxParticulier = null;
+            boxes.forEach(function(cb) {
+                if (cb.parentElement.textContent.trim().indexOf('Particulier') === 0) boxParticulier = cb;
+            });
+            if (boxParticulier) {
+                boxes.forEach(function(cb) { cb.classList.remove('checked'); });
+                boxParticulier.classList.add('checked');
+                toggleSociete();
+            }
+        }
+
+        // Souhait de reçu fiscal ("Don avec reçu" / "Don sans reçu" coché
+        // sur le Contrat d'adoption) → coche/décoche la case existante
+        // "Le donateur souhaite un reçu fiscal"
+        if (data._recuFiscalSouhaite === 'oui' || data._recuFiscalSouhaite === 'non') {
+            var boxRecu = document.querySelector('.checkbox[data-group="souhaiteRecu"]');
+            if (boxRecu) {
+                if (data._recuFiscalSouhaite === 'oui') boxRecu.classList.add('checked');
+                else boxRecu.classList.remove('checked');
+            }
+        }
+    } catch (e) {
+        console.warn('[Prefill Dons] Erreur lors du pré-remplissage :', e.message);
+    }
+}
+
+// Transmet explicitement au back-end (Apps Script) le souhait de reçu
+// fiscal du donateur, afin qu'il puisse décider d'envoyer — ou non —
+// le mail au donateur (pas de mail donateur pour un don sans reçu fiscal).
+// L'Arche de Mallo continue de recevoir le mail dans tous les cas.
+var _collectFormDataOriginalDons = collectFormData;
+collectFormData = function() {
+    var data = _collectFormDataOriginalDons();
+    var estAnonyme   = document.querySelector('.checkbox[data-group="anonyme"].checked') !== null;
+    var souhaiteRecu = document.querySelector('.checkbox[data-group="souhaiteRecu"].checked') !== null;
+    data.recuFiscalSouhaite = (!estAnonyme && souhaiteRecu) ? 'oui' : 'non';
+    return data;
+};
 
 // Validation spécifique
 validateRequiredFields = function() {
