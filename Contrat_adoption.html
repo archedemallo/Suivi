@@ -924,7 +924,10 @@ function ouvrirFormulaireDon() {
 
         if (mode === 'cheque') {
             var numEl = document.getElementById('numeroPaiement');
-            if (numEl && numEl.value) slim.numeroPaiement = numEl.value;
+            // Champ nommé différemment sur Dons.html ("numeroCheque" au lieu
+            // de "numeroPaiement" sur le Contrat d'adoption) : on écrit donc
+            // sous le nom attendu par le formulaire de destination.
+            if (numEl && numEl.value) slim.numeroCheque = numEl.value;
         }
         if (mode === 'plusieurs_cheques') {
             ['1', '2', '3', '4'].forEach(function(n) {
