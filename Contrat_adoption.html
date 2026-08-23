@@ -398,6 +398,20 @@ AVEC <input type="text" class="editable editable-medium" id="produitAntiPuces" d
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span> Caisse de transport <span class="red bold">10 €</span>
     </p>
     <p>
+        <span class="clickable-row" onclick="toggleCheck(this); toggleDonLibre()"><span class="checkbox" id="donLibre_check"></span></span>
+        Dons libre de <input type="number" class="editable editable-num" id="montantDonLibre" min="0" step="0.01"><span class="red"> €</span>
+    </p>
+    <p id="bloc_recuDonLibre" style="display:none; margin-left:24px;">
+        <span class="blue">Reçu fiscal :</span>
+        <span class="clickable-row" onclick="toggleCheck(this, 'recuDonLibre')">
+            <span class="checkbox" data-group="recuDonLibre"></span> Don avec reçu
+        </span>
+        &nbsp;&nbsp;
+        <span class="clickable-row" onclick="toggleCheck(this, 'recuDonLibre')">
+            <span class="checkbox" data-group="recuDonLibre"></span> Don sans reçu
+        </span>
+    </p>
+    <p>
         <span class="clickable-row" onclick="toggleCheck(this)"><span class="checkbox"></span></span>
         Autres : (préciser) <input type="text" class="editable editable-long" id="autres">
     </p>
@@ -840,10 +854,111 @@ function togglePaiement(element, mode) {
     if (detail) detail.style.display = box.classList.contains('checked') ? 'inline' : 'none';
 }
 
-	
+// ============================================================
+// DONS LIBRE — affichage du choix "avec / sans reçu" + génération
+// automatique du formulaire Dons pré-rempli après sauvegarde
+// ============================================================
+
+// Afficher/masquer le choix avec/sans reçu selon la case "Dons libre"
+function toggleDonLibre() {
+    var caseDon = document.getElementById('donLibre_check');
+    var estCoche = caseDon && caseDon.classList.contains('checked');
+    var bloc = document.getElementById('bloc_recuDonLibre');
+    if (bloc) bloc.style.display = estCoche ? '' : 'none';
+    if (!estCoche) {
+        // Réinitialisation si la case est décochée
+        var montant = document.getElementById('montantDonLibre');
+        if (montant) { montant.value = ''; montant.style.borderBottom = ''; }
+        document.querySelectorAll('.checkbox[data-group="recuDonLibre"]').forEach(function(cb) {
+            cb.classList.remove('checked');
+            cb.style.outline = '';
+        });
+    }
+}
+
+// Ouvre Dons.html dans un nouvel onglet, pré-rempli avec les infos
+// du donateur (= l'adoptant), le montant saisi, la date et la personne
+// qui a saisi le contrat, ainsi que le choix avec/sans reçu fiscal.
+function ouvrirFormulaireDon() {
+    var recuChoisi = document.querySelector('.checkbox[data-group="recuDonLibre"].checked');
+    var texteRecu  = recuChoisi ? recuChoisi.parentElement.textContent.trim() : '';
+    var recuFiscalSouhaite = texteRecu.indexOf('avec') >= 0 ? 'oui' : 'non';
+
+    var champs = ['nom', 'prenom', 'adresse', 'codePostal', 'ville', 'email', 'saisiPar'];
+    var slim = {};
+    champs.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.value) slim[id] = el.value;
+    });
+
+    var portableEl = document.getElementById('portable');
+    if (portableEl && portableEl.value) slim.telephone = portableEl.value;
+
+    var montantEl = document.getElementById('montantDonLibre');
+    if (montantEl && montantEl.value) slim.montantDon = montantEl.value;
+
+    var dateAdoptionEl = document.getElementById('dateAdoption');
+    if (dateAdoptionEl && dateAdoptionEl.value) slim.dateSignature = dateAdoptionEl.value;
+
+    // Champs spéciaux, non liés à un input : interprétés par Dons.html
+    // pour pré-cocher "Particulier" et le choix de reçu fiscal.
+    slim._typeDonateur       = 'Particulier';
+    slim._recuFiscalSouhaite = recuFiscalSouhaite;
+    slim._source              = 'Adoption';
+
+    var prefill = encodeURIComponent(JSON.stringify(slim));
+    var url     = 'Dons.html?prefill=' + prefill;
+
+    var fenetre = window.open(url, '_blank');
+    if (!fenetre) {
+        afficherLienFormulaireDon(url);
+    }
+}
+
+function afficherLienFormulaireDon(url) {
+    var conteneur = document.querySelector('.buttons');
+    if (!conteneur || document.getElementById('btnFormulaireDon')) return;
+    var btn = document.createElement('button');
+    btn.id = 'btnFormulaireDon';
+    btn.className = 'btn btn-save';
+    btn.textContent = '💶 Ouvrir le formulaire de don (bloqué par le navigateur)';
+    btn.onclick = function() { window.open(url, '_blank'); };
+    conteneur.appendChild(btn);
+}
+
 // Surcharge saveForm pour envoyer les photos après la sauvegarde principale
 var _saveFormOriginal = saveForm;
 saveForm = async function() {
+    // Validation spécifique "Dons libre" avant la sauvegarde
+    var caseDon  = document.getElementById('donLibre_check');
+    var donLibreCoche = caseDon && caseDon.classList.contains('checked');
+    if (donLibreCoche) {
+        var missingDon = [];
+        var montantEl  = document.getElementById('montantDonLibre');
+        var montantVal = montantEl ? parseFloat(montantEl.value) : 0;
+        if (!montantVal || montantVal <= 0) {
+            missingDon.push('Montant du don libre');
+            if (montantEl) montantEl.style.borderBottom = '2px solid red';
+        } else if (montantEl) {
+            montantEl.style.borderBottom = '';
+        }
+        var recuChoisi = document.querySelector('.checkbox[data-group="recuDonLibre"].checked');
+        if (!recuChoisi) {
+            missingDon.push('Don avec reçu / Don sans reçu');
+            document.querySelectorAll('.checkbox[data-group="recuDonLibre"]').forEach(function(cb) {
+                cb.style.outline = '2px solid red'; cb.style.outlineOffset = '1px';
+            });
+        } else {
+            document.querySelectorAll('.checkbox[data-group="recuDonLibre"]').forEach(function(cb) {
+                cb.style.outline = '';
+            });
+        }
+        if (missingDon.length > 0) {
+            afficherMessage('⚠️ Dons libre coché — veuillez compléter :<br><br>• ' + missingDon.join('<br>• '), 'erreur');
+            return;
+        }
+    }
+
     await _saveFormOriginal();
     // N'envoyer les photos QUE si la sauvegarde a réussi (formSaved = true)
     if (!formSaved) return;
@@ -854,6 +969,11 @@ saveForm = async function() {
     var dateRaw     = (document.getElementById('dateAdoption')|| {}).value || today;
     var dateFr      = dateRaw ? dateRaw.split('-').reverse().join('-') : today;
     await envoyerPhotos(nomAdoptant, nomChat, dateFr);
+
+    // Génération automatique du formulaire de don si "Dons libre" était coché
+    if (donLibreCoche) {
+        ouvrirFormulaireDon();
+    }
 };
 </script>
 
